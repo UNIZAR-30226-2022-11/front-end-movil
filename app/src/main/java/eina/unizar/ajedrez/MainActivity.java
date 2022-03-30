@@ -32,38 +32,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-      //  myCanvas = new ChessBoard(this);
-        setContentView(R.layout.user_sign_in);
+        myCanvas = new ChessBoard(this);
+        setContentView(R.layout.activity_main);
 
-      //  LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
+       LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
 
-      //  layout.addView(myCanvas);
+        layout.addView(myCanvas);
     }
-   /* @Override
-    public boolean onTouchEvent(MotionEvent e){
-        String TAG ="d: ";
-        switch (e.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                if(!pulsado){
-                    //pulsado = true;
-                    posX = Math.round(e.getX());
-                    posY = Math.round(e.getY());
-                   // if()
-                    pulsado = myCanvas.checkClick(posX,posY);
-                   // Log.d(TAG,"Tocado en pos:"+posX+" y "+posY);
-                }
-                else{
-                    Log.d(TAG,"Suelta en pos:"+posX+" y "+posY);
-                    posFinX = Math.round(e.getX());
-                    posFinY = Math.round(e.getY());
-                   // myCanvas.dibujarPieza( posFinX,posFinY);
-                    LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
-                    layout.invalidate();
-                    pulsado = false;
 
-                }
-        }
-     //  invalidate()
-        return super.onTouchEvent(e);
-    }*/
 }
