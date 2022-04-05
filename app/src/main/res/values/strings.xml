@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">Ajedrez</string>
+    <string name="user">Usuario</string>
+    <string name="password">Contraseña</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
-    <string name="user">User</string>
-    <string name="password">Password</string>
-    <string name="record">See my record</string>
 </resources>
