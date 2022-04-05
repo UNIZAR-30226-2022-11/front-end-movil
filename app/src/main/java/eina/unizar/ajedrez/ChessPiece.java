@@ -25,9 +25,6 @@ public class ChessPiece {
     // Filas: 1-8
     // Columnas: 1-8
     public boolean checkPos(int col, int fila){
-        String TAG = "d";
-        Log.d(TAG, "Cols:" + col + "-" + (this.col-65)/80);
-        Log.d(TAG, "Filas:" + fila + "-" + (this.fila-185)/80);
         return col ==  (this.col-65)/80 && fila == (this.fila-185)/80;
     }
 
@@ -79,15 +76,12 @@ public class ChessPiece {
             case "Rook":
                 return checkRook(col, fila);
             case "Knight":
-                Log.d("d", "Comprueba knight");
                 return checkKnight(col, fila);
             case "Bishop":
                 return checkBishop(col, fila);
             case "Queen":
-                Log.d("d", "Comprueba queen");
                 return checkBishop(col,fila) || checkRook(col,fila);
             case "King":
-                Log.d("d", "Comprueba king");
                 return checkKing(col,fila);
         }
         return false;
@@ -98,10 +92,11 @@ public class ChessPiece {
             && Math.abs(((this.col-65)/80) -  col) == 1) {
             return true;
         }
-        else if((col == (this.col-65)/80 || fila == (this.fila-185)/80)
-                && (Math.abs(((this.col-65)/80) -  col) == 1 || Math.abs((this.fila-185)/80) - fila == 1)){
+        else if((col == (this.col-65)/80 && Math.abs(((this.fila-185)/80) - fila) == 1) ||
+                (fila == (this.fila-185)/80) && (Math.abs(((this.col-65)/80) -  col) == 1)) {
             return true;
         }
+        Log.d("d", "King fallo " +(this.fila-185)/80 + " " + (this.col-65)/80+ "hasta" + +fila+ "  "+col);
         return false;
     }
 
