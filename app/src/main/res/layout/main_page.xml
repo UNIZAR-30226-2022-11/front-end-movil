@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="391dp"
+        android:layout_height="827dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="1dp"
+        android:layout_gravity="center_vertical">
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <EditText
+            android:id="@+id/editTextTextPersonName2"
+            android:layout_width="match_parent"
+            android:layout_height="71dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            android:text="Play online"
+            android:gravity="center"/>
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal" >
+            <Button
+                android:id="@+id/online3"
+                android:layout_marginStart="22dp"
+                android:textSize="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3 mins" />
+            <Button
+                android:id="@+id/online10"
+                android:textSize="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10 mins" />
+            <Button
+                android:id="@+id/online30"
+                android:textSize="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="30 mins" />
+            <Button
+                android:id="@+id/onlineNoTime"
+                android:textSize="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No time" />
+        </LinearLayout>
+        <EditText
+            android:id="@+id/TextPlayAI"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:minHeight="35dp"
+            android:text="Play against computer"
+            android:gravity="center"/>
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal" >
+            <Button
+                android:id="@+id/playAI3"
+                android:layout_marginStart="22dp"
+                android:textSize="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3 mins" />
+            <Button
+                android:id="@+id/playAI10"
+                android:textSize="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10 mins" />
+            <Button
+                android:id="@+id/playAI30"
+                android:textSize="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="30 mins" />
+            <Button
+                android:id="@+id/playAINoTime"
+                android:textSize="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No time" />
+        </LinearLayout>
+        <EditText
+            android:id="@+id/TextFriends"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:minHeight="35dp"
+            android:text="Friends"
+            android:gravity="center"/>
+        <LinearLayout
+            android:id="@+id/linearLayoutFriends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal" >
+            <Button
+                android:id="@+id/buttonSeeFriends"
+                android:textSize="12dp"
+                android:layout_marginStart="22dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="175dp"
+                android:text="My friends" />
+            <Button
+                android:id="@+id/buttonPlayFriend"
+                android:textSize="12dp"
+                android:minWidth="175dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Play a friend" />
+        </LinearLayout>
+        <EditText
+            android:id="@+id/TextTournament"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:minHeight="35dp"
+            android:text="Tournaments"
+            android:gravity="center"/>
+        <LinearLayout
+            android:id="@+id/linearLayoutTournaments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal" >
+            <Button
+                android:id="@+id/buttonJoinTournament"
+                android:textSize="12dp"
+                android:layout_marginStart="22dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="175dp"
+                android:text="Join tournament" />
+            <Button
+                android:id="@+id/buttonCreateTournament"
+                android:textSize="12dp"
+                android:minWidth="170dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create tournament" />
+        </LinearLayout>
+        <EditText
+            android:id="@+id/TextRecord"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:minHeight="35dp"
+            android:text="My record"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/Record"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="32dp"
+
+            android:text="@string/record"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+        <EditText
+            android:id="@+id/extras"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:minHeight="35dp"
+            android:text="Extras"
+            android:gravity="center"/>
+        <LinearLayout
+        android:id="@+id/linearLayoutExtras"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal" >
+            <Button
+                android:id="@+id/shop"
+                android:textSize="12dp"
+                android:layout_marginStart="22dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="175dp"
+                android:text="Visit shop" />
+            <Button
+                android:id="@+id/inventary"
+                android:textSize="12dp"
+                android:minWidth="175dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="My inventry" />
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
