@@ -40,7 +40,18 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
 
         layout.addView(myCanvas);
+        //playGame();
     }
+
+   /* public void playGame(){
+        while(true){
+            if(turno == 'w'){
+                Log.d("d: ", "Entra aqui");
+            }else{
+                myCanvas.makeAIMove();
+            }
+        }
+    }*/
     @Override
     public boolean onTouchEvent(MotionEvent e){
         switch (e.getAction()) {
@@ -57,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
                         startTimer();
                         turno = 'w';
                     }
+                    if(!myCanvas.isMate()) myCanvas.makeAIMove();
+                    stopTimerRival();
+                    startTimer();
+                    turno = 'w';
                 }
                 pulsado = false;
         }

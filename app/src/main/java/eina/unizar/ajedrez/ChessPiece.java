@@ -124,7 +124,7 @@ public class ChessPiece {
                 return true;
             }
         }
-        Log.d("d", "invalid move pawn");
+       // Log.d("d", "invalid move pawn");
         return false;
     }
     private boolean checkRook(int col, int fila){
