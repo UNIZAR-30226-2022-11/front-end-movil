@@ -1,31 +1,20 @@
 package eina.unizar.ajedrez;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import javax.security.auth.callback.Callback;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class OnlineActivity extends AppCompatActivity {
     private TextView countdownText,countdownTextRival;
-    ChessBoard myCanvas ;//= new ChessBoard(this);
+    ChessBoard myCanvas;
     private CountDownTimer countDownTimer,countDownTimerRival;
-    private long timeLeftInMilliseconds = 600000;
-    private long timeLeftInMillisecondsRival = 600000;
+    private long timeLeftInMilliseconds;
+    private long timeLeftInMillisecondsRival;
     private boolean timerRunning, timerRunningRival;
     char turno = 'w';
     boolean pulsado = false;
@@ -34,14 +23,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         myCanvas = new ChessBoard(this);
-        setContentView(R.layout.activity_main);
-        countdownTextRival = findViewById(R.id.timerRival);
-        countdownText = findViewById(R.id.timerUser);
-        startStop();
-        LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
+        setContentView(R.layout.activity_ai);
 
         time = getIntent().getExtras().getInt("time");
+        timeLeftInMilliseconds = (long) time*60*1000;
+        timeLeftInMillisecondsRival = (long) time*60*1000;
+        TextView timerUser = findViewById(R.id.timerUser);
+        timerUser.setText(time+":00");
+        TextView timerRival = findViewById(R.id.timerRival);
+        timerRival.setText(time+":00");
 
+        countdownText = findViewById(R.id.timerUser);
+        countdownTextRival = findViewById(R.id.timerRival);
+        startStop();
+
+        LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
         layout.addView(myCanvas);
         //playGame();
     }
@@ -96,9 +92,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFinish() {
-
-            }
+            public void onFinish() { }
         }.start();
         timerRunning = true;
     }
@@ -117,9 +111,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFinish() {
-
-            }
+            public void onFinish() { }
         }.start();
         timerRunningRival = true;
     }

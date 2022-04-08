@@ -26,7 +26,7 @@ public class ChessBoard extends View {
     int NUM_FILCOL = 8;
     int x0=65;
     int y0 = 185;
-    int squareSize = 80;
+    int squareSize = 120;
     int x1= x0 +squareSize;
     HashMap<Integer,ChessPiece> pieceSet  = new HashMap<Integer,ChessPiece>();
     int numPieza;

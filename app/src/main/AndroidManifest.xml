@@ -10,7 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
-            android:name=".MainActivity"
+            android:name=".AiActivity"
+            android:exported="true" />
+        <activity
+            android:name=".OnlineActivity"
             android:exported="true" />
         <activity
             android:name=".MainPage"
