@@ -23,7 +23,7 @@ public class OnlineActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         myCanvas = new ChessBoard(this);
-        setContentView(R.layout.activity_ai);
+        setContentView(R.layout.activity_online);
 
         time = getIntent().getExtras().getInt("time");
         timeLeftInMilliseconds = (long) time*60*1000;

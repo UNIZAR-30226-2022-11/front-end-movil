@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginTop="10dp"
         android:id="@+id/rival"
@@ -18,41 +18,22 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="22dp"
-            android:textColor="@color/fondo_negro"
-            android:background="@color/white"
-            android:typeface="sans"
-            android:textSize="40sp"
-            android:layout_gravity="left"
-            android:id="@+id/timerUser"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:typeface="sans"
-            android:text="@string/tu"
+            android:text="Time Left"
             android:textSize="25sp"
             android:layout_gravity="center"
             android:id="@+id/nombreUser"/>
+
         <TextView
+            android:id="@+id/timerUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="22dp"
-            android:textColor="@color/fondo_negro"
-            android:background="@color/white"
-            android:typeface="sans"
-            android:textSize="40sp"
-            android:layout_gravity="left"
-            android:id="@+id/timerRival"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:typeface="sans"
-            android:text="@string/ia"
-            android:textSize="25sp"
             android:layout_gravity="center"
-            android:id="@+id/nombreRival"/>
+            android:background="@color/white"
+            android:textColor="@color/fondo_negro"
+            android:textSize="40sp"
+            android:typeface="sans" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="fill_parent"

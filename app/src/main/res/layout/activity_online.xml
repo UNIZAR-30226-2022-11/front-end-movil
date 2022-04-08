@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:typeface="sans"
-            android:text="@string/ia"
+            android:text="Rival"
             android:textSize="25sp"
             android:layout_gravity="center"
             android:id="@+id/nombreRival"/>
