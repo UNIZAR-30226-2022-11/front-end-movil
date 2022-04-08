@@ -17,7 +17,7 @@ public class AiActivity extends AppCompatActivity {
     private long timeLeftInMilliseconds;
     private boolean timerRunning;
     char turno = 'w';
-    boolean pulsado = false;
+    boolean pulsado, noTime = false;
     int time;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,12 +26,16 @@ public class AiActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ai);
 
         time = getIntent().getExtras().getInt("time");
-        timeLeftInMilliseconds = (long) time*60*1000;
+        if(time != 0 )timeLeftInMilliseconds = (long) time*60*1000;
         TextView timerUser = findViewById(R.id.timerUser);
-        timerUser.setText(time+":00");
+        if(time != 0) timerUser.setText(time+":00");
+        else{
+            timerUser.setText("--:--");
+            noTime = true;
+        }
 
         countdownText = findViewById(R.id.timerUser);
-        startStop();
+        if(!noTime) startStop();
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
         layout.addView(myCanvas);
@@ -55,10 +59,10 @@ public class AiActivity extends AppCompatActivity {
                 if (myCanvas.checkCorrectMov(turno)){
                     Log.d("d: ", "Movimiento correcto");
                     if(turno == 'w'){
-                        stopTimer();
+                        if(!noTime) stopTimer();
                         turno = 'b';
                     }else{
-                        startTimer();
+                        if(!noTime) startTimer();
                         turno = 'w';
                     }
                     if(!myCanvas.isMate()){
