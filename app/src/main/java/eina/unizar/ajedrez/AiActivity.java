@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -37,15 +38,15 @@ public class AiActivity extends AppCompatActivity {
         //playGame();
     }
 
-   /* public void playGame(){
-        while(true){
-            if(turno == 'w'){
-                Log.d("d: ", "Entra aqui");
-            }else{
-                myCanvas.makeAIMove();
-            }
-        }
-    }*/
+    /* public void playGame(){
+         while(true){
+             if(turno == 'w'){
+                 Log.d("d: ", "Entra aqui");
+             }else{
+                 myCanvas.makeAIMove();
+             }
+         }
+     }*/
     @Override
     public boolean onTouchEvent(MotionEvent e){
         switch (e.getAction()) {
@@ -60,8 +61,16 @@ public class AiActivity extends AppCompatActivity {
                         startTimer();
                         turno = 'w';
                     }
-                    if(!myCanvas.isMate()) myCanvas.makeAIMove();
-                    startTimer();
+                    if(!myCanvas.isMate()){
+                        myCanvas.makeAIMove();
+                        startTimer();
+                    }
+                    else {
+                        stopTimer();
+                        Log.d("d: ", "Fin partida");
+                        Toast.makeText(this, "Fin de partida" +
+                                "", Toast.LENGTH_SHORT).show();
+                    }
                     turno = 'w';
                 }
                 pulsado = false;
