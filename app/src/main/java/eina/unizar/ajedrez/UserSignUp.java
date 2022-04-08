@@ -3,51 +3,34 @@ package eina.unizar.ajedrez;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import eina.unizar.ajedrez.databinding.UserSignInBinding;
+import eina.unizar.ajedrez.databinding.UserSignUpBinding;
+
 public class UserSignUp extends AppCompatActivity {
 
-    private EditText mUsername;
-    private EditText mUserFullName;
-    private EditText mUserPassword;
-    private EditText mUserPasswordRepeat;
-    private EditText mUserMail;
-    private Long mRowId;
+    private UserSignUpBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // mDbHelper = new NotesDbAdapter(this);
-        //mDbHelper.open();
-        // setContentView(R.layout.note_edit);
-        // setTitle(R.string.edit_note);
+        binding = UserSignUpBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
-        mUsername = (EditText) findViewById(R.id.username);
-        mUserFullName = (EditText) findViewById(R.id.userFullname);
-        mUserPassword = (EditText) findViewById(R.id.password);
-        mUserPasswordRepeat = (EditText) findViewById(R.id.passwordRepeat);
-        mUserMail = (EditText) findViewById(R.id.mail);
+        binding.button.setOnClickListener(vista -> {
+            String username = binding.username.getEditText().getText().toString();
+            String fullName = binding.fullName.getEditText().getText().toString();
+            String email = binding.email.getEditText().getText().toString();
+            String password = binding.password.getEditText().getText().toString();
+            String repeatPassword = binding.repeatPassword.getEditText().getText().toString();
 
-        Button confirmButton = (Button) findViewById(R.id.submit);
+            // Register new user account
 
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View view) {
-                setResult(RESULT_OK);
-                finish();
-            }
-
+            setResult(RESULT_OK);
+            finish();
         });
-        /*mRowId = (savedInstanceState == null) ? null:
-                (Long) savedInstanceState.getSerializable(NotesDbAdapter.KEY_ROWID);
-        if (mRowId == null) {
-            Bundle extras = getIntent().getExtras();
-            mRowId = (extras != null) ?
-                    extras.getLong(NotesDbAdapter.KEY_ROWID) : null;
-        }*/
-
-
     }
 }

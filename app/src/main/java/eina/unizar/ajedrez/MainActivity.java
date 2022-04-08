@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean timerRunning, timerRunningRival;
     char turno = 'w';
     boolean pulsado = false;
+    int time;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
         countdownText = findViewById(R.id.timerUser);
         startStop();
         LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
+
+        time = getIntent().getExtras().getInt("time");
 
         layout.addView(myCanvas);
         //playGame();

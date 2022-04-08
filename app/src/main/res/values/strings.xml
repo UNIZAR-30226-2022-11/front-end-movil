@@ -4,4 +4,23 @@
     <string name="password">Contraseña</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
+    <string name="record">See my record</string>
+    <string name="play_online">Play online</string>
+    <string name="_3_mins">3 mins</string>
+    <string name="_10_mins">10 mins</string>
+    <string name="_30_mins">30 mins</string>
+    <string name="play_a_friend">Play a friend</string>
+    <string name="join_tournament">Join tournament</string>
+    <string name="my_record">My record</string>
+    <string name="create_tournament">Create tournament</string>
+    <string name="extras">Extras</string>
+    <string name="visit_shop">Visit shop</string>
+    <string name="my_inventory">My inventory</string>
+    <string name="tournaments">Tournaments</string>
+    <string name="my_friends">My friends</string>
+    <string name="no_time">No time</string>
+    <string name="friends">Friends</string>
+    <string name="play_against_computer">Play against computer</string>
+    <string name="tu">Tú</string>
+    <string name="ia">IA</string>
 </resources>
