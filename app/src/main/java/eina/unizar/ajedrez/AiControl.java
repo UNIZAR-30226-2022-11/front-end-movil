@@ -40,9 +40,10 @@ public class AiControl {
             boardMtx[m.fin.X][m.fin.Y] = viejoEnd;
             boardMtx[m.inicial.X][m.inicial.Y] = viejoIni;
         }
-         //Log.d("d: ", "Desde: " + miMov.inicial.X + " "+miMov.inicial.Y);
-      //   Log.d("d: ", "Pos elegida: " + miMov.fin.X + " "+miMov.fin.Y);
-        return movsValidos.get(guarda);
+         Log.d("d: ",  " con guarda "+ guarda + " " +movsValidos.get(guarda).inicial.X + " "+ movsValidos.get(guarda).inicial.Y);
+       // Log.d("d: ", "Pos elegida: " + miMov.fin.X + " "+miMov.fin.Y);
+       if(guarda != -1) return movsValidos.get(guarda);
+       return null;
     }
 
     private int devolverPunt(char tipo){

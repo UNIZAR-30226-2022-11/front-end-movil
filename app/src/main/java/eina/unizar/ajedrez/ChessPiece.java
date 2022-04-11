@@ -103,7 +103,7 @@ public class ChessPiece {
     private boolean checkPawn(int col, int fila){
         if(this.color == "b") {
             if ((fila == ((this.fila-185)/80) + 1 || (fila == ((this.fila-185)/80) + 2 && !alreadyMoved)) && col == (this.col-65)/80) {
-                Log.d("d", "Valid move pawn");
+                Log.d("d", "Valid move black  pawn");
                 return true;
             }
 

@@ -2,11 +2,9 @@ package eina.unizar.ajedrez;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import eina.unizar.ajedrez.databinding.UserSignInBinding;
 import eina.unizar.ajedrez.databinding.UserSignUpBinding;
 
 public class UserSignUp extends AppCompatActivity {

@@ -241,22 +241,25 @@ public class ChessBoard extends View {
     }
     public void makeAIMove(){
         ArrayList<Movimiento> movs = generarTodosMovimientosValidos();
-       // Log.d("d: ", "Movs: " + movs.size());
+        Log.d("d: ", "Movs: " + movs.size());
         Movimiento m = controlador.mejorMov(boardMtx,movs);
-       // Log.d("d: ", "Movimiento final: " + m.inicial.X + " " + m.inicial.Y);
-       // Log.d("d: ", "Hasta: " + m.fin.X + " " + m.fin.Y);
+        if(m == null) mate = true;
+        Log.d("d: ", "Movimiento final: " + m.inicial.X + " " + m.inicial.Y);
+        Log.d("d: ", "Hasta: " + m.fin.X + " " + m.fin.Y);
         int piezaDown = eatsPiece(m.fin.Y, m.fin.X);
         ChessPiece p;
         for(Map.Entry<Integer,ChessPiece> entry : pieceSet.entrySet()){
             p = entry.getValue();
-            turnoIA = false;
-            if(checkCertainPiece(p, m.fin.Y, m.fin.X)){
-                Log.d("d: ", "Movimiento en orden "+ p.getType() + " EN " + p.getFila() + " y  " + p.getCol());
-                int val = entry.getKey();
-                p.newCoord(m.fin.Y, m.fin.X); // Cambiar posición a la pieza
-                pieceSet.put(val, p);
-                Log.d("d: ", "Movimiento en orden");
-                break;
+            if(p.checkPos(m.inicial.Y,m.inicial.X) && !mate) { // Encontrar pieza a mover por la ia en el set de pieza
+                turnoIA = false;
+                if (checkCertainPiece(p, m.fin.Y, m.fin.X)) {
+                    Log.d("d: ", "Movimiento en orden " + p.getType() + " color " + p.getColor() + " EN " + p.getFila() + " y  " + p.getCol());
+                    int val = entry.getKey();
+                    p.newCoord(m.fin.Y, m.fin.X); // Cambiar posición a la pieza
+                    pieceSet.put(val, p);
+                    Log.d("d: ", "Movimiento en orden");
+                    break;
+                }
             }
         }
         if (piezaDown != -1) pieceSet.remove(piezaDown); // Comer pieza rival
@@ -312,9 +315,27 @@ public class ChessBoard extends View {
             for(int j= 1; j < NUM_FILCOL;j++){
                 int colFin =  colIni + (dirActual.y*j);
                 int filaFin =  filaIni + (dirActual.x*j);
-                if (0 <= filaFin && filaFin<=7 && 0 <= colFin && colFin<=7){
+                if (0 <= filaFin && filaFin<=7 && 0 <= colFin && colFin<=7 && p.getType() != "Knight"){
                     if(checkValidMove(p,colFin,filaFin)){
-                        //Log.d("d: ", "Mov valido para " + p.getType() + " Col " + p.getCol());
+                        Log.d("d: ", "Mov valido para " + p.getType()+ " Color: "+ p.getColor()+" Fil: "+ p.getFila() + " Col " + p.getCol());
+                        Movimiento nuevoMov = new Movimiento(new Pos(p.getFila(),p.getCol()),new Pos(filaFin,colFin));
+                        movsValidos.add(nuevoMov);
+                        //Log.d("d: ", "EEEEEEEEEEEEEEEEEEEEEEEEEy " + boardMtx[filaFin][colFin] + " fila: " +filaFin + " col: "+ colFin);
+                    }
+                }
+            }
+        }
+        dirs[0] = new Pair(-2,-1); dirs[1] = new Pair(-2,1); dirs[2] = new Pair(-1,-2);
+        dirs[3] = new Pair(-1,2); dirs[4] = new Pair(1,-2); dirs[5] = new Pair(1,2);
+        dirs[6] = new Pair(2,-1); dirs[7] = new Pair(2,1);
+        for(int i =0; i < NUM_FILCOL;i++){
+            Pair dirActual = dirs[i];
+            for(int j= 1; j < NUM_FILCOL;j++){
+                int colFin =  colIni + (dirActual.y*j);
+                int filaFin =  filaIni + (dirActual.x*j);
+                if (0 <= filaFin && filaFin<=7 && 0 <= colFin && colFin<=7 && p.getType() == "Knight"){
+                    if(checkValidMove(p,colFin,filaFin)){
+                        Log.d("d: ", "Mov valido para " + p.getType()+ " Color: "+ p.getColor()+" Fil: "+ p.getFila() + " Col " + p.getCol());
                         Movimiento nuevoMov = new Movimiento(new Pos(p.getFila(),p.getCol()),new Pos(filaFin,colFin));
                         movsValidos.add(nuevoMov);
                         //Log.d("d: ", "EEEEEEEEEEEEEEEEEEEEEEEEEy " + boardMtx[filaFin][colFin] + " fila: " +filaFin + " col: "+ colFin);
@@ -516,6 +537,7 @@ public class ChessBoard extends View {
                 if (clavadas[i].fila == changePos.getFila() && clavadas[i].col == changePos.getCol()) { // Pieza clavada es la que se esta intentando mover
                     clavado = true;
                     dirClavada = new Pair(clavadas[i].dir.x, clavadas[i].dir.y);
+                   // Log.d("d:", "Fila Torre !!!!!!!!!!!!!!!!!!!!!!! "+ jaque);
                 }
             }
         }
