@@ -1,23 +1,38 @@
 package eina.unizar.ajedrez;
 
+<<<<<<< HEAD
 import android.content.DialogInterface;
 import android.content.Intent;
+=======
+>>>>>>> 5a418ac51eab0717b3c1a644cadfde1b3bfa5987
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+<<<<<<< HEAD
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+=======
+
+>>>>>>> 5a418ac51eab0717b3c1a644cadfde1b3bfa5987
 import androidx.appcompat.app.AppCompatActivity;
 
 public class OnlineActivity extends AppCompatActivity {
     private TextView countdownText,countdownTextRival;
     ChessBoard myCanvas;
     private CountDownTimer countDownTimer,countDownTimerRival;
+<<<<<<< HEAD
     private long timeLeftInMilliseconds;
+=======
+<<<<<<<< HEAD:app/src/main/java/eina/unizar/ajedrez/OnlineActivity.java
+    private long timeLeftInMilliseconds;
+========
+    private long timeLeftInMilliseconds ;
+>>>>>>>> 5a418ac51eab0717b3c1a644cadfde1b3bfa5987:app/src/main/java/eina/unizar/ajedrez/MainActivity.java
+>>>>>>> 5a418ac51eab0717b3c1a644cadfde1b3bfa5987
     private long timeLeftInMillisecondsRival;
     private boolean timerRunning, timerRunningRival;
     char turno = 'w';
@@ -26,9 +41,34 @@ public class OnlineActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+<<<<<<< HEAD
         myCanvas = new ChessBoard(this);
         setContentView(R.layout.activity_online);
 
+=======
+<<<<<<<< HEAD:app/src/main/java/eina/unizar/ajedrez/OnlineActivity.java
+        myCanvas = new ChessBoard(this);
+        setContentView(R.layout.activity_online);
+
+========
+        setContentView(R.layout.activity_main);
+        time = getIntent().getExtras().getInt("time");
+        Log.d("d: ", "Movimiento correcto ");
+        TextView mTextView = (TextView) findViewById(R.id.timerRival);
+        mTextView.setText(Integer.toString(time)+":00");
+        mTextView = (TextView) findViewById(R.id.timerUser);
+        mTextView.setText(Integer.toString(time)+":00");
+        myCanvas = new ChessBoard(this);
+        timeLeftInMilliseconds =  time *60*1000;
+        timeLeftInMillisecondsRival =  time *60*1000;
+
+        countdownTextRival = findViewById(R.id.timerRival);
+        countdownText = findViewById(R.id.timerUser);
+        startStop();
+        LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
+        time = getIntent().getExtras().getInt("time");
+>>>>>>>> 5a418ac51eab0717b3c1a644cadfde1b3bfa5987:app/src/main/java/eina/unizar/ajedrez/MainActivity.java
+>>>>>>> 5a418ac51eab0717b3c1a644cadfde1b3bfa5987
         time = getIntent().getExtras().getInt("time");
         timeLeftInMilliseconds = (long) time*60*1000;
         timeLeftInMillisecondsRival = (long) time*60*1000;
@@ -46,6 +86,7 @@ public class OnlineActivity extends AppCompatActivity {
         //playGame();
     }
 
+<<<<<<< HEAD
     /* public void playGame(){
          while(true){
              if(turno == 'w'){
@@ -55,13 +96,30 @@ public class OnlineActivity extends AppCompatActivity {
              }
          }
      }*/
+=======
+   /* public void playGame(){
+        while(true){
+            if(turno == 'w'){
+                Log.d("d: ", "Entra aqui");
+            }else{
+                myCanvas.makeAIMove();
+            }
+        }
+    }*/
+>>>>>>> 5a418ac51eab0717b3c1a644cadfde1b3bfa5987
     @Override
     public boolean onTouchEvent(MotionEvent e){
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
+<<<<<<< HEAD
                 Log.d("d: ", "Pre comprobacion");
                 if (myCanvas.checkCorrectMov(turno)){
                     Log.d("d: ", "Movimiento correcto");
+=======
+                //Log.d("d: ", "Pre comprobacion");
+                if (myCanvas.checkCorrectMov(turno)){
+                  //  Log.d("d: ", "Movimiento correcto");
+>>>>>>> 5a418ac51eab0717b3c1a644cadfde1b3bfa5987
                     if(turno == 'w'){
                         stopTimer();
                         startTimerRival();
@@ -71,6 +129,7 @@ public class OnlineActivity extends AppCompatActivity {
                         startTimer();
                         turno = 'w';
                     }
+<<<<<<< HEAD
                     if(!myCanvas.isMate()) {
                         myCanvas.makeAIMove();
                         startTimer();
@@ -91,6 +150,12 @@ public class OnlineActivity extends AppCompatActivity {
                         });
                         builder.show();
                     }
+=======
+
+                    if(!myCanvas.isMate()) myCanvas.makeAIMove();
+                    stopTimerRival();
+                    startTimer();
+>>>>>>> 5a418ac51eab0717b3c1a644cadfde1b3bfa5987
                     turno = 'w';
                 }
                 pulsado = false;
@@ -160,4 +225,8 @@ public class OnlineActivity extends AppCompatActivity {
         timeLeftText += secondsRival;
         countdownTextRival.setText(timeLeftText);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 5a418ac51eab0717b3c1a644cadfde1b3bfa5987

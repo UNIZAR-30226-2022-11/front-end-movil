@@ -73,6 +73,7 @@ public class AiActivity extends AppCompatActivity {
                     if(!myCanvas.isMate()){
                         myCanvas.makeAIMove();
                         startTimer();
+<<<<<<< HEAD
                     } else {
                         stopTimer();
                         Log.d("d: ", "Fin partida");
@@ -95,7 +96,6 @@ public class AiActivity extends AppCompatActivity {
                         positiveButtonLL.gravity = Gravity.CENTER;
                         positiveButton.setLayoutParams(positiveButtonLL);*/
                         builder.show();
-
                     }
                     turno = 'w';
                 }
