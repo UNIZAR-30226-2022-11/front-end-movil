@@ -44,8 +44,4 @@
         android:id="@+id/tablero">
     </LinearLayout>
 
-<<<<<<< HEAD
 </LinearLayout>
-=======
-</LinearLayout>
->>>>>>> 5a418ac51eab0717b3c1a644cadfde1b3bfa5987
