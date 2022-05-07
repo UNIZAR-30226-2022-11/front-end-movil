@@ -4,6 +4,7 @@
     <string name="password">Contraseña</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
+    <string name="search_friend">Find friend</string>
     <string name="record">See my record</string>
     <string name="play_online">Play online</string>
     <string name="_3_mins">3 mins</string>
@@ -23,4 +24,5 @@
     <string name="play_against_computer">Play against computer</string>
     <string name="tu">Tú</string>
     <string name="ia">IA</string>
+    <string name="no_friends">No friends yet</string>
 </resources>

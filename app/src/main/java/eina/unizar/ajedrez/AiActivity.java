@@ -22,7 +22,7 @@ public class AiActivity extends AppCompatActivity {
     private long timeLeftInMilliseconds;
     private boolean timerRunning;
     char turno = 'w';
-    boolean pulsado, noTime = false;
+    boolean pulsado, noTime, finTiempo = false;
     int time;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +31,7 @@ public class AiActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ai);
 
         time = getIntent().getExtras().getInt("time");
+        if(time == 3) time =1;
         if(time != 0 )timeLeftInMilliseconds = (long) time*60*1000;
         TextView timerUser = findViewById(R.id.timerUser);
         if(time != 0) timerUser.setText(time+":00");
@@ -73,7 +74,6 @@ public class AiActivity extends AppCompatActivity {
                     if(!myCanvas.isMate()){
                         myCanvas.makeAIMove();
                         startTimer();
-<<<<<<< HEAD
                     } else {
                         stopTimer();
                         Log.d("d: ", "Fin partida");
@@ -96,6 +96,7 @@ public class AiActivity extends AppCompatActivity {
                         positiveButtonLL.gravity = Gravity.CENTER;
                         positiveButton.setLayoutParams(positiveButtonLL);*/
                         builder.show();
+
                     }
                     turno = 'w';
                 }
@@ -133,7 +134,19 @@ public class AiActivity extends AppCompatActivity {
 
         int minutes =  (int) timeLeftInMilliseconds / 60000;
         int seconds =  (int) timeLeftInMilliseconds % 60000 / 1000;
-
+        if(minutes == 0 && seconds == 0){
+            finTiempo = true;
+            AlertDialog.Builder builder = new AlertDialog.Builder(AiActivity.this);
+            builder.setMessage("Tiempo superado");
+            builder.setPositiveButton("Volver", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Intent x  = new Intent(getApplicationContext(),MainPage.class);
+                    startActivity(x);
+                }
+            });
+            builder.show();
+        }
         String timeLeftText = "" + minutes + ":";
         if(seconds < 10) timeLeftText += "0";
         timeLeftText += seconds;

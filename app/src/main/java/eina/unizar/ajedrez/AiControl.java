@@ -1,5 +1,7 @@
 package eina.unizar.ajedrez;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class AiControl {
@@ -12,7 +14,7 @@ public class AiControl {
     int puntBishopKnight = 3;
     int puntPawn = 1;
 
-     public ChessBoard.Movimiento mejorMov(String[][] boardMtx, ArrayList<ChessBoard.Movimiento> movsValidos){
+     public ChessBoard.Movimiento mejorMov(String boardMtx[][], ArrayList<ChessBoard.Movimiento> movsValidos){
         int maxPunt = mate;
         int guarda = -1;
         String viejoIni;
@@ -56,7 +58,7 @@ public class AiControl {
         return 0;
     }
 
-    private int obtenerPuntuacion(String[][] boardMtx){
+    private int obtenerPuntuacion(String boardMtx[][]){
         int punt = 0;
         for(int fila = 0; fila < NUM_FILCOL;fila++){
             for(int col = 0; col < NUM_FILCOL;col++){

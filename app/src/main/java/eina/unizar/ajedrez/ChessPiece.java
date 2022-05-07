@@ -25,15 +25,15 @@ public class ChessPiece {
     // Filas: 1-8
     // Columnas: 1-8
     public boolean checkPos(int col, int fila){
-        return col ==  (this.col-65)/120 && fila == (this.fila-185)/120;
+        return col ==  (this.col-65)/80 && fila == (this.fila-185)/80;
     }
 
     public void newCoord(int col, int fila) {
         String TAG = "d";
         if(checkMove(col,fila)){
-            this.col = 65 + (col*120);
-            this.fila = 185 + (fila*120);
-            Log.d(TAG, "Nueva pos:" + (this.col -65) / 120 + " y " + (this.fila-185)/120+ " de "+this.type);
+            this.col = 65 + (col*80);
+            this.fila = 185 + (fila*80);
+            Log.d(TAG, "Nueva pos:" + (this.col -65) / 80 + " y " + (this.fila-185)/80+ " de "+this.type);
         }
         if(this.type == "Pawn" && !alreadyMoved){ // Si peon ha hecho algun movimiento ya
             alreadyMoved =  true;
@@ -50,11 +50,11 @@ public class ChessPiece {
     }
 
     public int getCol() {
-        return (col-65)/120;
+        return (col-65)/80;
     }
 
     public int getFila() {
-        return (fila-185)/120;
+        return (fila-185)/80;
     }
 
     public Bitmap getPiece() {
@@ -88,43 +88,38 @@ public class ChessPiece {
     }
 
     private boolean checkKing(int col, int fila){
-        if(Math.abs(((this.col-65)/120) -  col) ==  Math.abs(((this.fila-185)/120) - fila)
-            && Math.abs(((this.col-65)/120) -  col) == 1) {
+        if(Math.abs(((this.col-65)/80) -  col) ==  Math.abs(((this.fila-185)/80) - fila)
+            && Math.abs(((this.col-65)/80) -  col) == 1) {
             return true;
         }
-        else if((col == (this.col-65)/120 && Math.abs(((this.fila-185)/120) - fila) == 1) ||
-                (fila == (this.fila-185)/120) && (Math.abs(((this.col-65)/120) -  col) == 1)) {
+        else if((col == (this.col-65)/80 && Math.abs(((this.fila-185)/80) - fila) == 1) ||
+                (fila == (this.fila-185)/80) && (Math.abs(((this.col-65)/80) -  col) == 1)) {
             return true;
         }
-        Log.d("d", "King fallo " +(this.fila-185)/120 + " " + (this.col-65)/120+ "hasta" + +fila+ "  "+col);
+        Log.d("d", "King fallo " +(this.fila-185)/80 + " " + (this.col-65)/80+ "hasta" + +fila+ "  "+col);
         return false;
     }
 
     private boolean checkPawn(int col, int fila){
         if(this.color == "b") {
-<<<<<<< HEAD
             if ((fila == ((this.fila-185)/80) + 1 || (fila == ((this.fila-185)/80) + 2 && !alreadyMoved)) && col == (this.col-65)/80) {
                 Log.d("d", "Valid move black  pawn");
-=======
-            if ((fila == ((this.fila-185)/120) + 1 || (fila == ((this.fila-185)/120) + 2 && !alreadyMoved)) && col == (this.col-65)/120) {
-                Log.d("d", "Valid move pawn");
->>>>>>> 5a418ac51eab0717b3c1a644cadfde1b3bfa5987
                 return true;
             }
 
-            if (fila == (this.fila-185)/120 + 1 && (col == (this.col-65)/120 + 1 || col == (this.col-65)/120 - 1)) {
+            if (fila == (this.fila-185)/80 + 1 && (col == (this.col-65)/80 + 1 || col == (this.col-65)/80 - 1)) {
                 Log.d("d", "eat pawn");
                 return true;
             }
         }
         if(this.color == "w"){
-            Log.d("d", "Check white pawn "+ fila+ " y "+col + " / " + (this.fila-185)/120+ " y " +(this.col-65)/120);
-            if ((fila == ((this.fila-185)/120) - 1 || (fila == ((this.fila-185)/120)-2 && !alreadyMoved)) && col == (this.col-65)/120) {
+            Log.d("d", "Check white pawn "+ fila+ " y "+col + " / " + (this.fila-185)/80+ " y " +(this.col-65)/80);
+            if ((fila == ((this.fila-185)/80) - 1 || (fila == ((this.fila-185)/80)-2 && !alreadyMoved)) && col == (this.col-65)/80) {
                 Log.d("d", "Valid move pawn");
                 return true;
             }
 
-            if (fila == ((this.fila-185)/120) -1 && (col == (this.col-65)/120 + 1 || col == (this.col-65)/120 - 1)) {
+            if (fila == ((this.fila-185)/80) -1 && (col == (this.col-65)/80 + 1 || col == (this.col-65)/80 - 1)) {
                 Log.d("d", "eat pawn");
                 return true;
             }
@@ -133,7 +128,7 @@ public class ChessPiece {
         return false;
     }
     private boolean checkRook(int col, int fila){
-        if(col == (this.col-65)/120 || fila == (this.fila-185)/120){
+        if(col == (this.col-65)/80 || fila == (this.fila-185)/80){
             Log.d("d", "Valid move " );
             return true;
         }
@@ -141,15 +136,15 @@ public class ChessPiece {
     }
 
     private boolean checkBishop(int col, int fila){
-        if(Math.abs(((this.col-65)/120) -  col) ==  Math.abs(((this.fila-185)/120) - fila)){
+        if(Math.abs(((this.col-65)/80) -  col) ==  Math.abs(((this.fila-185)/80) - fila)){
             return true;
         }
         return false;
     }
 
     private boolean checkKnight(int col, int fila){
-        if(Math.abs(((this.col-65)/120) -  col) == 2 &&  Math.abs(((this.fila-185)/120) - fila) == 1
-            || Math.abs(((this.col-65)/120) -  col) == 1 &&  Math.abs(((this.fila-185)/120) - fila) == 2){
+        if(Math.abs(((this.col-65)/80) -  col) == 2 &&  Math.abs(((this.fila-185)/80) - fila) == 1
+            || Math.abs(((this.col-65)/80) -  col) == 1 &&  Math.abs(((this.fila-185)/80) - fila) == 2){
             return true;
         }
         return false;

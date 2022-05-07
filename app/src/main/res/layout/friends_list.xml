@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:id="@+id/friends">
+
+   <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:typeface="sans"
+            android:hint="Buscar amigos"
+            android:layout_marginStart="22dp"
+            android:textSize="25sp"
+            android:id="@+id/username"
+            android:minHeight="50dp"
+            />
+
+        <Button
+            android:id="@+id/searchfriend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="50dp"
+            android:layout_marginStart="22dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:layout_weight="0.8"
+            android:textSize="12dp"
+            android:text="Enviar solicitud" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/Listfriends"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp">
+    </LinearLayout>
+
+</LinearLayout>
