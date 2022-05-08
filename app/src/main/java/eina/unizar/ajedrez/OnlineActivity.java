@@ -23,6 +23,9 @@ public class OnlineActivity extends AppCompatActivity {
     char turno = 'w';
     boolean pulsado = false;
     int time;
+    int side;
+    String idSocket;
+    String nickname;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +33,9 @@ public class OnlineActivity extends AppCompatActivity {
         setContentView(R.layout.activity_online);
 
         time = getIntent().getExtras().getInt("time");
+        side = getIntent().getExtras().getInt("side");
+        idSocket = getIntent().getExtras().getString("idSocket");
+        nickname = getIntent().getExtras().getString("nickname");
         timeLeftInMilliseconds = (long) time*60*1000;
         timeLeftInMillisecondsRival = (long) time*60*1000;
         TextView timerUser = findViewById(R.id.timerUser);

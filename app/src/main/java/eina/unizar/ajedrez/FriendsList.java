@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextMenu;
@@ -53,16 +54,20 @@ import java.util.Map;
 
 import eina.unizar.ajedrez.databinding.FriendsListBinding;
 import eina.unizar.ajedrez.databinding.UserSignInBinding;
+import io.socket.emitter.Emitter;
 
 public class FriendsList extends AppCompatActivity {
     private RequestQueue queue;
     private String nickname;
     private FriendsListBinding binding;
     private Socket mSocket;
+    private List<String> pendientes = new ArrayList<>();;
     {
         try {
             mSocket = IO.socket("http://ec2-18-206-137-85.compute-1.amazonaws.com:3000");
-        } catch (URISyntaxException e) {}
+        } catch (URISyntaxException e) {
+            Log.d("Socket: ",   e.toString());
+        }
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,7 +82,18 @@ public class FriendsList extends AppCompatActivity {
         queue = Volley.newRequestQueue(this);
 
         try {
-            fillData(nickname);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    // Actions to do after 5 seconds
+                    try {
+                        fillData(nickname);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, 5000);
+           // fillData(nickname);
             searchRequests(nickname);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -101,13 +117,22 @@ public class FriendsList extends AppCompatActivity {
     }
 
     private void fillData(String nickname) throws JSONException {
-        Log.d("Socket: ", "Comprobando conexion");
+        Log.d("Socket: ", "Comprobando conexion " + mSocket.connected());
 
         if(mSocket.connected()){
             Log.d("Socket: ", "Socket conectado");
         }
-
-
+     //   mSocket.emit("connection");
+        mSocket.on("getOpponent", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject data = (JSONObject)args[0];
+//here the data is in JSON Format
+                Log.d("Socket: ", data.toString());
+               // Toast.makeText(FriendsList.this, data.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        
 
 
 
@@ -161,6 +186,7 @@ public class FriendsList extends AppCompatActivity {
     }
 
     private void searchForUser(String nickname, String username) throws JSONException {
+
         String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/friendRequest";
         JSONObject jsonBody = new JSONObject();
         jsonBody.put("nickname", username);
@@ -217,7 +243,7 @@ public class FriendsList extends AppCompatActivity {
         String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/friendRequest?nickname="+username;
         Log.d("Enviando: ", URL);
 
-        LinearLayout relativeLayout = (LinearLayout) findViewById(R.id.Listfriends);
+        LinearLayout layoutInterno = (LinearLayout) findViewById(R.id.Listfriends);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(35, 15, 5, 0);
 
@@ -237,22 +263,23 @@ public class FriendsList extends AppCompatActivity {
                         layout2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                         layout2.setOrientation(LinearLayout.HORIZONTAL);
                         Log.d("Amigo: ", requester.getString("valor"));
+                        pendientes.add( requester.getString("valor")); // Añadir a lista para luego saber que solicitud ha sido aceptada
                         TextView textView = new TextView(getApplicationContext());
                         textView.setLayoutParams(params);
-                        textView.setPadding(20,10,10,10);
+                        textView.setPadding(20,20,10,20);
                         textView.setText(requester.getString("valor"));
                         textView.setTextColor(Color.parseColor("#FFFFFFFF"));
                         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
                         layout2.addView(textView);
                         Button aceptar = new Button(getApplicationContext());
                         aceptar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                       // btnTag.setMargins(300,10,10,10);
+                       // aceptar.setMargins(300,10,10,10);
                         aceptar.setText("Aceptar");
                         aceptar.setId(i);
                         layout2.addView(aceptar);
                         layout2.setBackground(border);
-                        relativeLayout.addView(layout2);
-                        //aceptar.setOnClickListener(view -> aceptarSolicitud());
+                        layoutInterno.addView(layout2);
+                        aceptar.setOnClickListener(view -> aceptarSolicitud(nickname,pendientes.get(aceptar.getId())));
                         /*new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -282,7 +309,37 @@ public class FriendsList extends AppCompatActivity {
         queue.add(stringRequest);
     }
 
-    /*void aceptarSolicitud(String nuevo amigo){
+    void aceptarSolicitud(String nickname, String  nuevoAmigo){// La peticion al back-end está todavía por hacer
+        Toast.makeText(FriendsList.this,"Nuevo amigo " + nuevoAmigo + " añadido.", Toast.LENGTH_SHORT).show();
+        Intent i = new Intent(this, MainPage.class);
+        i.putExtra("nickname", nickname);
+        startActivity(i);
+       /* String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/friendRequest?nickname="+nickname+"&amigo="+nuevoAmigo;
+        Log.d("Enviando: ", URL);
 
-    }*/
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("d: ", "Nuevo amigo añadido" +response );
+                Toast.makeText(FriendsList.this,"Nuevo amigo " + nuevoAmigo + " añadido.", Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("onErrorResponse: ", error.getLocalizedMessage() == null ? "" : error.getLocalizedMessage());
+            }
+        }){
+            @Override
+            public Map<String,String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String,String>();
+                params.put("content-type","application/json");
+                //  params.put("Access-Control-Allow-Origin","*");
+                return params;
+            }
+        };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(stringRequest);*/
+
+        // Volver a cargar pantalla
+    }
 }

@@ -24,6 +24,9 @@
             android:name=".UserSignUp"
             android:exported="true" />
         <activity
+            android:name=".WaitingPage"
+            android:exported="true" />
+        <activity
             android:name=".UserSignIn"
             android:exported="true">
             <intent-filter>
