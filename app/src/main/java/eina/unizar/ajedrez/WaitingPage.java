@@ -63,9 +63,6 @@ public class WaitingPage extends AppCompatActivity {
             handler.postDelayed(new Runnable() {
                 public void run() {
                     // Actions to do after 5 seconds
-
-                    i.putExtra("nickname", nickname);
-                    startActivity(i);
                         if(mSocket.connected()){
                             Log.d("Socket: ", "Socket conectado");
                             mSocket.on("getOpponent", new Emitter.Listener() {
@@ -78,8 +75,8 @@ public class WaitingPage extends AppCompatActivity {
                                          side = data.getString("side");
                                          i.putExtra("nickname", nickname);
                                          i.putExtra("time", time);
-                                        i.putExtra("idSocket", idSocket);
-                                        i.putExtra("side", side);
+                                         i.putExtra("idSocket", idSocket);
+                                         i.putExtra("side", side);
                                          startActivity(i);
                                     } catch (JSONException e) {
                                         e.printStackTrace();

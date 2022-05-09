@@ -53,7 +53,7 @@ public class MainPage extends AppCompatActivity {
     }
 
     private void playAgainstOnlineRival(int min) {
-        Intent i = new Intent(this, WaitingPage.class);//OnlineActivity
+        Intent i = new Intent(this, OnlineActivity.class);//OnlineActivity
         i.putExtra("nickname", nickname);
         i.putExtra("time", min);
         startActivity(i);

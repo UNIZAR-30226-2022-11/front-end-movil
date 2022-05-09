@@ -310,18 +310,22 @@ public class FriendsList extends AppCompatActivity {
     }
 
     void aceptarSolicitud(String nickname, String  nuevoAmigo){// La peticion al back-end está todavía por hacer
-        Toast.makeText(FriendsList.this,"Nuevo amigo " + nuevoAmigo + " añadido.", Toast.LENGTH_SHORT).show();
-        Intent i = new Intent(this, MainPage.class);
-        i.putExtra("nickname", nickname);
-        startActivity(i);
-       /* String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/friendRequest?nickname="+nickname+"&amigo="+nuevoAmigo;
-        Log.d("Enviando: ", URL);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+       /* String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/addFriend";
+        Log.d("Enviando: ", URL);
+        JSONObject jsonBody = new JSONObject();
+        jsonBody.put("nickname", nickname);
+        jsonBody.put("amigo", nuevoAmigo);
+        Log.d("Enviando: ", username + " " + nickname);
+        final String requestBody = jsonBody.toString();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d("d: ", "Nuevo amigo añadido" +response );
                 Toast.makeText(FriendsList.this,"Nuevo amigo " + nuevoAmigo + " añadido.", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(this, MainPage.class);
+                i.putExtra("nickname", nickname);
+                startActivity(i);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -329,6 +333,15 @@ public class FriendsList extends AppCompatActivity {
                 Log.e("onErrorResponse: ", error.getLocalizedMessage() == null ? "" : error.getLocalizedMessage());
             }
         }){
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    Log.d("d: " ,"Falla aqui");
+                    return null;
+                }
+            }
             @Override
             public Map<String,String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String,String>();

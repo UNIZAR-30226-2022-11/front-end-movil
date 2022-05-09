@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         mTextView.setText(Integer.toString(time)+":00");
         mTextView = (TextView) findViewById(R.id.timerUser);
         mTextView.setText(Integer.toString(time)+":00");
-        myCanvas = new ChessBoard(this);
+      //  myCanvas = new ChessBoard(this);
         timeLeftInMilliseconds =  time *60*1000;
         timeLeftInMillisecondsRival =  time *60*1000;
 

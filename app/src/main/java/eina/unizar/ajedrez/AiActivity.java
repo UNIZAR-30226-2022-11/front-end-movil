@@ -27,7 +27,7 @@ public class AiActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        myCanvas = new ChessBoard(this);
+        myCanvas = new ChessBoard(this,"0");
         setContentView(R.layout.activity_ai);
 
         time = getIntent().getExtras().getInt("time");

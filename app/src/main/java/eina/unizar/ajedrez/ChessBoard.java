@@ -33,6 +33,7 @@ public class ChessBoard extends View {
     int posX, posY, posFinX, posFinY;
     boolean pulsado, movimientoCorrecto = false;
     String turno;
+    String side;
     AiControl controlador;
     String boardMtx[][] = new String[NUM_FILCOL][NUM_FILCOL];
     class PosibleClavada{
@@ -92,7 +93,7 @@ public class ChessBoard extends View {
      * ___________________________
      **************************************************************/
 
-    public ChessBoard(Context context){
+    public ChessBoard(Context context, String side){
         super(context);
         p = new Paint();
         q = new Paint();
@@ -100,10 +101,11 @@ public class ChessBoard extends View {
         setPieceSet();
         setMatrix();
         turno = "w";
+        this.side = side;
         controlador = new AiControl();
     }
 
-    public boolean checkCorrectMov(char turno){
+    public boolean checkCorrectMov(char turno){ // Añadir parametro para devolver las posiciones
         Log.d("d: ", "mC " + movimientoCorrecto + " t " +  turno + " p "+ this.turno.charAt(0));
         return movimientoCorrecto ;
     }
@@ -114,49 +116,51 @@ public class ChessBoard extends View {
 
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if(!pulsado) {
-                    movimientoCorrecto = false;
-                    posX = Math.round(e.getX()); // Coordenadas x e y donde se toca
-                    posY = Math.round(e.getY());
-                    if (posX > x0 && posX < x0 + (squareSize * 8) // Comprobar que se ha pulsado en el tablero
-                            && posY > y0 && posY < y0 + (squareSize * 8)) {
-                        posX = (posX - x0) / squareSize; // Fila y columna donde se toca en función de los px
-                        posY = (posY - y0) / squareSize;
-                        pulsado = checkClick(posX, posY); // Ver si es casilla con pieza del color que toca
-                        Log.d(TAG, "Tocado en pos:" + posX + " y " + posY);
-                    }
-                }
-                else{
-
-                    posFinX = Math.round(e.getX()); posFinX = (posFinX-x0) / squareSize;
-                    posFinY = Math.round(e.getY()); posFinY = (posFinY-y0) / squareSize;
-
-                    Log.d(TAG, "Soltado en pos:" + posFinX + " y " + posFinY);
-                    if (isAClick(posX, posFinX, posY, posFinY)) { // Fila o Col distinta al de la casilla inicial
-                        ChessPiece changePos = pieceSet.get(numPieza);
-                        // Comprobar si el movimiento es valido (choque con otras piezas)
-                        Log.d(TAG, "Entra aqui");
-                        if(checkValidMove(changePos, posFinX,posFinY)) {
-                            movimientoCorrecto = true;
-                            int piezaDown = eatsPiece(posFinX,posFinY);
-                            if (piezaDown != -1) pieceSet.remove(piezaDown); // Comer pieza rival
-                            changePos.newCoord(posFinX, posFinY); // Cambiar posición a la pieza
-                            pieceSet.put(numPieza, changePos);
-
-                            if(checkForMate()) Log.d(TAG, "Fin de partida");
-                            if (turno == "w" && !mate) turno = "b"; // Cambio de turno
-                            else if(!mate) turno = "w";
-                            else turno = "x";
-                            pulsado = false;
-                            turnoIA = true;
-                            invalidate();
+                //if(turno == 'w' && side == "0" || turno == 'b' && side == "1"){ // Comprobar si es mi turno o no, sino, sudar
+                    if (!pulsado) {
+                        movimientoCorrecto = false;
+                        posX = Math.round(e.getX()); // Coordenadas x e y donde se toca
+                        posY = Math.round(e.getY());
+                        if (posX > x0 && posX < x0 + (squareSize * 8) // Comprobar que se ha pulsado en el tablero
+                                && posY > y0 && posY < y0 + (squareSize * 8)) {
+                            posX = (posX - x0) / squareSize; // Fila y columna donde se toca en función de los px
+                            posY = (posY - y0) / squareSize;
+                            pulsado = checkClick(posX, posY); // Ver si es casilla con pieza del color que toca
+                            Log.d(TAG, "Tocado en pos:" + posX + " y " + posY + " movimiento valido "+ pulsado);
                         }
-                        else{
-                            pulsado = false;
-                            pieceSet.put(numPieza,changePos);// Devolver pieza sin cambios, movimiento invalido
+                    } else {
+
+                        posFinX = Math.round(e.getX());
+                        posFinX = (posFinX - x0) / squareSize;
+                        posFinY = Math.round(e.getY());
+                        posFinY = (posFinY - y0) / squareSize;
+
+                        Log.d(TAG, "Soltado en pos:" + posFinX + " y " + posFinY);
+                        if (isAClick(posX, posFinX, posY, posFinY)) { // Fila o Col distinta al de la casilla inicial
+                            ChessPiece changePos = pieceSet.get(numPieza);
+                            // Comprobar si el movimiento es valido (choque con otras piezas)
+                            Log.d(TAG, "Entra aqui");
+                            if (checkValidMove(changePos, posFinX, posFinY)) {
+                                movimientoCorrecto = true;
+                                int piezaDown = eatsPiece(posFinX, posFinY);
+                                if (piezaDown != -1) pieceSet.remove(piezaDown); // Comer pieza rival
+                                changePos.newCoord(posFinX, posFinY); // Cambiar posición a la pieza
+                                pieceSet.put(numPieza, changePos);
+
+                                if (checkForMate()) Log.d(TAG, "Fin de partida");
+                                if (turno == "w" && !mate) turno = "b"; // Cambio de turno
+                                else if (!mate) turno = "w";
+                                else turno = "x";
+                                pulsado = false;
+                                turnoIA = true;
+                                invalidate();
+                            } else {
+                                pulsado = false;
+                                pieceSet.put(numPieza, changePos);// Devolver pieza sin cambios, movimiento invalido
+                            }
                         }
                     }
-                }
+                //}
         }
         return super.onTouchEvent(e);
     }
@@ -290,8 +294,8 @@ public class ChessBoard extends View {
             ChessPiece p = entry.getValue();
             if(p.checkPos(col,fil)) {
                 numPieza = entry.getKey();
-                if (turno == "w" && p.getColor() == "w") return true; // Le toca a las blancas y el click es sobre una blanca
-                else if (turno == "b" && p.getColor() == "b") return true; // Le toca a las negras y el click es sobre una negra
+                if (turno == "w" && p.getColor() == "w" && side == "0") return true; // Le toca a las blancas, el click es sobre una blanca y el jugador juega con blancas
+                else if (turno == "b" && p.getColor() == "b" && side == "1") return true; // Le toca a las negras, el click es sobre una negra y el jugador juega con blancas
                 else return false; // El color pulsado no coincide con el de las piezas que toca mover
             }
         }
@@ -347,9 +351,10 @@ public class ChessBoard extends View {
 
     public ArrayList<Movimiento> generarTodosMovimientosValidos(){
         ArrayList<Movimiento> movsValidos = new ArrayList<Movimiento>();
+        Log.d("d: ", "Turno " + turno);
         for(int fila = 0; fila < NUM_FILCOL;fila++){
             for(int col = 0; col<NUM_FILCOL;col++){
-                if(boardMtx[fila][col].charAt(0) == 'b'){
+                if(boardMtx[fila][col].charAt(0) == turno.charAt(0)){
                     for(Map.Entry<Integer,ChessPiece> entry : pieceSet.entrySet()){
                         ChessPiece p = entry.getValue();
                         if(p.checkPos(col,fila)) { // Encontrada pieza que se busca, comprobar movimientos validos
@@ -666,82 +671,84 @@ public class ChessBoard extends View {
     private boolean checkPawn(int col, int fila,ChessPiece changePos){
         boolean clavado = false;
         Pair dirClavada = new Pair(0,0);
-        if(numClavadas != 0) {
-            for (int i = 0; i < numClavadas; i++) {
-                if (clavadas[i].fila == changePos.getFila() && clavadas[i].col == changePos.getCol()) { // Pieza clavada es la que se esta intentando mover
-                    clavado = true;
-                    dirClavada = new Pair(clavadas[i].dir.x, clavadas[i].dir.y);
+      //  if(turno == "w" && side == "0" && turno == "b" && side == "1"){
+            if(numClavadas != 0) {
+                for (int i = 0; i < numClavadas; i++) {
+                    if (clavadas[i].fila == changePos.getFila() && clavadas[i].col == changePos.getCol()) { // Pieza clavada es la que se esta intentando mover
+                        clavado = true;
+                        dirClavada = new Pair(clavadas[i].dir.x, clavadas[i].dir.y);
+                    }
                 }
             }
-        }
 
-        if(turno == "w"){ // Turno de las blancas
-            if(boardMtx[changePos.getFila()-1][changePos.getCol()] == "--" && col == changePos.getCol()){// No hay nadie delante
-                if(fila == changePos.getFila()-1){ // Se quiere mover una hacia adelante
-                    if(((!clavado && !jaque) || (dirClavada.x == -1 && dirClavada.y == 0)) || jaque && !clavado && findValidMove(fila, col)) { // No clavada o clavada en la dirección a la que se mueve
-                        if(!turnoIA) boardMtx[changePos.getFila() - 1][changePos.getCol()] = "wp";
+            if(turno == "w"){ // Turno de las blancas
+                if(boardMtx[changePos.getFila()-1][changePos.getCol()] == "--" && col == changePos.getCol()){// No hay nadie delante
+                    if(fila == changePos.getFila()-1){ // Se quiere mover una hacia adelante
+                        if(((!clavado && !jaque) || (dirClavada.x == -1 && dirClavada.y == 0)) || jaque && !clavado && findValidMove(fila, col)) { // No clavada o clavada en la dirección a la que se mueve
+                            if(!turnoIA) boardMtx[changePos.getFila() - 1][changePos.getCol()] = "wp";
+                            if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
+                            Log.d("d: ", "Puede avanzar uno");
+                            return true;
+                        }
+                    }
+                    if(changePos.getFila() == 6 && fila == 4 && boardMtx[fila][col] == "--"){ // Se quiere mover 2 adelante
+                        if(((!clavado && ! jaque) || (dirClavada.x == -1 && dirClavada.y == 0)) || (jaque && !clavado && findValidMove(fila, col))) {
+                            if(!turnoIA) boardMtx[changePos.getFila() - 2][changePos.getCol()] = "wp";
+                            if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
+                            Log.d("d: ", "Puede avanzar dos");
+                            return true;
+                        }
+                    }
+                } else if(boardMtx[fila][col].charAt(0) == 'b' && col != changePos.getCol()){ // Hay pieza rival en diagonal y se mueve alli
+                    if(((!clavado && !jaque) || (dirClavada.x == -1 && dirClavada.y == -1 && col == changePos.getCol()-1))|| jaque && !clavado && findValidMove(fila, col)) { // No clavada o clavada en esa dirección. Come hacia la izquierda
+                        if(!turnoIA) boardMtx[fila][col] = "wp";
                         if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
-                        Log.d("d: ", "Puede avanzar uno");
+                        Log.d("d:", "Puede comer izda");
                         return true;
                     }
-                }
-                if(changePos.getFila() == 6 && fila == 4 && boardMtx[fila][col] == "--"){ // Se quiere mover 2 adelante
-                    if(((!clavado && ! jaque) || (dirClavada.x == -1 && dirClavada.y == 0)) || (jaque && !clavado && findValidMove(fila, col))) {
-                        if(!turnoIA) boardMtx[changePos.getFila() - 2][changePos.getCol()] = "wp";
+                    if(((!clavado && !jaque) || (dirClavada.x == -1 && dirClavada.y == 1 && col == changePos.getCol()+1)) || jaque && !clavado && findValidMove(fila, col)) { // No clavada o clavada en esa dirección. Come hacia la derecha
+                        if(!turnoIA) boardMtx[fila][col] = "wp";
                         if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
-                        Log.d("d: ", "Puede avanzar dos");
+                        Log.d("d: ", "Puede comer dcha");
                         return true;
                     }
-                }
-            } else if(boardMtx[fila][col].charAt(0) == 'b' && col != changePos.getCol()){ // Hay pieza rival en diagonal y se mueve alli
-                if(((!clavado && !jaque) || (dirClavada.x == -1 && dirClavada.y == -1 && col == changePos.getCol()-1))|| jaque && !clavado && findValidMove(fila, col)) { // No clavada o clavada en esa dirección. Come hacia la izquierda
-                    if(!turnoIA) boardMtx[fila][col] = "wp";
-                    if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
-                    Log.d("d:", "Puede comer izda");
-                    return true;
-                }
-                if(((!clavado && !jaque) || (dirClavada.x == -1 && dirClavada.y == 1 && col == changePos.getCol()+1)) || jaque && !clavado && findValidMove(fila, col)) { // No clavada o clavada en esa dirección. Come hacia la derecha
-                    if(!turnoIA) boardMtx[fila][col] = "wp";
-                    if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
-                    Log.d("d: ", "Puede comer dcha");
-                    return true;
                 }
             }
-        }
-        else{ // Turno de negras
-            if(boardMtx[changePos.getFila()+1][changePos.getCol()] == "--" && col == changePos.getCol()){// No hay nadie delante
-                if(fila == changePos.getFila()+1){ // Se quiere mover una hacia adelante
-                    if(((!clavado && !jaque) || (dirClavada.x == 1 && dirClavada.y == 0)) || jaque && !clavado && findValidMove(fila, col)) {
-                        Log.d("d: ", "Puede avanzar uno");
-                        if(!turnoIA) boardMtx[changePos.getFila() + 1][changePos.getCol()] = "bp";
-                        if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
-                        return true;
+            else{ // Turno de negras
+                if(boardMtx[changePos.getFila()+1][changePos.getCol()] == "--" && col == changePos.getCol()){// No hay nadie delante
+                    if(fila == changePos.getFila()+1){ // Se quiere mover una hacia adelante
+                        if(((!clavado && !jaque) || (dirClavada.x == 1 && dirClavada.y == 0)) || jaque && !clavado && findValidMove(fila, col)) {
+                            Log.d("d: ", "Puede avanzar uno");
+                            if(!turnoIA) boardMtx[changePos.getFila() + 1][changePos.getCol()] = "bp";
+                            if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
+                            return true;
+                        }
                     }
-                }
-                if(changePos.getFila() == 1 && fila == 3 && boardMtx[fila][col] == "--"){ // Se quiere mover 2 adelante
-                    if(((!clavado && ! jaque) || (dirClavada.x == 1 && dirClavada.y == 0)) || jaque && !clavado && findValidMove(fila, col)) {
-                        Log.d("d:", "Puede avanzar dos");
-                        if(!turnoIA) boardMtx[changePos.getFila() + 2][changePos.getCol()] = "bp";
-                        if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
-                        return true;
+                    if(changePos.getFila() == 1 && fila == 3 && boardMtx[fila][col] == "--"){ // Se quiere mover 2 adelante
+                        if(((!clavado && ! jaque) || (dirClavada.x == 1 && dirClavada.y == 0)) || jaque && !clavado && findValidMove(fila, col)) {
+                            Log.d("d:", "Puede avanzar dos");
+                            if(!turnoIA) boardMtx[changePos.getFila() + 2][changePos.getCol()] = "bp";
+                            if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
+                            return true;
+                        }
                     }
-                }
-            } else if(boardMtx[fila][col].charAt(0) == 'w' && col != changePos.getCol()){ // Hay pieza rival en diagonal y se mueve alli
+                } else if(boardMtx[fila][col].charAt(0) == 'w' && col != changePos.getCol()){ // Hay pieza rival en diagonal y se mueve alli
 
-                if(((!clavado && !jaque)|| (dirClavada.x == 1 && dirClavada.y == -1 && col == changePos.getCol()-1)) || jaque && !clavado && findValidMove(fila, col)) { // No clavada o clavada en esa dirección. Come hacia la izquierda
-                    if(!turnoIA) boardMtx[fila][col] = "bp";
-                    if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
-                    Log.d("d:", "Puede comer");
-                    return true;
-                }
-                if(((!clavado && !jaque) || (dirClavada.x == 1 && dirClavada.y == 11 && col == changePos.getCol()+1))|| jaque && !clavado && findValidMove(fila, col)) {
-                    if(!turnoIA) boardMtx[fila][col] = "bp";
-                    if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
-                    Log.d("d:", "Puede comer");
-                    return true;
+                    if(((!clavado && !jaque)|| (dirClavada.x == 1 && dirClavada.y == -1 && col == changePos.getCol()-1)) || jaque && !clavado && findValidMove(fila, col)) { // No clavada o clavada en esa dirección. Come hacia la izquierda
+                        if(!turnoIA) boardMtx[fila][col] = "bp";
+                        if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
+                        Log.d("d:", "Puede comer");
+                        return true;
+                    }
+                    if(((!clavado && !jaque) || (dirClavada.x == 1 && dirClavada.y == 11 && col == changePos.getCol()+1))|| jaque && !clavado && findValidMove(fila, col)) {
+                        if(!turnoIA) boardMtx[fila][col] = "bp";
+                        if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
+                        Log.d("d:", "Puede comer");
+                        return true;
+                    }
                 }
             }
-        }
+        //}
         return false;
     }
 
@@ -759,45 +766,82 @@ public class ChessBoard extends View {
         Bitmap wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_queen);
         Bitmap bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_king);
         Bitmap wKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_king);
+        if(side=="0"){ // Juega como blancas
+            for(int i= 0; i < NUM_FILCOL;i++){
+                pieceSet.put(num,new ChessPiece(x0+(i*squareSize),y0+squareSize,"Pawn",squareSize,"b",bPawn)); num++;
+                pieceSet.put(num,new ChessPiece(x0+(i*squareSize),y0+(6*squareSize),"Pawn",squareSize,"w",wPawn)); num++;
+            }
+            pieceSet.put(num,new ChessPiece(x0,y0,"Rook",squareSize,"b",bRook)); num++;
+            pieceSet.put(num,new ChessPiece(x0+(7*squareSize),y0,"Rook",squareSize,"b",bRook)); num++;
+            pieceSet.put(num,new ChessPiece(x0,y0+(7*squareSize),"Rook",squareSize,"w",wRook)); num++;
+            pieceSet.put(num,new ChessPiece(x0+(7*squareSize),y0+(7*squareSize),"Rook",squareSize,"w",wRook)); num++;
+                                            // left top
+            pieceSet.put(num,new ChessPiece(x0+squareSize,y0,"Knight",squareSize,"b",bKnight)); num++;
+            pieceSet.put(num,new ChessPiece(x0+(6*squareSize),y0,"Knight",squareSize,"b",bKnight)); num++;
+            pieceSet.put(num,new ChessPiece(x0+squareSize,y0+(7*squareSize),"Knight",squareSize,"w",wKnight)); num++;
+            pieceSet.put(num,new ChessPiece(x0+(6*squareSize),y0+(7*squareSize),"Knight",squareSize,"w",wKnight)); num++;
 
-        for(int i= 0; i < NUM_FILCOL;i++){
-            pieceSet.put(num,new ChessPiece(x0+(i*squareSize),y0+squareSize,"Pawn",squareSize,"b",bPawn)); num++;
-            pieceSet.put(num,new ChessPiece(x0+(i*squareSize),y0+(6*squareSize),"Pawn",squareSize,"w",wPawn)); num++;
+            pieceSet.put(num,new ChessPiece(x0+(2*squareSize),y0,"Bishop",squareSize,"b",bBishop)); num++;
+            pieceSet.put(num,new ChessPiece(x0+(5*squareSize),y0,"Bishop",squareSize,"b",bBishop)); num++;
+            pieceSet.put(num,new ChessPiece(x0+(2*squareSize),y0+(7*squareSize),"Bishop",squareSize,"w",wBishop)); num++;
+            pieceSet.put(num,new ChessPiece(x0+(5*squareSize),y0+(7*squareSize),"Bishop",squareSize,"w",wBishop)); num++;
+
+            pieceSet.put(num,new ChessPiece(x0+(3*squareSize),y0,"Queen",squareSize,"b",bQueen)); num++;
+            pieceSet.put(num,new ChessPiece(x0+(3*squareSize),y0+(7*squareSize),"Queen",squareSize,"w",wQueen)); num++;
+
+            pieceSet.put(num,new ChessPiece(x0+(4*squareSize),y0,"King",squareSize,"b",bKing)); num++;
+            pieceSet.put(num,new ChessPiece(x0+(4*squareSize),y0+(7*squareSize),"King",squareSize,"w",wKing)); num++;
+        }else{ // Juega como negras
+            for(int i= 0; i < NUM_FILCOL;i++){
+                pieceSet.put(num,new ChessPiece(x0+(i*squareSize),y0+squareSize,"Pawn",squareSize,"w",wPawn)); num++;
+                pieceSet.put(num,new ChessPiece(x0+(i*squareSize),y0+(6*squareSize),"Pawn",squareSize,"b",bPawn)); num++;
+            }
+            pieceSet.put(num,new ChessPiece(x0,y0,"Rook",squareSize,"w",wRook)); num++;
+            pieceSet.put(num,new ChessPiece(x0+(7*squareSize),y0,"Rook",squareSize,"w",wRook)); num++;
+            pieceSet.put(num,new ChessPiece(x0,y0+(7*squareSize),"Rook",squareSize,"b",bRook)); num++;
+            pieceSet.put(num,new ChessPiece(x0+(7*squareSize),y0+(7*squareSize),"Rook",squareSize,"b",bRook)); num++;
+            // left top
+            pieceSet.put(num,new ChessPiece(x0+squareSize,y0,"Knight",squareSize,"w",wKnight)); num++;
+            pieceSet.put(num,new ChessPiece(x0+(6*squareSize),y0,"Knight",squareSize,"w",wKnight)); num++;
+            pieceSet.put(num,new ChessPiece(x0+squareSize,y0+(7*squareSize),"Knight",squareSize,"b",bKnight)); num++;
+            pieceSet.put(num,new ChessPiece(x0+(6*squareSize),y0+(7*squareSize),"Knight",squareSize,"b",bKnight)); num++;
+
+            pieceSet.put(num,new ChessPiece(x0+(2*squareSize),y0,"Bishop",squareSize,"w",wBishop)); num++;
+            pieceSet.put(num,new ChessPiece(x0+(5*squareSize),y0,"Bishop",squareSize,"w",wBishop)); num++;
+            pieceSet.put(num,new ChessPiece(x0+(2*squareSize),y0+(7*squareSize),"Bishop",squareSize,"b",bBishop)); num++;
+            pieceSet.put(num,new ChessPiece(x0+(5*squareSize),y0+(7*squareSize),"Bishop",squareSize,"b",bBishop)); num++;
+
+            pieceSet.put(num,new ChessPiece(x0+(3*squareSize),y0,"King",squareSize,"w",wKing)); num++;
+            pieceSet.put(num,new ChessPiece(x0+(3*squareSize),y0+(7*squareSize),"King",squareSize,"b",bKing)); num++;
+
+            pieceSet.put(num,new ChessPiece(x0+(4*squareSize),y0,"Queen",squareSize,"w",wQueen)); num++;
+            pieceSet.put(num,new ChessPiece(x0+(4*squareSize),y0+(7*squareSize),"Queen",squareSize,"b",bQueen)); num++;
         }
-        pieceSet.put(num,new ChessPiece(x0,y0,"Rook",squareSize,"b",bRook)); num++;
-        pieceSet.put(num,new ChessPiece(x0+(7*squareSize),y0,"Rook",squareSize,"b",bRook)); num++;
-        pieceSet.put(num,new ChessPiece(x0,y0+(7*squareSize),"Rook",squareSize,"w",wRook)); num++;
-        pieceSet.put(num,new ChessPiece(x0+(7*squareSize),y0+(7*squareSize),"Rook",squareSize,"w",wRook)); num++;
-                                        // left top
-        pieceSet.put(num,new ChessPiece(x0+squareSize,y0,"Knight",squareSize,"b",bKnight)); num++;
-        pieceSet.put(num,new ChessPiece(x0+(6*squareSize),y0,"Knight",squareSize,"b",bKnight)); num++;
-        pieceSet.put(num,new ChessPiece(x0+squareSize,y0+(7*squareSize),"Knight",squareSize,"w",wKnight)); num++;
-        pieceSet.put(num,new ChessPiece(x0+(6*squareSize),y0+(7*squareSize),"Knight",squareSize,"w",wKnight)); num++;
-
-        pieceSet.put(num,new ChessPiece(x0+(2*squareSize),y0,"Bishop",squareSize,"b",bBishop)); num++;
-        pieceSet.put(num,new ChessPiece(x0+(5*squareSize),y0,"Bishop",squareSize,"b",bBishop)); num++;
-        pieceSet.put(num,new ChessPiece(x0+(2*squareSize),y0+(7*squareSize),"Bishop",squareSize,"w",wBishop)); num++;
-        pieceSet.put(num,new ChessPiece(x0+(5*squareSize),y0+(7*squareSize),"Bishop",squareSize,"w",wBishop)); num++;
-
-        pieceSet.put(num,new ChessPiece(x0+(3*squareSize),y0,"Queen",squareSize,"b",bQueen)); num++;
-        pieceSet.put(num,new ChessPiece(x0+(3*squareSize),y0+(7*squareSize),"Queen",squareSize,"w",wQueen)); num++;
-
-        pieceSet.put(num,new ChessPiece(x0+(4*squareSize),y0,"King",squareSize,"b",bKing)); num++;
-        pieceSet.put(num,new ChessPiece(x0+(4*squareSize),y0+(7*squareSize),"King",squareSize,"w",wKing)); num++;
     }
 
     private void setMatrix(){
         for(int i = 0;i < NUM_FILCOL;i++){
             for(int j = 0; j < NUM_FILCOL;j++) boardMtx[i][j] = "--";
         }
-        for(int i = 0; i < NUM_FILCOL; i++){
-            boardMtx[1][i] = "bp"; boardMtx[6][i] = "wp";
+        if(side == "0"){ // Si juega como blancas
+            for(int i = 0; i < NUM_FILCOL; i++){
+                boardMtx[1][i] = "bp"; boardMtx[6][i] = "wp";
+            }
+            boardMtx[0][0] = "bR"; boardMtx[0][7] = "bR"; boardMtx[7][0] = "wR"; boardMtx[7][7] = "wR";
+            boardMtx[0][1] = "bN"; boardMtx[0][6] = "bN"; boardMtx[7][1] = "wN"; boardMtx[7][6] = "wN";
+            boardMtx[0][2] = "bB"; boardMtx[0][5] = "bB"; boardMtx[7][2] = "wB"; boardMtx[7][5] = "wB";
+            boardMtx[0][3] = "bQ"; boardMtx[7][3] = "wQ";
+            boardMtx[0][4] = "bK"; boardMtx[7][4] = "wK";
+        }else{ // Si juega como negras
+            for(int i = 0; i < NUM_FILCOL; i++){
+                boardMtx[1][i] = "wp"; boardMtx[6][i] = "bp";
+            }
+            boardMtx[0][0] = "wR"; boardMtx[0][7] = "wR"; boardMtx[7][0] = "bR"; boardMtx[7][7] = "bR";
+            boardMtx[0][1] = "wN"; boardMtx[0][6] = "wN"; boardMtx[7][1] = "bN"; boardMtx[7][6] = "bN";
+            boardMtx[0][2] = "wB"; boardMtx[0][5] = "wB"; boardMtx[7][2] = "bB"; boardMtx[7][5] = "bB";
+            boardMtx[0][3] = "wK"; boardMtx[7][3] = "bK";
+            boardMtx[0][4] = "wQ"; boardMtx[7][4] = "bQ";
         }
-        boardMtx[0][0] = "bR"; boardMtx[0][7] = "bR"; boardMtx[7][0] = "wR"; boardMtx[7][7] = "wR";
-        boardMtx[0][1] = "bN"; boardMtx[0][6] = "bN"; boardMtx[7][1] = "wN"; boardMtx[7][6] = "wN";
-        boardMtx[0][2] = "bB"; boardMtx[0][5] = "bB"; boardMtx[7][2] = "wB"; boardMtx[7][5] = "wB";
-        boardMtx[0][3] = "bQ"; boardMtx[7][3] = "wQ";
-        boardMtx[0][4] = "bK"; boardMtx[7][4] = "wK";
 
     }
     protected void onDraw(Canvas canvas) {
