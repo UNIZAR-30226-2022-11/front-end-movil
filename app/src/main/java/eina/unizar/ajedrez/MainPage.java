@@ -19,6 +19,10 @@ public class MainPage extends AppCompatActivity {
     Button ai30Button;
     Button aiNoTimeButton;
     Button myFriends;
+    Button playFriends;
+    Button requests;
+    Button store;
+    Button gameRecord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,10 @@ public class MainPage extends AppCompatActivity {
         aiNoTimeButton = findViewById(R.id.playAINoTime);
 
         myFriends = findViewById(R.id.buttonSeeFriends);
+        requests = findViewById(R.id.buttonRequests);
+
+        store = findViewById((R.id.buttonJoinTournament));
+        gameRecord = findViewById((R.id.buttonCreateTournament));
 
         online3Button.setOnClickListener(view -> playAgainstOnlineRival(3));
         online10Button.setOnClickListener(view -> playAgainstOnlineRival(10));
@@ -50,6 +58,10 @@ public class MainPage extends AppCompatActivity {
         aiNoTimeButton.setOnClickListener(view -> playAgainstAI(0));
 
         myFriends.setOnClickListener((view -> seeFriendsList(nickname)));
+        requests.setOnClickListener((view -> seeRequests(nickname)));
+
+        store.setOnClickListener((view -> seeStore()));
+        gameRecord.setOnClickListener((view -> seeRecord()));
     }
 
     private void playAgainstOnlineRival(int min) {
@@ -68,6 +80,25 @@ public class MainPage extends AppCompatActivity {
     private void seeFriendsList(String nickname){
         Log.d("res","Cambio actividad");
         Intent i = new Intent(this, FriendsList.class);
+        i.putExtra("nickname", nickname);
+        startActivity(i);
+    }
+
+    private void seeRequests(String nickname){
+        Log.d("res","Cambio actividad");
+        Intent i = new Intent(this, friendRequests.class);
+        i.putExtra("nickname", nickname);
+        startActivity(i);
+    }
+
+    private void seeStore(){
+        Intent i = new Intent(this, Store.class);
+        i.putExtra("nickname", nickname);
+        startActivity(i);
+    }
+
+    private void seeRecord(){
+        Intent i = new Intent(this, GameRecord.class);
         i.putExtra("nickname", nickname);
         startActivity(i);
     }

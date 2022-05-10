@@ -81,23 +81,15 @@ public class FriendsList extends AppCompatActivity {
         nickname = getIntent().getExtras().getString("nickname");
         queue = Volley.newRequestQueue(this);
 
+
+        // Actions to do after 5 seconds
         try {
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    // Actions to do after 5 seconds
-                    try {
-                        fillData(nickname);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, 5000);
-           // fillData(nickname);
-            searchRequests(nickname);
+            fillData(nickname);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
 
         binding.searchfriend.setOnClickListener(vista -> {
             String username = binding.username.getText().toString();
@@ -112,6 +104,46 @@ public class FriendsList extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add(Menu.NONE, Menu.FIRST, Menu.NONE, "Invitar a partida 3 mins");
+        menu.add(Menu.NONE, Menu.FIRST+1, Menu.NONE, "Invitar a partida 10 mins");
+        menu.add(Menu.NONE, Menu.FIRST+2, Menu.NONE, "Invitar a partida 30 mins");
+        menu.add(Menu.NONE, Menu.FIRST+3, Menu.NONE, "Invitar a partida sin tiempo");
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        Intent i = new Intent(getApplicationContext(), OnlineActivity.class);
+        i.putExtra("nickname", nickname);
+        switch(item.getItemId()) {
+            case Menu.FIRST:
+                i.putExtra("time",3);
+                startActivity(i);
+                Toast.makeText(FriendsList.this,"Funciona", Toast.LENGTH_SHORT).show();
+                return true;
+            case Menu.FIRST+1:
+                i.putExtra("time",10);
+                startActivity(i);
+                Toast.makeText(FriendsList.this,"Funciona", Toast.LENGTH_SHORT).show();
+                return true;
+            case Menu.FIRST+2:
+                i.putExtra("time",30);
+                startActivity(i);
+                Toast.makeText(FriendsList.this,"Funciona", Toast.LENGTH_SHORT).show();
+                return true;
+            case Menu.FIRST+3:
+                i.putExtra("time",0);
+                startActivity(i);
+                Toast.makeText(FriendsList.this,"Funciona", Toast.LENGTH_SHORT).show();
+                return true;
+
+        }
+        return super.onContextItemSelected(item);
+    }
+
     public Socket getSocket(){
         return mSocket;
     }
@@ -119,7 +151,7 @@ public class FriendsList extends AppCompatActivity {
     private void fillData(String nickname) throws JSONException {
         Log.d("Socket: ", "Comprobando conexion " + mSocket.connected());
 
-        if(mSocket.connected()){
+       /* if(mSocket.connected()){
             Log.d("Socket: ", "Socket conectado");
         }
      //   mSocket.emit("connection");
@@ -131,19 +163,15 @@ public class FriendsList extends AppCompatActivity {
                 Log.d("Socket: ", data.toString());
                // Toast.makeText(FriendsList.this, data.toString(), Toast.LENGTH_SHORT).show();
             }
-        });
-        
+        });*/
 
-
-
-       /* Intent i = new Intent(this, UserSignIn.class);
-        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getFriendList/?nickname="+nickname;
+        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getFriends?nickname="+nickname;
         Log.d("Exito: ", "Se va a buscar a  "+ URL);
 
         LinearLayout relativeLayout = (LinearLayout) findViewById(R.id.Listfriends);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(35, 15, 5, 0);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
@@ -161,6 +189,7 @@ public class FriendsList extends AppCompatActivity {
                         textView.setTextColor(Color.parseColor("#FFFFFFFF"));
                         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
                         relativeLayout.addView(textView);
+                        registerForContextMenu(textView);
 
                     }
                 } catch (JSONException e) {
@@ -182,7 +211,7 @@ public class FriendsList extends AppCompatActivity {
             }
         };
         stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        queue.add(stringRequest);*/
+        queue.add(stringRequest);
     }
 
     private void searchForUser(String nickname, String username) throws JSONException {
@@ -239,7 +268,7 @@ public class FriendsList extends AppCompatActivity {
         queue.add(stringRequest);
     }
 
-    private void searchRequests( String username) throws JSONException {
+   /* private void searchRequests( String username) throws JSONException {
         String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/friendRequest?nickname="+username;
         Log.d("Enviando: ", URL);
 
@@ -279,13 +308,14 @@ public class FriendsList extends AppCompatActivity {
                         layout2.addView(aceptar);
                         layout2.setBackground(border);
                         layoutInterno.addView(layout2);
-                        aceptar.setOnClickListener(view -> aceptarSolicitud(nickname,pendientes.get(aceptar.getId())));
-                        /*new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                // put code on click operation
+                        aceptar.setOnClickListener(view -> {
+                            try {
+                                aceptarSolicitud(nickname,pendientes.get(aceptar.getId()));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        });*/
+                        });
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -307,23 +337,23 @@ public class FriendsList extends AppCompatActivity {
         };
         stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
-    }
+    }*/
 
-    void aceptarSolicitud(String nickname, String  nuevoAmigo){// La peticion al back-end está todavía por hacer
+   /* void aceptarSolicitud(String nickname, String  nuevoAmigo) throws JSONException {// La peticion al back-end está todavía por hacer
 
-       /* String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/addFriend";
+        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/addFriend";
         Log.d("Enviando: ", URL);
         JSONObject jsonBody = new JSONObject();
         jsonBody.put("nickname", nickname);
         jsonBody.put("amigo", nuevoAmigo);
-        Log.d("Enviando: ", username + " " + nickname);
+        Log.d("Enviando: ", nuevoAmigo + " " + nickname);
         final String requestBody = jsonBody.toString();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d("d: ", "Nuevo amigo añadido" +response );
                 Toast.makeText(FriendsList.this,"Nuevo amigo " + nuevoAmigo + " añadido.", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(this, MainPage.class);
+                Intent i = new Intent(getApplicationContext(), MainPage.class);
                 i.putExtra("nickname", nickname);
                 startActivity(i);
             }
@@ -351,8 +381,8 @@ public class FriendsList extends AppCompatActivity {
             }
         };
         stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        queue.add(stringRequest);*/
+        queue.add(stringRequest);
 
         // Volver a cargar pantalla
-    }
+    }*/
 }

@@ -19,7 +19,7 @@
             android:layout_height="1dp"
             android:background="?android:attr/listDivider" />
 
-        <EditText
+        <TextView
             android:id="@+id/editTextTextPersonName2"
             android:layout_width="match_parent"
             android:layout_height="71dp"
@@ -134,12 +134,12 @@
                 android:minWidth="175dp"
                 android:text="My friends" />
             <Button
-                android:id="@+id/buttonPlayFriend"
+                android:id="@+id/buttonRequests"
                 android:textSize="12dp"
                 android:minWidth="175dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Play a friend" />
+                android:text="Requests" />
         </LinearLayout>
         <EditText
             android:id="@+id/TextTournament"

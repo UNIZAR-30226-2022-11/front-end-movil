@@ -38,6 +38,15 @@
         <activity
             android:name=".FriendsList"
             android:exported="true" />
+        <activity
+            android:name=".Store"
+            android:exported="true" />
+        <activity
+            android:name=".GameRecord"
+            android:exported="true" />
+        <activity
+            android:name=".friendRequests"
+            android:exported="true" />
 
     </application>
 

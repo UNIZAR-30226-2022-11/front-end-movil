@@ -38,13 +38,15 @@ public class OnlineActivity extends AppCompatActivity {
     String idSocket;
     String nickname;
     boolean finPartida =  false;
+    ProgressDialog dialog;
 
     String cInicial,cFinal,fInicial,fFinal;
 
-    private Socket mSocket;
+    private Socket mSocket, mSocket2;
     {
         try {
             mSocket = IO.socket("http://ec2-18-206-137-85.compute-1.amazonaws.com:3000");
+            mSocket2 = IO.socket("http://ec2-18-206-137-85.compute-1.amazonaws.com:3000");
         } catch (URISyntaxException e) {
             Log.d("Socket: ",   e.toString());
         }
@@ -56,12 +58,15 @@ public class OnlineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //myCanvas = new ChessBoard(this,"0");
         setContentView(R.layout.activity_online);
+        mSocket.disconnect();
+        mSocket2.disconnect();
         mSocket.connect();
+        mSocket2.connect();
 
-        ProgressDialog dialog=new ProgressDialog(this);
+         dialog=new ProgressDialog(this);
         dialog.setMessage("Esperando rival");
-        dialog.setCancelable(false);
-        dialog.setInverseBackgroundForced(false);
+        dialog.setCancelable(true);
+        dialog.setInverseBackgroundForced(true);
         dialog.show();
 
         nickname = getIntent().getExtras().getString("nickname");
@@ -84,10 +89,27 @@ public class OnlineActivity extends AppCompatActivity {
         countdownTextRival = findViewById(R.id.timerRival);
        // if(!noTime) startStop();
         esperaRival();
-        dialog.hide();
+        Log.d("Socket: ", "Esperando rival");
+        mSocket.on("getOpponent", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject data = (JSONObject) args[0];
+//here the data is in JSON Format
+                try {
+                    idSocket = data.getString("id");
+                    side = data.getString("side");
+                    playGame();
+                    dialog.dismiss();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d("Socket2: ", data.toString());
+                // Toast.makeText(FriendsList.this, data.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
         //side="1";
-
-        myCanvas = new ChessBoard(this,"0");
+        Log.d("Socket: ", "Despues de esperar");
+        myCanvas = new ChessBoard(this,side);
         LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
         layout.addView(myCanvas);
         //myCanvas.makeAIMove();
@@ -193,32 +215,33 @@ public class OnlineActivity extends AppCompatActivity {
     }
 
    private void esperaRival(){
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                // Actions to do after 5 seconds
-                if(mSocket.connected()){
-                    Log.d("Socket: ", "Socket conectado");
-                    mSocket.on("getOpponent", new Emitter.Listener() {
-                        @Override
-                        public void call(Object... args) {
-                            JSONObject data = (JSONObject)args[0];
-//here the data is in JSON Format
-                            try {
-                                idSocket = data.getString("id");
-                                side = data.getString("side");
-                                playGame();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            Log.d("Socket: ", data.toString());
-                            // Toast.makeText(FriendsList.this, data.toString(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
 
-            }
-        }, 5000);
+       Handler handler = new Handler();
+       handler.postDelayed(new Runnable() {
+           public void run() {
+               Log.d("Socket: ", "Socket conectado");
+               Log.d("Socket: ", "Esperando rival");
+               mSocket2.on("getOpponent", new Emitter.Listener() {
+                   @Override
+                   public void call(Object... args) {
+                       JSONObject data = (JSONObject) args[0];
+//here the data is in JSON Format
+                       try {
+                           idSocket = data.getString("id");
+                           side = data.getString("side");
+                           playGame();
+                           dialog.dismiss();
+                       } catch (JSONException e) {
+                           e.printStackTrace();
+                       }
+                       Log.d("Socket: ", data.toString());
+                       // Toast.makeText(FriendsList.this, data.toString(), Toast.LENGTH_SHORT).show();
+                   }
+               });
+           }
+       }, 5000);
+
+
     }
 
     public void startStop(){

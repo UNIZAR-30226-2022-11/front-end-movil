@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:id="@+id/gamesRecord">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:typeface="sans"
+            android:hint="PREVIOUS GAMES"
+            android:layout_marginStart="22dp"
+            android:textSize="40sp"
+            android:id="@+id/titleGames"
+            android:minHeight="50dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:typeface="sans"
+            android:hint="USER"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="300dp"
+            android:textSize="20sp"
+            android:id="@+id/userRecord"
+            android:minHeight="50dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/listGames"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp">
+    </LinearLayout>
+
+</LinearLayout>
