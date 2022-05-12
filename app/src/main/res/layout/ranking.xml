@@ -3,12 +3,12 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:id="@+id/friendsRequests">
+    android:id="@+id/myRanking">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_marginTop="10dp">
 
         <TextView
@@ -16,15 +16,14 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:typeface="sans"
-            android:hint="FRIEND REQUESTS"
-            android:layout_marginStart="50dp"
-            android:textSize="30sp"
-            android:id="@+id/username"
-            android:minHeight="50dp"
-            />
+            android:hint="MY RANKING"
+            android:layout_marginStart="22dp"
+            android:textSize="40sp"
+            android:id="@+id/titleGames"
+            android:minHeight="50dp" />
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/ListRequests"
+        android:id="@+id/listGames"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"

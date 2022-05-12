@@ -226,20 +226,19 @@ public class FriendsList extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 Log.d("Exito: ", response );
-                /*JSONObject obj = null;
                 try {
-                    obj = new JSONObject(response);
-
+                    JSONObject obj = new JSONObject((response));
+                    String res = obj.getString("resultado");
+                    if(res.equals("El amigo no existe")){
+                        Toast.makeText(FriendsList.this,"Este usuario no existe", Toast.LENGTH_SHORT).show();
+                    }else if(res.equals("El usuario existe pero ya es amigo tuyo")){
+                        Toast.makeText(FriendsList.this,"Este usuario ya es amigo tuyo", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(FriendsList.this,obj.getString("resultado"), Toast.LENGTH_SHORT).show();
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                try {
-                    String nombre = obj.getString("resultado");
-                    Log.d("res: ", nombre );
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }*/
-                Toast.makeText(FriendsList.this,response, Toast.LENGTH_SHORT).show();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -267,122 +266,4 @@ public class FriendsList extends AppCompatActivity {
         stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
     }
-
-   /* private void searchRequests( String username) throws JSONException {
-        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/friendRequest?nickname="+username;
-        Log.d("Enviando: ", URL);
-
-        LinearLayout layoutInterno = (LinearLayout) findViewById(R.id.Listfriends);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(35, 15, 5, 0);
-
-       StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d("Exito: ", response );
-                try {
-                    JSONArray friendRequests = new JSONArray((response));
-                    JSONObject requester;
-
-                    for(int i = 0;i < friendRequests.length();i++){
-                        GradientDrawable border = new GradientDrawable();
-                        border.setStroke(1, 0xFFFFFFFF); //black border with full opacity
-                        requester = friendRequests.getJSONObject(i);
-                        LinearLayout layout2 = new LinearLayout(getApplicationContext());
-                        layout2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                        layout2.setOrientation(LinearLayout.HORIZONTAL);
-                        Log.d("Amigo: ", requester.getString("valor"));
-                        pendientes.add( requester.getString("valor")); // Añadir a lista para luego saber que solicitud ha sido aceptada
-                        TextView textView = new TextView(getApplicationContext());
-                        textView.setLayoutParams(params);
-                        textView.setPadding(20,20,10,20);
-                        textView.setText(requester.getString("valor"));
-                        textView.setTextColor(Color.parseColor("#FFFFFFFF"));
-                        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
-                        layout2.addView(textView);
-                        Button aceptar = new Button(getApplicationContext());
-                        aceptar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                       // aceptar.setMargins(300,10,10,10);
-                        aceptar.setText("Aceptar");
-                        aceptar.setId(i);
-                        layout2.addView(aceptar);
-                        layout2.setBackground(border);
-                        layoutInterno.addView(layout2);
-                        aceptar.setOnClickListener(view -> {
-                            try {
-                                aceptarSolicitud(nickname,pendientes.get(aceptar.getId()));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        });
-
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("onErrorResponse: ", error.getLocalizedMessage() == null ? "" : error.getLocalizedMessage());
-            }
-        }){
-            @Override
-            public Map<String,String> getHeaders() throws AuthFailureError {
-                Map<String,String> params = new HashMap<String,String>();
-                params.put("content-type","application/json");
-              //  params.put("Access-Control-Allow-Origin","*");
-                return params;
-            }
-        };
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        queue.add(stringRequest);
-    }*/
-
-   /* void aceptarSolicitud(String nickname, String  nuevoAmigo) throws JSONException {// La peticion al back-end está todavía por hacer
-
-        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/addFriend";
-        Log.d("Enviando: ", URL);
-        JSONObject jsonBody = new JSONObject();
-        jsonBody.put("nickname", nickname);
-        jsonBody.put("amigo", nuevoAmigo);
-        Log.d("Enviando: ", nuevoAmigo + " " + nickname);
-        final String requestBody = jsonBody.toString();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d("d: ", "Nuevo amigo añadido" +response );
-                Toast.makeText(FriendsList.this,"Nuevo amigo " + nuevoAmigo + " añadido.", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(getApplicationContext(), MainPage.class);
-                i.putExtra("nickname", nickname);
-                startActivity(i);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("onErrorResponse: ", error.getLocalizedMessage() == null ? "" : error.getLocalizedMessage());
-            }
-        }){
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                try {
-                    return requestBody == null ? null : requestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    Log.d("d: " ,"Falla aqui");
-                    return null;
-                }
-            }
-            @Override
-            public Map<String,String> getHeaders() throws AuthFailureError {
-                Map<String,String> params = new HashMap<String,String>();
-                params.put("content-type","application/json");
-                //  params.put("Access-Control-Allow-Origin","*");
-                return params;
-            }
-        };
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        queue.add(stringRequest);
-
-        // Volver a cargar pantalla
-    }*/
 }

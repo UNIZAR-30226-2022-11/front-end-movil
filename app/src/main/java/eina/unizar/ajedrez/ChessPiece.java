@@ -11,16 +11,18 @@ public class ChessPiece {
     int size;
     boolean alreadyMoved;
     String color;
+    String side;
 
 
 
-    public ChessPiece(int col, int fila, String type, int size, String color, Bitmap piece){
+    public ChessPiece(int col, int fila, String type, int size, String color, Bitmap piece, String side){
         this.col = col;
         this.fila = fila;
         this.type = type;
         this.color = color;
         this.piece = piece;
         this.alreadyMoved =false;
+        this.side = side;
     }
     // Filas: 1-8
     // Columnas: 1-8
@@ -101,7 +103,7 @@ public class ChessPiece {
     }
 
     private boolean checkPawn(int col, int fila){
-        if(this.color == "b") {
+        if(this.color == "b" && this.side == "0" || this.color == "w" && this.side == "1") {
             if ((fila == ((this.fila-185)/80) + 1 || (fila == ((this.fila-185)/80) + 2 && !alreadyMoved)) && col == (this.col-65)/80) {
                 Log.d("d", "Valid move black  pawn");
                 return true;
@@ -112,7 +114,7 @@ public class ChessPiece {
                 return true;
             }
         }
-        if(this.color == "w"){
+        if(this.color == "w" && this.side == "0" || this.color == "b" && this.side == "1"){
             Log.d("d", "Check white pawn "+ fila+ " y "+col + " / " + (this.fila-185)/80+ " y " +(this.col-65)/80);
             if ((fila == ((this.fila-185)/80) - 1 || (fila == ((this.fila-185)/80)-2 && !alreadyMoved)) && col == (this.col-65)/80) {
                 Log.d("d", "Valid move pawn");
@@ -136,6 +138,7 @@ public class ChessPiece {
     }
 
     private boolean checkBishop(int col, int fila){
+        Log.d("d", "Valid move  bishop" + fila + " " + col );
         if(Math.abs(((this.col-65)/80) -  col) ==  Math.abs(((this.fila-185)/80) - fila)){
             return true;
         }

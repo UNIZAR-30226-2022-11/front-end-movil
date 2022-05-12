@@ -114,7 +114,7 @@ public class friendRequests extends AppCompatActivity {
                         layout2.addView(rechazar);
                         layout2.setBackground(border);
                         layoutInterno.addView(layout2);
-                        aceptar.setOnClickListener(view -> {
+                        rechazar.setOnClickListener(view -> {
                             try {
                                 rechazarSolicitud(nickname,pendientes.get(aceptar.getId()));
                             } catch (JSONException e) {

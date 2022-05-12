@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -14,6 +15,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class AiActivity extends AppCompatActivity {
     private TextView countdownText;
@@ -24,12 +28,19 @@ public class AiActivity extends AppCompatActivity {
     char turno = 'w';
     boolean pulsado, noTime, finTiempo = false;
     int time;
+    String nickname;
+    String side;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        myCanvas = new ChessBoard(this,"0");
+        int randomNum = ThreadLocalRandom.current().nextInt(0, 1 + 1);
+        side = String.valueOf(randomNum);
+        Log.d("d: ", "Side " + side);
+        if(side.equals("0")) myCanvas = new ChessBoard(this,"0");
+        else myCanvas = new ChessBoard(this,"1");
         setContentView(R.layout.activity_ai);
 
+        nickname = getIntent().getExtras().getString("nickname");
         time = getIntent().getExtras().getInt("time");
         if(time == 3) time =1;
         if(time != 0 )timeLeftInMilliseconds = (long) time*60*1000;
@@ -45,6 +56,11 @@ public class AiActivity extends AppCompatActivity {
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
         layout.addView(myCanvas);
+
+        if(side.equals("1")) {
+            myCanvas.makeAIMove();
+            turno = 'b';
+        }
         //playGame();
     }
 
@@ -86,6 +102,7 @@ public class AiActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 Intent x  = new Intent(getApplicationContext(),MainPage.class);
+                                x.putExtra("nickname",nickname);
                                 startActivity(x);
                             }
                         });
@@ -98,12 +115,32 @@ public class AiActivity extends AppCompatActivity {
                         builder.show();
 
                     }
-                    turno = 'w';
+                    if (turno == 'b')turno = 'w';
+                    else turno = 'b';
                 }
                 pulsado = false;
         }
         return super.onTouchEvent(e);
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.d("d: ", "Fin actividad");
+        stopTimer();
+        this.finish();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if ((keyCode == KeyEvent.KEYCODE_BACK))
+        {
+            stopTimer();
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
     public void startStop(){
         if(timerRunning){
             stopTimer();

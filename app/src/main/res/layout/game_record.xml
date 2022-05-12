@@ -21,17 +21,47 @@
             android:textSize="40sp"
             android:id="@+id/titleGames"
             android:minHeight="50dp" />
-        <TextView
+        <LinearLayout
+            android:id="@+id/headerGames"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:typeface="sans"
-            android:hint="USER"
-            android:layout_marginTop="30dp"
-            android:layout_marginStart="300dp"
-            android:textSize="20sp"
-            android:id="@+id/userRecord"
-            android:minHeight="50dp" />
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:typeface="sans"
+                android:hint="USER"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="22dp"
+                android:textSize="20sp"
+                android:id="@+id/myNickame"
+                android:minHeight="50dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:typeface="sans"
+                android:hint="RIVAL"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="70dp"
+                android:textSize="20sp"
+                android:id="@+id/rivalGames"
+                android:minHeight="50dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:typeface="sans"
+                android:hint="RESULT"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="90dp"
+                android:textSize="20sp"
+                android:id="@+id/resultGames"
+                android:minHeight="50dp" />
+
+        </LinearLayout>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/listGames"

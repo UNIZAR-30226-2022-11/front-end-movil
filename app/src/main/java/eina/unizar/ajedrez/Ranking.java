@@ -5,7 +5,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,24 +26,22 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GameRecord  extends AppCompatActivity {
-
-    private String nickname;
-    private RequestQueue queue;
-
+public class Ranking extends AppCompatActivity {
+    String nickname;
+    RequestQueue queue;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.game_record);
+        setContentView(R.layout.ranking);
         queue = Volley.newRequestQueue(this);
 
         nickname = getIntent().getExtras().getString("nickname");
 
-        previousGames();
+        getRanking();
     }
 
-    void previousGames() {
-        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/matchHistory?nickname=" + nickname;
+    private void getRanking(){
+        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getRankingList?nickname=" + nickname;
         Log.d("Enviando: ", URL);
 
         LinearLayout layoutInterno = (LinearLayout) findViewById(R.id.listGames);
@@ -57,45 +54,40 @@ public class GameRecord  extends AppCompatActivity {
                 Log.d("Exito: ", response);
                 try {
                     JSONArray gamesRequests = new JSONArray((response));
-                    JSONObject partida;
+                    JSONObject posJugador;
 
                     for (int i = 0; i < gamesRequests.length(); i++) {
                         GradientDrawable border = new GradientDrawable();
                         border.setStroke(1, 0xFFFFFFFF); //black border with full opacity
-                        partida = gamesRequests.getJSONObject(i);
+                        posJugador = gamesRequests.getJSONObject(i);
                         LinearLayout layout2 = new LinearLayout(getApplicationContext());
                         layout2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                         layout2.setOrientation(LinearLayout.HORIZONTAL);
-                        Log.d("Amigo: ", partida.getString("rival"));
+                        Log.d("Amigo: ", posJugador.getString("rival"));
 
-                        TextView yo = new TextView(getApplicationContext());
-                        yo.setLayoutParams(params);
-                        yo.setPadding(20, 20, 10, 20);
-                        yo.setText(nickname);
-                        yo.setTextColor(Color.parseColor("#FFFFFFFF"));
-                        yo.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-                        layout2.addView(yo);
+                        TextView position = new TextView(getApplicationContext());
+                        position.setLayoutParams(params);
+                        position.setPadding(20, 20, 10, 20);
+                        position.setText(posJugador.getString("position"));
+                        position.setTextColor(Color.parseColor("#FFFFFFFF"));
+                        position.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                        layout2.addView(position);
 
-                        TextView rival = new TextView(getApplicationContext());
-                        rival.setLayoutParams(params);
-                        rival.setPadding(20, 20, 10, 20);
-                        rival.setText(partida.getString("rival"));
-                        rival.setTextColor(Color.parseColor("#FFFFFFFF"));
-                        rival.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-                        layout2.addView(rival);
+                        TextView username = new TextView(getApplicationContext());
+                        username.setLayoutParams(params);
+                        username.setPadding(20, 20, 10, 20);
+                        username.setText(posJugador.getString("username"));
+                        username.setTextColor(Color.parseColor("#FFFFFFFF"));
+                        username.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                        layout2.addView(username);
 
-                        TextView resultado = new TextView(getApplicationContext());
-                        resultado.setLayoutParams(params);
-                        resultado.setPadding(20, 20, 10, 20);
-                        if(partida.getString("empate") == "true"){
-                            resultado.setText("Empate");
-                        }else{
-                            resultado.setText(partida.getString("ganador"));
-                        }
-                        resultado.setTextColor(Color.parseColor("#FFFFFFFF"));
-                        resultado.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-                        layout2.addView(resultado);
-
+                        TextView puntos = new TextView(getApplicationContext());
+                        puntos.setLayoutParams(params);
+                        puntos.setPadding(20, 20, 10, 20);
+                        puntos.setTextColor(Color.parseColor("#FFFFFFFF"));
+                        username.setText(posJugador.getString("points"));
+                        puntos.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                        layout2.addView(puntos);
                         layout2.setBackground(border);
                         layoutInterno.addView(layout2);
                     }
@@ -121,3 +113,5 @@ public class GameRecord  extends AppCompatActivity {
         queue.add(stringRequest);
     }
 }
+
+

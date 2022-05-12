@@ -141,7 +141,7 @@ public class OnlineActivity extends AppCompatActivity {
                          fInicial = data.getString("fI");
                          cFinal = data.getString("cF");
                          fFinal = data.getString("fF");
-                         //myCanvas.makeOpponentMove(cI,fI,cF,fF);
+                         myCanvas.hacerMovimientoRival(Integer.parseInt(fInicial),Integer.parseInt(cInicial),Integer.parseInt(fFinal),Integer.parseInt(cFinal));
                      } catch (JSONException e) {
                          e.printStackTrace();
                      }
@@ -151,7 +151,25 @@ public class OnlineActivity extends AppCompatActivity {
              });
              if(turno == 'w') turno = 'b';
              else turno = 'w';
+             if (!myCanvas.isMate()) {
+                 startTimer();
+             }else break;
          }
+        stopTimer();
+        Log.d("d: ", "Fin partida");
+        Toast.makeText(this, "Derrota" , Toast.LENGTH_SHORT).show();
+        //Intent i  = new Intent(getApplicationContext(),PopActivity.class);
+        //startActivity(i);
+        AlertDialog.Builder builder = new AlertDialog.Builder(OnlineActivity.this);
+        builder.setMessage("Derrota");
+        builder.setPositiveButton("Volver", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent x = new Intent(getApplicationContext(), MainPage.class);
+                startActivity(x);
+            }
+        });
+        builder.show();
          // Terminar la partida
      }
     @Override
@@ -192,14 +210,15 @@ public class OnlineActivity extends AppCompatActivity {
                         } else { // Enviar datos de la partida al server y liberar el socket
                             stopTimer();
                             Log.d("d: ", "Fin partida");
-                            Toast.makeText(this, "Fin de partida" + "", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Victoria", Toast.LENGTH_SHORT).show();
                             //Intent i  = new Intent(getApplicationContext(),PopActivity.class);
                             //startActivity(i);
                             AlertDialog.Builder builder = new AlertDialog.Builder(OnlineActivity.this);
-                            builder.setMessage("Fin de la partida");
+                            builder.setMessage("Victoria!");
                             builder.setPositiveButton("Volver", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    guardarPartida();
                                     Intent x = new Intent(getApplicationContext(), MainPage.class);
                                     startActivity(x);
                                 }
@@ -241,6 +260,10 @@ public class OnlineActivity extends AppCompatActivity {
            }
        }, 5000);
 
+
+    }
+
+    private void guardarPartida(){
 
     }
 

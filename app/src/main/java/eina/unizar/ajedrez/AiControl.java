@@ -14,7 +14,7 @@ public class AiControl {
     int puntBishopKnight = 3;
     int puntPawn = 1;
 
-     public ChessBoard.Movimiento mejorMov(String boardMtx[][], ArrayList<ChessBoard.Movimiento> movsValidos){
+     public ChessBoard.Movimiento mejorMov(String boardMtx[][], ArrayList<ChessBoard.Movimiento> movsValidos,String side){
         int maxPunt = mate;
         int guarda = -1;
         String viejoIni;
@@ -28,7 +28,7 @@ public class AiControl {
             viejoIni =  boardMtx[m.inicial.X][m.inicial.Y]; // Guardar posición inicial antes de nuevo movimiento
             boardMtx[m.inicial.X][m.inicial.Y] = "--";
             boardMtx[m.fin.X][m.fin.Y] = viejoIni;
-            int punt =  obtenerPuntuacion(boardMtx);
+            int punt =  obtenerPuntuacion(boardMtx, side);
           //  Log.d("d: ", "La puntuacion es  " + punt);
             if(punt <= maxPunt){
                 maxPunt = punt;
@@ -58,13 +58,13 @@ public class AiControl {
         return 0;
     }
 
-    private int obtenerPuntuacion(String boardMtx[][]){
+    private int obtenerPuntuacion(String boardMtx[][], String side){
         int punt = 0;
         for(int fila = 0; fila < NUM_FILCOL;fila++){
             for(int col = 0; col < NUM_FILCOL;col++){
-                if(boardMtx[fila][col].charAt(0) == 'w'){// Sumar puntuaciones a blancas
+                if(boardMtx[fila][col].charAt(0) == 'w' && side == "0" || boardMtx[fila][col].charAt(0) == 'b' && side == "1" ){// Sumar puntuaciones a blancas
                     punt += devolverPunt(boardMtx[fila][col].charAt(1));
-                }else if(boardMtx[fila][col].charAt(0) == 'b'){ // Sumar puntuaciones a negras
+                }else if(boardMtx[fila][col].charAt(0) == 'b' && side == "0" || boardMtx[fila][col].charAt(0) == 'w' && side == "1"){ // Sumar puntuaciones a negras
                     punt -= devolverPunt(boardMtx[fila][col].charAt(1));
                 }
             }

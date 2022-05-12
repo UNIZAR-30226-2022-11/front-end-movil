@@ -7,6 +7,9 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class MainPage extends AppCompatActivity {
 
     String nickname;
@@ -23,12 +26,17 @@ public class MainPage extends AppCompatActivity {
     Button requests;
     Button store;
     Button gameRecord;
+    Button ranking;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_page);
-
+        Random ran = new Random();int x = 0;
+        for(int i = 0; i<100;i++){
+            int randomNum = ThreadLocalRandom.current().nextInt(0, 1 + 1);
+            Log.d("d: ", "Pre comprobacion x" + randomNum);
+        }
         nickname = getIntent().getExtras().getString("nickname");
 
         online3Button = findViewById(R.id.online3);
@@ -44,10 +52,13 @@ public class MainPage extends AppCompatActivity {
         myFriends = findViewById(R.id.buttonSeeFriends);
         requests = findViewById(R.id.buttonRequests);
 
-        store = findViewById((R.id.buttonJoinTournament));
-        gameRecord = findViewById((R.id.buttonCreateTournament));
+        gameRecord = findViewById((R.id.Record));
+        ranking = findViewById((R.id.ranking));
 
-        online3Button.setOnClickListener(view -> playAgainstOnlineRival(3));
+        store = findViewById((R.id.shop));
+
+        //online3Button.setOnClickListener(view -> playAgainstOnlineRival(3));
+        online3Button.setOnClickListener(view -> seeStore());
         online10Button.setOnClickListener(view -> playAgainstOnlineRival(10));
         online30Button.setOnClickListener(view -> playAgainstOnlineRival(30));
         onlineNoTimeButton.setOnClickListener(view -> playAgainstOnlineRival(30));
@@ -62,6 +73,7 @@ public class MainPage extends AppCompatActivity {
 
         store.setOnClickListener((view -> seeStore()));
         gameRecord.setOnClickListener((view -> seeRecord()));
+        ranking.setOnClickListener((view-> seeRanking()));
     }
 
     private void playAgainstOnlineRival(int min) {
@@ -99,6 +111,12 @@ public class MainPage extends AppCompatActivity {
 
     private void seeRecord(){
         Intent i = new Intent(this, GameRecord.class);
+        i.putExtra("nickname", nickname);
+        startActivity(i);
+    }
+
+    private void seeRanking(){
+        Intent i = new Intent(this, Ranking.class);
         i.putExtra("nickname", nickname);
         startActivity(i);
     }
