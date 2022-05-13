@@ -98,12 +98,12 @@ public class OnlineActivity extends AppCompatActivity {
                 try {
                     idSocket = data.getString("id");
                     side = data.getString("side");
-                    playGame();
+                  //  playGame();
                     dialog.dismiss();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.d("Socket2: ", data.toString());
+                Log.d("Socket: ", data.toString());
                 // Toast.makeText(FriendsList.this, data.toString(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -238,8 +238,8 @@ public class OnlineActivity extends AppCompatActivity {
        Handler handler = new Handler();
        handler.postDelayed(new Runnable() {
            public void run() {
-               Log.d("Socket: ", "Socket conectado");
-               Log.d("Socket: ", "Esperando rival");
+               Log.d("Socket2: ", "Socket conectado");
+               Log.d("Socket2: ", "Esperando rival");
                mSocket2.on("getOpponent", new Emitter.Listener() {
                    @Override
                    public void call(Object... args) {
@@ -253,7 +253,7 @@ public class OnlineActivity extends AppCompatActivity {
                        } catch (JSONException e) {
                            e.printStackTrace();
                        }
-                       Log.d("Socket: ", data.toString());
+                       Log.d("Socket2: ", data.toString());
                        // Toast.makeText(FriendsList.this, data.toString(), Toast.LENGTH_SHORT).show();
                    }
                });

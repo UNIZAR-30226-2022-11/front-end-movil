@@ -7,6 +7,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -56,36 +57,56 @@ public class Ranking extends AppCompatActivity {
                     JSONArray gamesRequests = new JSONArray((response));
                     JSONObject posJugador;
 
+                    LinearLayout layout2 = new LinearLayout(getApplicationContext());
+                    layout2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                    layout2.setOrientation(LinearLayout.HORIZONTAL);
+
+                    TextView header = new TextView(getApplicationContext());
+                    header.setLayoutParams(params);
+                    header.setPadding(20, 20, 10, 20);
+                    header.setText("Jugador");
+                    header.setTextColor(Color.parseColor("#FFFFFFFF"));
+                    header.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                    layout2.addView(header);
+
+                    header = new TextView(getApplicationContext());
+                    header.setLayoutParams(params);
+                    header.setPadding(20, 20, 10, 20);
+                    header.setTextColor(Color.parseColor("#FFFFFFFF"));
+                    header.setText("Puntos");
+                    header.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                    layout2.addView(header);
+                    layoutInterno.addView(layout2);
                     for (int i = 0; i < gamesRequests.length(); i++) {
-                        GradientDrawable border = new GradientDrawable();
+                       GradientDrawable border = new GradientDrawable();
                         border.setStroke(1, 0xFFFFFFFF); //black border with full opacity
                         posJugador = gamesRequests.getJSONObject(i);
-                        LinearLayout layout2 = new LinearLayout(getApplicationContext());
+                         layout2 = new LinearLayout(getApplicationContext());
                         layout2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                         layout2.setOrientation(LinearLayout.HORIZONTAL);
-                        Log.d("Amigo: ", posJugador.getString("rival"));
+                        Log.d("Amigo: ", posJugador.getString("Nickname"));
 
-                        TextView position = new TextView(getApplicationContext());
+                        /*TextView position = new TextView(getApplicationContext());
                         position.setLayoutParams(params);
                         position.setPadding(20, 20, 10, 20);
                         position.setText(posJugador.getString("position"));
                         position.setTextColor(Color.parseColor("#FFFFFFFF"));
                         position.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-                        layout2.addView(position);
+                        layout2.addView(position);*/
 
                         TextView username = new TextView(getApplicationContext());
                         username.setLayoutParams(params);
                         username.setPadding(20, 20, 10, 20);
-                        username.setText(posJugador.getString("username"));
+                        username.setText(posJugador.getString("Nickname"));
                         username.setTextColor(Color.parseColor("#FFFFFFFF"));
                         username.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
                         layout2.addView(username);
 
                         TextView puntos = new TextView(getApplicationContext());
                         puntos.setLayoutParams(params);
-                        puntos.setPadding(20, 20, 10, 20);
+                        puntos.setPadding(100, 20, 10, 20);
                         puntos.setTextColor(Color.parseColor("#FFFFFFFF"));
-                        username.setText(posJugador.getString("points"));
+                        puntos.setText(posJugador.getString("puntos"));
                         puntos.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
                         layout2.addView(puntos);
                         layout2.setBackground(border);

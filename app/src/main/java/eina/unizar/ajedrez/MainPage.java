@@ -33,10 +33,10 @@ public class MainPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_page);
         Random ran = new Random();int x = 0;
-        for(int i = 0; i<100;i++){
+       /* for(int i = 0; i<100;i++){
             int randomNum = ThreadLocalRandom.current().nextInt(0, 1 + 1);
             Log.d("d: ", "Pre comprobacion x" + randomNum);
-        }
+        }*/
         nickname = getIntent().getExtras().getString("nickname");
 
         online3Button = findViewById(R.id.online3);
@@ -58,7 +58,7 @@ public class MainPage extends AppCompatActivity {
         store = findViewById((R.id.shop));
 
         //online3Button.setOnClickListener(view -> playAgainstOnlineRival(3));
-        online3Button.setOnClickListener(view -> seeStore());
+        online3Button.setOnClickListener(view -> seeRanking());
         online10Button.setOnClickListener(view -> playAgainstOnlineRival(10));
         online30Button.setOnClickListener(view -> playAgainstOnlineRival(30));
         onlineNoTimeButton.setOnClickListener(view -> playAgainstOnlineRival(30));
