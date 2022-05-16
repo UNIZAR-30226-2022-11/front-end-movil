@@ -61,7 +61,7 @@ public class OnlineActivity extends AppCompatActivity {
         mSocket.disconnect();
         mSocket2.disconnect();
         mSocket.connect();
-        mSocket2.connect();
+
 
          dialog=new ProgressDialog(this);
         dialog.setMessage("Esperando rival");
@@ -89,29 +89,10 @@ public class OnlineActivity extends AppCompatActivity {
         countdownTextRival = findViewById(R.id.timerRival);
        // if(!noTime) startStop();
         esperaRival();
-        Log.d("Socket: ", "Esperando rival");
-        mSocket.on("getOpponent", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                JSONObject data = (JSONObject) args[0];
-//here the data is in JSON Format
-                try {
-                    idSocket = data.getString("id");
-                    side = data.getString("side");
-                  //  playGame();
-                    dialog.dismiss();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("Socket: ", data.toString());
-                // Toast.makeText(FriendsList.this, data.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
+
         //side="1";
         Log.d("Socket: ", "Despues de esperar");
-        myCanvas = new ChessBoard(this,side);
-        LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
-        layout.addView(myCanvas);
+
         //myCanvas.makeAIMove();
 
 
@@ -142,6 +123,11 @@ public class OnlineActivity extends AppCompatActivity {
                          cFinal = data.getString("cF");
                          fFinal = data.getString("fF");
                          myCanvas.hacerMovimientoRival(Integer.parseInt(fInicial),Integer.parseInt(cInicial),Integer.parseInt(fFinal),Integer.parseInt(cFinal));
+                         if(turno == 'w') turno = 'b';
+                         else turno = 'w';
+                         if (!myCanvas.isMate()) {
+                             startTimer();
+                         }
                      } catch (JSONException e) {
                          e.printStackTrace();
                      }
@@ -149,11 +135,7 @@ public class OnlineActivity extends AppCompatActivity {
                      // Toast.makeText(FriendsList.this, data.toString(), Toast.LENGTH_SHORT).show();
                  }
              });
-             if(turno == 'w') turno = 'b';
-             else turno = 'w';
-             if (!myCanvas.isMate()) {
-                 startTimer();
-             }else break;
+
          }
         stopTimer();
         Log.d("d: ", "Fin partida");
@@ -205,7 +187,7 @@ public class OnlineActivity extends AppCompatActivity {
                             turno = 'w';
                         }
                         if (!myCanvas.isMate()) {
-                            myCanvas.makeAIMove();
+                           // myCanvas.makeAIMove();
                             startTimer();
                         } else { // Enviar datos de la partida al server y liberar el socket
                             stopTimer();
@@ -232,12 +214,57 @@ public class OnlineActivity extends AppCompatActivity {
         }
         return super.onTouchEvent(e);
     }
+    private void cambiarTabler(String side){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (side.equals("0")){
+                    myCanvas = new ChessBoard(getApplicationContext(), "0");
+                LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
+                layout.addView(myCanvas);
+                }
+                else{
+                    myCanvas = new ChessBoard(getApplicationContext(), "1");
+                    LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
+                    layout.addView(myCanvas);
+                }
+                startStop();
+            }
+        });
 
+    }
    private void esperaRival(){
+
+       Log.d("Socket: ", "Esperando rival");
+       mSocket.on("getOpponent", new Emitter.Listener() {
+
+           @Override
+           public void call (Object...args){
+               JSONObject data = (JSONObject) args[0];
+               //here the data is in JSON Format
+               try {
+                   idSocket = data.getString("id");
+                   int s = data.getInt("side");
+                   side = String.valueOf(data.getInt("side"));
+                   //  playGame();
+                   dialog.dismiss();
+                    cambiarTabler(side);
+
+               } catch (JSONException e) {
+                   e.printStackTrace();
+               }
+               Log.d("Socket: ", data.toString());
+               // Toast.makeText(FriendsList.this, data.toString(), Toast.LENGTH_SHORT).show();
+           }
+
+       });
+
+
 
        Handler handler = new Handler();
        handler.postDelayed(new Runnable() {
            public void run() {
+               mSocket2.connect();
                Log.d("Socket2: ", "Socket conectado");
                Log.d("Socket2: ", "Esperando rival");
                mSocket2.on("getOpponent", new Emitter.Listener() {

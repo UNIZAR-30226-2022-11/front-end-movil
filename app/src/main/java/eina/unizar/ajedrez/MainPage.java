@@ -58,7 +58,7 @@ public class MainPage extends AppCompatActivity {
         store = findViewById((R.id.shop));
 
         //online3Button.setOnClickListener(view -> playAgainstOnlineRival(3));
-        online3Button.setOnClickListener(view -> seeRanking());
+        online3Button.setOnClickListener(view -> playAgainstOnlineRival(3));
         online10Button.setOnClickListener(view -> playAgainstOnlineRival(10));
         online30Button.setOnClickListener(view -> playAgainstOnlineRival(30));
         onlineNoTimeButton.setOnClickListener(view -> playAgainstOnlineRival(30));

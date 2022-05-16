@@ -26,17 +26,27 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class Store extends AppCompatActivity {
     private String nickname;
-    private String monedas;
+    private int monedas;
     private RequestQueue queue;
     private String actual = "1";
-    private String compradoBlue, compradoBrown;
+    private String compradoBlue, compradoBrown,compradoKnight,compradoStar,compradoFootball, compradoHeart;
     Button comprarGris, equiparGris;
     Button comprarAzul, equiparAzul;
     Button comprarMarron, equiparMarron;
+    Button comprarKnight, equiparKnight;
+    Button comprarStar, equiparStar;
+    Button comprarFootball, equiparFootball;
+    Button comprarHeart, equiparHeart;
+    Map<String, Integer> tableros = new HashMap<String, Integer>();
+    Map<String, Integer>  avatares = new HashMap<String, Integer>();
+    Set<String> tablerosComprados = new HashSet<String>();
+    Set<String> avataresComprados = new HashSet<String>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +54,16 @@ public class Store extends AppCompatActivity {
         setContentView(R.layout.store);
         queue = Volley.newRequestQueue(this);
 
+        nickname = getIntent().getExtras().getString("nickname");
+        TextView usuarioTienda = findViewById(R.id.nomUser);
+        usuarioTienda.setText(nickname+": ");
+        setBoards();
+        TextView numMonedas =  findViewById(R.id.monedas);
+        numMonedas.setText(String.valueOf(monedas));
+
+    }
+
+    void setBoards(){
         comprarGris = findViewById(R.id.buyGris);
         comprarGris.setText("Comprado");
         comprarGris.setBackgroundColor(Color.GREEN);
@@ -55,9 +75,6 @@ public class Store extends AppCompatActivity {
         equiparAzul = findViewById((R.id.equiparBlue));
         equiparMarron = findViewById((R.id.equiparBrown));
 
-        nickname = getIntent().getExtras().getString("nickname");
-        TextView usuarioTienda = findViewById(R.id.nomUser);
-        usuarioTienda.setText(nickname+": ");
         infoTienda();
         if(actual == "1"){
             equiparGris.setText("Equipado");
@@ -69,16 +86,14 @@ public class Store extends AppCompatActivity {
             equiparMarron.setText("Equipado");
             equiparMarron.setBackgroundColor(Color.GREEN);
         }
-        if(compradoBlue == "1"){
+        if(tablerosComprados.contains("BoardAzul")){
             comprarAzul.setText("Comprado");
             comprarAzul.setBackgroundColor(Color.GREEN);
         }
-        if(compradoBrown == "1"){
+        if(tablerosComprados.contains("BoardMarron")){
             comprarMarron.setText("Comprado");
             comprarMarron.setBackgroundColor(Color.GREEN);
         }
-        TextView numMonedas =  findViewById(R.id.monedas);
-        numMonedas.setText(monedas);
 
         //comprarGris.setOnClickListener(view -> buyBoard(""));
         comprarAzul.setOnClickListener(view -> buyBoard("Azul"));
@@ -89,8 +104,64 @@ public class Store extends AppCompatActivity {
         equiparMarron.setOnClickListener(view -> equiparBoard("Marron"));
     }
 
+    void setAvatars(){
+        comprarKnight = findViewById(R.id.buyKnight);
+        comprarKnight.setText("Comprado");
+        comprarKnight.setBackgroundColor(Color.GREEN);
+        comprarFootball = findViewById(R.id.buyFootball);
+        comprarStar = findViewById(R.id.buyStar);
+        comprarHeart = findViewById(R.id.buyHeart);
+
+        equiparKnight = findViewById((R.id.equiparKnight));
+        equiparFootball = findViewById((R.id.equiparFootball));
+        equiparStar = findViewById((R.id.equiparStar));
+        equiparHeart = findViewById((R.id.equiparHeart));
+        actual = "0";
+        if(actual == "1"){
+            equiparKnight.setText("Equipado");
+            equiparKnight.setBackgroundColor(Color.GREEN);
+        }else if(actual == "2"){
+            equiparFootball.setText("Equipado");
+            equiparFootball.setBackgroundColor(Color.GREEN);
+        }else if(actual == "3"){
+            equiparStar.setText("Equipado");
+            equiparStar.setBackgroundColor(Color.GREEN);
+        }else{
+            equiparHeart.setText("Equipado");
+            equiparHeart.setBackgroundColor(Color.GREEN);
+        }
+        if(avataresComprados.contains("knight_avatar")){
+            comprarKnight.setText("Comprado");
+            comprarKnight.setBackgroundColor(Color.GREEN);
+        }
+        if(avataresComprados.contains("soccer_avatar")){
+            comprarFootball.setText("Comprado");
+            comprarFootball.setBackgroundColor(Color.GREEN);
+        }
+        if(avataresComprados.contains("star_avatar")){
+            comprarStar.setText("Comprado");
+            comprarStar.setBackgroundColor(Color.GREEN);
+        }
+        if(avataresComprados.contains("heart_avatar")){
+            comprarHeart.setText("Comprado");
+            comprarHeart.setBackgroundColor(Color.GREEN);
+        }
+
+
+        //comprarGris.setOnClickListener(view -> buyBoard(""));
+        comprarKnight.setOnClickListener(view -> buyBoard("Azul"));
+        comprarFootball.setOnClickListener(view -> buyBoard("Marron"));
+        comprarStar.setOnClickListener(view -> buyBoard("Azul"));
+        comprarHeart.setOnClickListener(view -> buyBoard("Marron"));
+
+        equiparKnight.setOnClickListener(view -> equiparBoard("Gris"));
+        equiparFootball.setOnClickListener(view -> equiparBoard("Azul"));
+        equiparStar.setOnClickListener(view -> equiparBoard("Marron"));
+        equiparHeart.setOnClickListener(view -> equiparBoard("Marron"));
+    }
+
     void infoTienda(){
-       /* String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getStoreInfo?nickname="+nickname;
+       String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getCoins?nickname="+nickname;
         Log.d("Enviando: ", URL);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
@@ -99,8 +170,8 @@ public class Store extends AppCompatActivity {
                 Log.d("Exito: ", response );
                 try {
                     JSONObject obj = new JSONObject(response);
-                    monedas = obj.getString("monedas");
-                    Log.d("Numero monedas: ", monedas);
+                    monedas = obj.getInt("coins");
+                    Log.d("Numero monedas: ", String.valueOf(monedas));
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -121,12 +192,99 @@ public class Store extends AppCompatActivity {
             }
         };
         stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        queue.add(stringRequest);*/
-        monedas="4";
+        queue.add(stringRequest);
+
+         URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getShop?nickname="+nickname;
+        Log.d("Enviando: ", URL);
+
+         stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("Exito: ", response );
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    //Log.d("Numero monedas: ", String.valueOf(monedas));
+                    JSONArray shopItems = obj.getJSONArray("articulos");
+                    JSONObject item;
+
+                    for(int i = 0;i < shopItems.length();i++){
+                        item = shopItems.getJSONObject(i);
+                        Log.d("Valor: ", item.toString() );
+                        if(item.getString("tipo").equals("table")){
+                            tableros.put(item.getString("nombre"),item.getInt("precio"));
+                        }else if(item.getString("tipo").equals("avatar")){
+                            avatares.put(item.getString("nombre"),item.getInt("precio"));
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("onErrorResponse: ", error.getLocalizedMessage() == null ? "" : error.getLocalizedMessage());
+            }
+        }){
+            @Override
+            public Map<String,String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String,String>();
+                params.put("content-type","application/json");
+                //  params.put("Access-Control-Allow-Origin","*");
+                return params;
+            }
+        };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(stringRequest);
+       // monedas="4";
+
+
+        URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getInventory?nickname="+nickname;
+        Log.d("Enviando: ", URL);
+
+        stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("Exito: ", response );
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    //Log.d("Numero monedas: ", String.valueOf(monedas));
+                    JSONArray shopItems = obj.getJSONArray("articulos");
+                    JSONObject item;
+
+                    for(int i = 0;i < shopItems.length();i++){
+                        item = shopItems.getJSONObject(i);
+                        Log.d("Valor: ", item.toString() );
+                        if(item.getString("tipo").equals("table")){
+                            tablerosComprados.add(item.getString("nombre"));
+                        }else if(item.getString("tipo").equals("avatar")){
+                            avataresComprados.add(item.getString("nombre"));
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("onErrorResponse: ", error.getLocalizedMessage() == null ? "" : error.getLocalizedMessage());
+            }
+        }){
+            @Override
+            public Map<String,String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String,String>();
+                params.put("content-type","application/json");
+                //  params.put("Access-Control-Allow-Origin","*");
+                return params;
+            }
+        };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(stringRequest);
     }
 
     private void buyBoard(String color){
-        if(Integer.parseInt(monedas) < 10 && color == "Marron" || Integer.parseInt(monedas) < 5 && color == "Azul"){
+        if(monedas < 10 && color == "Marron" || monedas < 5 && color == "Azul"){
             Toast.makeText(Store.this,"No hay sufcientes monedas", Toast.LENGTH_SHORT).show();
         }else if(compradoBlue == "1" && color == "Azul" || compradoBrown == "1" && color == "Marron"){
             Toast.makeText(Store.this,"El tablero ya esta adquirido", Toast.LENGTH_SHORT).show();
@@ -141,9 +299,9 @@ public class Store extends AppCompatActivity {
                 Log.d("Exito: ", response );
                 try {
                     JSONObject obj = new JSONObject(response);
-                    monedas = obj.getString("monedas");
+                    monedas = obj.getInt("coins");
                     String res = obj.getString("resultado");
-                    Log.d("Numero monedas: ", monedas);
+                    Log.d("Numero monedas: ", String.valueOf(monedas));
                     Toast.makeText(Store.this,res, Toast.LENGTH_SHORT).show();
                     comprarGris = findViewById(R.id.buyGris);
                     comprarGris.setText("Comprado");
@@ -190,9 +348,9 @@ public class Store extends AppCompatActivity {
                     Log.d("Exito: ", response );
                     try {
                         JSONObject obj = new JSONObject(response);
-                        monedas = obj.getString("monedas");
+                        monedas = obj.getInt("monedas");
                         String res = obj.getString("resultado");
-                        Log.d("Numero monedas: ", monedas);
+                        Log.d("Numero monedas: ", String.valueOf(monedas));
                         Toast.makeText(Store.this,res, Toast.LENGTH_SHORT).show();
                         equiparGris = findViewById((R.id.equiparGris));
                         equiparGris.setText("Equipado");

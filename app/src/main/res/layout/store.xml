@@ -1,167 +1,365 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="391dp"
-        android:layout_height="827dp"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp"
-        android:layout_gravity="center_vertical">
+    <ScrollView
+        android:id="@+id/ScrollView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="33dp">
+
+        <LinearLayout
+
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="1dp">
 
             <TextView
                 android:id="@+id/tienda"
                 android:layout_width="255dp"
                 android:layout_height="56dp"
-                android:text="OUR STORE"
-                android:textSize="40sp"
+                android:layout_marginStart="60dp"
+
                 android:gravity="center"
-                android:layout_marginStart="60dp"/>
+                android:text="OUR STORE"
+                android:textSize="40sp" />
 
-        <LinearLayout
-            android:layout_width="391dp"
-            android:layout_height="50dp"
-            android:orientation="horizontal"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="15dp"
-           >
-            <TextView
-                android:id="@+id/nomUser"
-                android:layout_width="92dp"
-                android:layout_height="22dp"
-                android:textSize="20sp"
-                android:text="TextView"
-                android:gravity="right"
-                android:layout_marginStart="190dp"/>
+            <LinearLayout
+                android:layout_width="391dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/nomUser"
+                    android:layout_width="92dp"
+                    android:layout_height="22dp"
+                    android:layout_marginStart="190dp"
+                    android:gravity="right"
+                    android:text="TextView"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/monedas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="right"
+                    android:text="TextView"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/monedas"
+                android:id="@+id/headerBoards"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="TextView"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="30dp"
                 android:gravity="right"
-               />
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/ListGrey"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp">
-            <ImageView
-                android:id="@+id/imagenGris"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/board_gris" />
+                android:text="Boards"
+                android:textSize="40sp" />
+
+            <LinearLayout
+                android:id="@+id/ListGrey"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imagenGris"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/board_gris" />
 
                 <Button
                     android:id="@+id/buyGris"
-                    android:layout_marginStart="17dp"
-                    android:layout_marginTop="30dp"
-                    android:textSize="12dp"
-                    android:minWidth="120dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Get: 5 coins" />
+                    android:layout_marginStart="17dp"
+                    android:layout_marginTop="30dp"
+                    android:minWidth="120dp"
+                    android:text="Get: 5 coins"
+                    android:textSize="12dp" />
+
                 <Button
                     android:id="@+id/equiparGris"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginStart="17dp"
-                    android:textSize="12dp"
-                    android:minWidth="120dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Set default" />
+                    android:layout_marginStart="17dp"
+                    android:layout_marginTop="30dp"
+                    android:minWidth="120dp"
+                    android:text="Set default"
+                    android:textSize="12dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ListBlue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imagenBlue"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/board_azul" />
+
+                <Button
+                    android:id="@+id/buyBlue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="30dp"
+                    android:minWidth="120dp"
+                    android:text="Get: 5 coins"
+                    android:textSize="12dp" />
+
+                <Button
+                    android:id="@+id/equiparBlue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:minWidth="120dp"
+                    android:text="Set default"
+                    android:textSize="12dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ListBrown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imagenBrown"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/board_marron" />
+
+                <Button
+                    android:id="@+id/buyBrown"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="30dp"
+                    android:minWidth="120dp"
+                    android:text="Get: 10 coins"
+                    android:textSize="12dp" />
+
+                <Button
+                    android:id="@+id/equiparBrown"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:minWidth="120dp"
+                    android:text="Set default"
+                    android:textSize="12dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/headerAvatars"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:gravity="right"
+                android:text="Avatars"
+                android:textSize="40sp" />
+
+            <LinearLayout
+                android:id="@+id/ListKnight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imagenKnight"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/knight_avatar" />
+
+                <Button
+                    android:id="@+id/buyKnight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="30dp"
+                    android:minWidth="120dp"
+                    android:text="Get: 10 coins"
+                    android:textSize="12dp" />
+
+                <Button
+                    android:id="@+id/equiparKnight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:minWidth="120dp"
+                    android:text="Set default"
+                    android:textSize="12dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ListStar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imagenStar"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/star_avatar" />
+
+                <Button
+                    android:id="@+id/buyStar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="30dp"
+                    android:minWidth="120dp"
+                    android:text="Get: 5 coins"
+                    android:textSize="12dp" />
+
+                <Button
+                    android:id="@+id/equiparStar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:minWidth="120dp"
+                    android:text="Set default"
+                    android:textSize="12dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ListFootball"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imagenFootball"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/soccer_avatar" />
+
+                <Button
+                    android:id="@+id/buyFootball"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="30dp"
+                    android:minWidth="120dp"
+                    android:text="Get: 10 coins"
+                    android:textSize="12dp" />
+
+                <Button
+                    android:id="@+id/equiparFootball"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:minWidth="120dp"
+                    android:text="Set default"
+                    android:textSize="12dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ListHeart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imagenHeart"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/heart_avatar" />
+
+                <Button
+                    android:id="@+id/buyHeart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="30dp"
+                    android:minWidth="120dp"
+                    android:text="Get: 15 coins"
+                    android:textSize="12dp" />
+
+                <Button
+                    android:id="@+id/equiparHeart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:minWidth="120dp"
+                    android:text="Set default"
+                    android:textSize="12dp" />
+            </LinearLayout>
 
         </LinearLayout>
-        <LinearLayout
-            android:id="@+id/ListBlue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp">
-            <ImageView
-                android:id="@+id/imagenBlue"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/board_azul" />
-
-            <Button
-                android:id="@+id/buyBlue"
-                android:layout_marginStart="22dp"
-                android:layout_marginTop="30dp"
-                android:textSize="12dp"
-                android:minWidth="120dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Get: 5 coins" />
-            <Button
-                android:id="@+id/equiparBlue"
-                android:layout_marginTop="30dp"
-                android:textSize="12dp"
-                android:minWidth="120dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Set default" />
-
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/ListBrown"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp">
-            <ImageView
-                android:id="@+id/imagenBrown"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/board_marron" />
-
-            <Button
-                android:id="@+id/buyBrown"
-                android:layout_marginStart="22dp"
-                android:layout_marginTop="30dp"
-                android:textSize="12dp"
-                android:minWidth="120dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Get: 10 coins" />
-            <Button
-                android:id="@+id/equiparBrown"
-                android:layout_marginTop="30dp"
-                android:textSize="12dp"
-                android:minWidth="120dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Set default" />
-
-        </LinearLayout>
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</ScrollView>
