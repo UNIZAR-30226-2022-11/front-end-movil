@@ -58,6 +58,7 @@ public class Store extends AppCompatActivity {
         TextView usuarioTienda = findViewById(R.id.nomUser);
         usuarioTienda.setText(nickname+": ");
         setBoards();
+        setAvatars();
         TextView numMonedas =  findViewById(R.id.monedas);
         numMonedas.setText(String.valueOf(monedas));
 
@@ -99,9 +100,9 @@ public class Store extends AppCompatActivity {
         comprarAzul.setOnClickListener(view -> buyBoard("Azul"));
         comprarMarron.setOnClickListener(view -> buyBoard("Marron"));
 
-        equiparGris.setOnClickListener(view -> equiparBoard("Gris"));
-        equiparAzul.setOnClickListener(view -> equiparBoard("Azul"));
-        equiparMarron.setOnClickListener(view -> equiparBoard("Marron"));
+        equiparGris.setOnClickListener(view -> equiparItem("Gris", "tablero"));
+        equiparAzul.setOnClickListener(view -> equiparItem("Azul","tablero"));
+        equiparMarron.setOnClickListener(view -> equiparItem("Marron","tablero"));
     }
 
     void setAvatars(){
@@ -126,7 +127,7 @@ public class Store extends AppCompatActivity {
         }else if(actual == "3"){
             equiparStar.setText("Equipado");
             equiparStar.setBackgroundColor(Color.GREEN);
-        }else{
+        }else if(actual == "4"){
             equiparHeart.setText("Equipado");
             equiparHeart.setBackgroundColor(Color.GREEN);
         }
@@ -154,10 +155,10 @@ public class Store extends AppCompatActivity {
         comprarStar.setOnClickListener(view -> buyBoard("Azul"));
         comprarHeart.setOnClickListener(view -> buyBoard("Marron"));
 
-        equiparKnight.setOnClickListener(view -> equiparBoard("Gris"));
-        equiparFootball.setOnClickListener(view -> equiparBoard("Azul"));
-        equiparStar.setOnClickListener(view -> equiparBoard("Marron"));
-        equiparHeart.setOnClickListener(view -> equiparBoard("Marron"));
+        equiparKnight.setOnClickListener(view -> equiparItem("Knight","avatar"));
+        equiparFootball.setOnClickListener(view -> equiparItem("Soccer","avatar"));
+        equiparStar.setOnClickListener(view -> equiparItem("Star", "avatar"));
+        equiparHeart.setOnClickListener(view -> equiparItem("Heart", "avatar"));
     }
 
     void infoTienda(){
@@ -200,7 +201,7 @@ public class Store extends AppCompatActivity {
          stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("Exito: ", response );
+                Log.d("Exito tienda: ", response );
                 try {
                     JSONObject obj = new JSONObject(response);
                     //Log.d("Numero monedas: ", String.valueOf(monedas));
@@ -209,7 +210,7 @@ public class Store extends AppCompatActivity {
 
                     for(int i = 0;i < shopItems.length();i++){
                         item = shopItems.getJSONObject(i);
-                        Log.d("Valor: ", item.toString() );
+                        Log.d("Tienda: ", item.toString() );
                         if(item.getString("tipo").equals("table")){
                             tableros.put(item.getString("nombre"),item.getInt("precio"));
                         }else if(item.getString("tipo").equals("avatar")){
@@ -245,7 +246,7 @@ public class Store extends AppCompatActivity {
         stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("Exito: ", response );
+                Log.d("Exito comprado: ", response );
                 try {
                     JSONObject obj = new JSONObject(response);
                     //Log.d("Numero monedas: ", String.valueOf(monedas));
@@ -254,10 +255,11 @@ public class Store extends AppCompatActivity {
 
                     for(int i = 0;i < shopItems.length();i++){
                         item = shopItems.getJSONObject(i);
-                        Log.d("Valor: ", item.toString() );
+                        Log.d("Comprado: ", item.toString() );
                         if(item.getString("tipo").equals("table")){
                             tablerosComprados.add(item.getString("nombre"));
                         }else if(item.getString("tipo").equals("avatar")){
+                            Log.d("XQ: ", " Añade avatar" );
                             avataresComprados.add(item.getString("nombre"));
                         }
                     }
@@ -332,14 +334,19 @@ public class Store extends AppCompatActivity {
         queue.add(stringRequest);
         }
     }
-    private void equiparBoard(String color){
+    private void equiparItem(String color,String tipo){
         if(color == "Gris" && actual == "1" || color == "Azul" && actual == "2" || color == "Marron" && actual == "3"){
             Toast.makeText(Store.this,"Este color ya esta elegido", Toast.LENGTH_SHORT).show();
         }else if(compradoBlue != "1" && color == "Azul" || compradoBrown != "1" && color == "Marron"){
             Toast.makeText(Store.this,"Hay que comprar el tablero para escogerlo", Toast.LENGTH_SHORT).show();
         }
         else{
-            String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/setBoard?nickname=&color="+nickname;
+            String URL = "";
+            if(tipo.equals("tablero")) {
+                 URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/setBoard?nickname=&color=" + nickname;
+            }else if(tipo.equals("avatar")){
+
+            }
             Log.d("Enviando: ", URL);
 
             StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {

@@ -13,6 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class MainPage extends AppCompatActivity {
 
     String nickname;
+    String avatar;
     Button online3Button;
     Button online10Button;
     Button online30Button;
@@ -38,6 +39,7 @@ public class MainPage extends AppCompatActivity {
             Log.d("d: ", "Pre comprobacion x" + randomNum);
         }*/
         nickname = getIntent().getExtras().getString("nickname");
+        avatar = getIntent().getExtras().getString("avatar");
 
         online3Button = findViewById(R.id.online3);
         online10Button = findViewById(R.id.online10);

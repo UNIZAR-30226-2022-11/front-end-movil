@@ -151,7 +151,7 @@ public class friendRequests extends AppCompatActivity {
     }
     void aceptarSolicitud(String nickname, String  nuevoAmigo) throws JSONException {// La peticion al back-end está todavía por hacer
 
-        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/addFriend";
+        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/acceptFriendRequest";
         Log.d("Enviando: ", URL);
         JSONObject jsonBody = new JSONObject();
         jsonBody.put("nickname", nickname);

@@ -81,9 +81,11 @@ public class UserSignIn extends AppCompatActivity{
                     JSONObject obj = new JSONObject(response);
                     String nombre = obj.getString("nickname").toString();
                     String monedas = obj.getString("monedas");
+                    String avatar = obj.getString("avatar");
                     if( nombre.equals(username)){
                         i.putExtra("nickname", nombre);
                         i.putExtra("monedas", monedas);
+                        i.putExtra("avatar", avatar);
                         startActivity(i);
                         Log.d("Exito: ", obj.getString("nickname")+ "y username" +username);
                     }
