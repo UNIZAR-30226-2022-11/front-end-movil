@@ -118,7 +118,15 @@ public class ChessBoard extends View {
         Log.d("d: ", "mC " + movimientoCorrecto + " t " +  turno + " p "+ this.turno.charAt(0));
         return movimientoCorrecto ;
     }
+    public int[] getPos(){
+        int[] pos = new int[4];
+        pos[0] = posX;
+        pos[1] = posY;
+        pos[2] = posFinX;
+        pos[3] = posFinY;
 
+        return pos;
+    }
     @Override
     public boolean onTouchEvent(MotionEvent e){
         String TAG ="d: ";
