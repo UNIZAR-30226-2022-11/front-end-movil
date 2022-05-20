@@ -7,13 +7,11 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-
 public class MainPage extends AppCompatActivity {
 
     String nickname;
     String avatar;
+
     Button online3Button;
     Button online10Button;
     Button online30Button;
@@ -33,11 +31,7 @@ public class MainPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_page);
-        Random ran = new Random();int x = 0;
-       /* for(int i = 0; i<100;i++){
-            int randomNum = ThreadLocalRandom.current().nextInt(0, 1 + 1);
-            Log.d("d: ", "Pre comprobacion x" + randomNum);
-        }*/
+
         nickname = getIntent().getExtras().getString("nickname");
         avatar = getIntent().getExtras().getString("avatar");
 
@@ -59,7 +53,6 @@ public class MainPage extends AppCompatActivity {
 
         store = findViewById((R.id.shop));
 
-        //online3Button.setOnClickListener(view -> playAgainstOnlineRival(3));
         online3Button.setOnClickListener(view -> playAgainstOnlineRival(3));
         online10Button.setOnClickListener(view -> playAgainstOnlineRival(10));
         online30Button.setOnClickListener(view -> playAgainstOnlineRival(30));
@@ -68,7 +61,7 @@ public class MainPage extends AppCompatActivity {
         ai3Button.setOnClickListener(view -> playAgainstAI(3));
         ai10Button.setOnClickListener(view -> playAgainstAI(10));
         ai30Button.setOnClickListener(view -> playAgainstAI(30));
-        aiNoTimeButton.setOnClickListener(view -> playAgainstAI(0));
+        aiNoTimeButton.setOnClickListener(view -> playAgainstAI(30));
 
         myFriends.setOnClickListener((view -> seeFriendsList(nickname)));
         requests.setOnClickListener((view -> seeRequests(nickname)));

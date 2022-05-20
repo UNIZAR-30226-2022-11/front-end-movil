@@ -25,4 +25,7 @@
     <string name="tu">Tú</string>
     <string name="ia">IA</string>
     <string name="no_friends">No friends yet</string>
+    <string name="requests">Requests</string>
+    <string name="my_records">My records</string>
+    <string name="my_ranking">My ranking</string>
 </resources>
