@@ -136,7 +136,10 @@ public class UserSignUp extends AppCompatActivity {
 
     private boolean validFields() {
         Log.d("Valor campos", username + ", " + email + ", " + password + ", " + repeatPassword);
-        boolean ok = validNickname() && validFullName() && validEmail() && validPassword();
+        boolean ok = validNickname();
+        ok &= validFullName();
+        ok &= validEmail();
+        ok &= validPassword();
         Log.d("Resultado validación", String.valueOf(ok));
         return ok;
     }
