@@ -107,6 +107,8 @@ public class ChessBoard extends View {
         this.side = side;
         setPieceSet();
         setMatrix();
+        //setPieceSetAhogado();
+       // setMatrixAhogado();
         turno = "w";
         boardColor = board;
         if(side == "0"){
@@ -118,6 +120,8 @@ public class ChessBoard extends View {
             posReyNegro = new Pos(7,3);
             posReyBlanco = new Pos(0,3);
         }
+        //posReyNegro = new Pos(0,0);
+        //posReyBlanco = new Pos(1,2);
         controlador = new AiControl();
     }
 
@@ -188,15 +192,21 @@ public class ChessBoard extends View {
                                 else if(piezaDown != -1 && enroque){
                                     Log.d(TAG, "Enrocada"+posFinX);
                                     ChessPiece Torre = pieceSet.get(piezaDown);
-                                    if(posFinX == 0){ // Enroque a la izda
+                                    if(posFinX == 0 && side.equals("1")){ // Enroque a la izda jugando con negras
                                         Log.d(TAG, "Enrocada"+posFinX);
                                         int posFinal = posY-1;
                                         Torre.newCoord(posX-1, posY);
                                         Log.d(TAG, "Rey en: " + posY + " y " + (posX-1) + " boardMtx: " + boardMtx[posY][posX-1]);
 
-                                    }else{
+                                    }else if(posFinX == 7 && side.equals("1")){
                                         Log.d(TAG, "Rey en: " + posY + " y " + (posX+1) + " boardMtx: " + boardMtx[posY][posX+1]);
                                         Torre.newCoord(posX+1, posY);
+                                    }else if(posFinX == 0 && side.equals("0")){
+                                        Torre.newCoord(posX-1, posY);
+                                        Log.d(TAG, "Rey en: " + posY + " y " + (posX-1) + " boardMtx: " + boardMtx[posY][posX-1]);
+                                    }else if(posFinX == 7 && side.equals("0")) {
+                                        Torre.newCoord(posX+1, posY);
+                                        Log.d(TAG, "Rey en: " + posY + " y " + (posX-1) + " boardMtx: " + boardMtx[posY][posX-1]);
                                     }
                                     changePos.setAlreadyMoved();
                                     Torre.setAlreadyMoved();
@@ -217,12 +227,12 @@ public class ChessBoard extends View {
                                 }else {
                                     if(side.equals("0") && changePos.getType().equals("King")){
                                         if(cuidadoEnroque && posFinX == 0) {
-                                            posReyBlanco.X = posVieja.X; posReyBlanco.Y = 1;
-                                            posFinY = 1;
+                                            posReyBlanco.X = posVieja.X; posReyBlanco.Y = 2;
+                                            posFinX = 2;
                                             ;
                                         }else if(cuidadoEnroque && posFinX == 7){
                                             posReyBlanco.X = posVieja.X; posReyBlanco.Y = 5;
-                                            posFinY = 5;
+                                            posFinX = 6;
                                         }else{
                                             posReyBlanco.X =  posVieja.X; posReyBlanco.Y = posVieja.Y;
                                         }
@@ -270,6 +280,10 @@ public class ChessBoard extends View {
     }
     public boolean getCheckClick(){
         return checkClick(posX, posY);
+    }
+
+    public String[][] devolverTablero(){
+        return boardMtx;
     }
 
     public boolean getIsAClick(){
@@ -475,6 +489,7 @@ public class ChessBoard extends View {
     public void makeAIMove(){
         ArrayList<Movimiento> movs = generarTodosMovimientosValidos();
         Log.d("d: ", "Movs: " + movs.size());
+        if(movs.size() == 0){}
         Movimiento m = controlador.mejorMov(boardMtx,movs,side);
         if(m == null) mate = true;
         Log.d("d: ", "Movimiento final: " + m.inicial.X + " " + m.inicial.Y);
@@ -1297,7 +1312,26 @@ public class ChessBoard extends View {
             pieceSet.put(num,new ChessPiece(x0+(4*squareSize),y0+(7*squareSize),"Queen",squareSize,"b",bQueen,side)); num++;
         }
     }
+    void setPieceSetAhogado(){
+        Bitmap wPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_pawn);
+        Bitmap bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_king);
+        Bitmap wKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_king);
 
+        pieceSet.put(0,new ChessPiece(x0,y0+(2*squareSize),"Pawn",squareSize,"w",wPawn,side));
+        pieceSet.put(1,new ChessPiece(x0,y0,"King",squareSize,"b",bKing,side));
+        pieceSet.put(2,new ChessPiece(x0+(1*squareSize),y0+(2*squareSize),"King",squareSize,"w",wKing,side));
+
+    }
+
+    private void setMatrixAhogado(){
+        for(int i = 0;i < NUM_FILCOL;i++){
+            for(int j = 0; j < NUM_FILCOL;j++) boardMtx[i][j] = "--";
+        }
+
+            boardMtx[0][0] = "bK";
+            boardMtx[0][2] = "wp";
+            boardMtx[1][2] = "wK";
+    }
     private void setMatrix(){
         for(int i = 0;i < NUM_FILCOL;i++){
             for(int j = 0; j < NUM_FILCOL;j++) boardMtx[i][j] = "--";
