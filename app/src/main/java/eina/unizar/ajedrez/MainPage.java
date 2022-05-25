@@ -103,8 +103,13 @@ public class MainPage extends AppCompatActivity {
 
                     JSONArray obj = new JSONArray(response);
                     JSONObject tablero = obj.getJSONObject(0);
-                     board = tablero.getString("tablero");
-
+                    String board = tablero.getString("tablero");
+                    Intent i = new Intent(getApplicationContext(), AiActivity.class);
+                    i.putExtra("nickname", nickname);
+                    i.putExtra("time", min);
+                    i.putExtra("avatar", avatar);
+                    i.putExtra("board", board);
+                    startActivity(i);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -125,46 +130,7 @@ public class MainPage extends AppCompatActivity {
         };
         stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
-
-
-            URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getPieces?nickname=" + nickname;
-            Log.d("Exito: ", URL);
-            stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    Log.d("ExitoPieces: ", response);
-                    try {
-
-                        JSONArray obj = new JSONArray(response);
-                        JSONObject tablero = obj.getJSONObject(0);
-                        String board = tablero.getString("tablero");
-                        Intent i = new Intent(getApplicationContext(), OnlineActivity.class);//OnlineActivity
-                        i.putExtra("nickname", nickname);
-                        i.putExtra("time", min);
-                        i.putExtra("avatar", avatar);
-                        i.putExtra("board", board);
-                        i.putExtra("pieces", pieces);
-                        startActivity(i);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("onErrorResponse: ", error.getLocalizedMessage() == null ? "" : error.getLocalizedMessage());
-                }
-            }) {
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("content-type", "application/json");
-                    params.put("Access-Control-Allow-Origin", "*");
-                    return params;
-                }
-            };
-            stringRequest.setRetryPolicy(new DefaultRetryPolicy(50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            queue.add(stringRequest);
+        
 
 
     }
