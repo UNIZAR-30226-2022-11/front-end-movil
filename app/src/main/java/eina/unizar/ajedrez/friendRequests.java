@@ -155,15 +155,15 @@ public class friendRequests extends AppCompatActivity {
         String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/acceptFriendRequest";
         Log.d("Enviando: ", URL);
         JSONObject jsonBody = new JSONObject();
-        jsonBody.put("nickname", nickname);
-        jsonBody.put("amigo", nuevoAmigo);
+        jsonBody.put("nickname", nuevoAmigo);
+        jsonBody.put("amigo", nickname);
         Log.d("Enviando: ", nuevoAmigo + " " + nickname);
         final String requestBody = jsonBody.toString();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d("d: ", "Nuevo amigo añadido" +response );
-                Toast.makeText(friendRequests.this,"Nuevo amigo " + nuevoAmigo + " añadido.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(friendRequests.this,"Nuevo amigo " + nuevoAmigo, Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(getApplicationContext(), MainPage.class);
                 i.putExtra("nickname", nickname);
                 startActivity(i);
@@ -201,8 +201,8 @@ public class friendRequests extends AppCompatActivity {
         String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/declineFriendRequest";
         Log.d("Enviando: ", URL);
         JSONObject jsonBody = new JSONObject();
-        jsonBody.put("nickname", nickname);
-        jsonBody.put("amigo", nuevoAmigo);
+        jsonBody.put("nickname", nuevoAmigo );
+        jsonBody.put("amigo", nickname);
         Log.d("Enviando: ", nuevoAmigo + " " + nickname);
         final String requestBody = jsonBody.toString();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {

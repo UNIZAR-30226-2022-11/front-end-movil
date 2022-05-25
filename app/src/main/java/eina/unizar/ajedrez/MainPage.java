@@ -104,7 +104,7 @@ public class MainPage extends AppCompatActivity {
                     JSONArray obj = new JSONArray(response);
                     JSONObject tablero = obj.getJSONObject(0);
                     String board = tablero.getString("tablero");
-                    Intent i = new Intent(getApplicationContext(), AiActivity.class);
+                    Intent i = new Intent(getApplicationContext(), OnlineActivity.class);
                     i.putExtra("nickname", nickname);
                     i.putExtra("time", min);
                     i.putExtra("avatar", avatar);
@@ -130,7 +130,7 @@ public class MainPage extends AppCompatActivity {
         };
         stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
-        
+
 
 
     }
@@ -196,10 +196,46 @@ public class MainPage extends AppCompatActivity {
     }
 
     private void seeStore(){
-        Intent i = new Intent(this, Store.class);
-        i.putExtra("nickname", nickname);
-        i.putExtra("avatar", avatar);
-        startActivity(i);
+        RequestQueue queue;
+        queue = Volley.newRequestQueue(this);
+        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getBoard?nickname="+nickname;
+        Log.d("Exito: ", URL );
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("Exito: ", response );
+                try {
+
+                    JSONArray obj = new JSONArray(response);
+                    JSONObject tablero = obj.getJSONObject(0);
+                    String board = tablero.getString("tablero");
+                    Intent i = new Intent(getApplicationContext(), Store.class);
+                    i.putExtra("nickname", nickname);
+                    i.putExtra("avatar", avatar);
+                    i.putExtra("board", board);
+                    startActivity(i);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("onErrorResponse: ", error.getLocalizedMessage() == null ? "" : error.getLocalizedMessage());
+            }
+        }){
+            @Override
+            public Map<String,String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String,String>();
+                params.put("content-type","application/json");
+                params.put("Access-Control-Allow-Origin","*");
+                return params;
+            }
+        };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(stringRequest);
+
+
     }
 
     private void seeRecord(){

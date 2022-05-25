@@ -130,7 +130,7 @@ public class ChessPiece {
             }
         }
         if(this.color == "w" && this.side == "0" || this.color == "b" && this.side == "1"){
-            Log.d("d", "Check white pawn "+ fila+ " y "+col + " / " + (this.fila-185)/80+ " y " +(this.col-65)/80);
+            //Log.d("d", "Check white pawn "+ fila+ " y "+col + " / " + (this.fila-185)/80+ " y " +(this.col-65)/80);
             if ((fila == ((this.fila-185)/80) - 1 || (fila == ((this.fila-185)/80)-2 && !alreadyMoved)) && col == (this.col-65)/80) {
                 Log.d("d", "Valid move pawn");
                 return true;

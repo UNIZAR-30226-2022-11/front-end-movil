@@ -94,10 +94,10 @@ public class OnlineActivity extends AppCompatActivity {
         board = getIntent().getExtras().getString("board");
         if(time != 0 )timeLeftInMilliseconds = (long) time*60*1000;
         timeLeftInMillisecondsRival = (long) time*60*1000;
-        mSocket.emit("buscarPartida",nickname,nickname,Integer.toString(time));
+        mSocket.emit("buscarPartida",nickname,Integer.toString(time));
         //mSocket2.emit("buscarPartida","Juan","Juan",Integer.toString(time));
-      //  TextView nameUser = findViewById(R.id.nomUser);
-       // nameUser.setText(nickname);
+       TextView nameUser = findViewById(R.id.nombreUser);
+        nameUser.setText(nickname);
         TextView timerUser = findViewById(R.id.timerUser);
         timerUser.setText(time+":00");
         TextView timerRival = findViewById(R.id.timerRival);
@@ -251,7 +251,7 @@ public class OnlineActivity extends AppCompatActivity {
                            runOnUiThread(new Runnable() {
                                @Override
                                public void run() {
-                                   TextView rival = findViewById(R.id.nombreUser);
+                                   TextView rival = findViewById(R.id.nombreRival);
                                    rival.setText(idSocket);
                                }
                            });
@@ -350,7 +350,7 @@ public class OnlineActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        mSocket2.disconnect();
+       // mSocket2.disconnect();
         mSocket.disconnect();
         Log.d("d: ", "Fin actividad");
         stopTimer();
@@ -362,7 +362,7 @@ public class OnlineActivity extends AppCompatActivity {
     {
         if ((keyCode == KeyEvent.KEYCODE_BACK))
         {
-            mSocket2.disconnect();
+           // mSocket2.disconnect();
             mSocket.disconnect();
             stopTimer();
             finish();
