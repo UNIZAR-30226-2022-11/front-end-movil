@@ -61,6 +61,7 @@ public class Store extends AppCompatActivity {
         actual =  getIntent().getExtras().getString("board");
         TextView usuarioTienda = findViewById(R.id.nomUser);
         usuarioTienda.setText(nickname+": ");
+        usuarioTienda.setTextColor(this.getResources().getColor(R.color.white));
         infoTienda();
         //setBoards();
         //setAvatars();
@@ -221,7 +222,8 @@ public class Store extends AppCompatActivity {
                     monedas = obj.getInt("coins");
                     Log.d("Numero monedas: ", String.valueOf(monedas));
                     TextView numMonedas =  findViewById(R.id.monedas);
-                    numMonedas.setText(String.valueOf(monedas));
+                    numMonedas.setText(String.valueOf(monedas) + " coins");
+                    numMonedas.setTextColor(getResources().getColor(R.color.white));
 
                 } catch (JSONException e) {
                     e.printStackTrace();

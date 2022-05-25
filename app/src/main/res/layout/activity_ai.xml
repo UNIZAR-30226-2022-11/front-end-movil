@@ -35,31 +35,15 @@
             android:textSize="40sp"
             android:typeface="sans" />
     </LinearLayout>
+
     <LinearLayout
+        android:id="@+id/tablero"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginTop="1dp"
         android:layout_marginBottom="40dp"
-        android:id="@+id/tablero">
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginTop="1dp"
-        android:layout_marginBottom="20dp"
-        android:id="@+id/chat">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:typeface="sans"
-            android:text="Esto es el chat"
-            android:textSize="25sp"
-            android:layout_gravity="center"
-            android:id="@+id/chatText"/>
+        android:orientation="vertical">
+
     </LinearLayout>
 </LinearLayout>

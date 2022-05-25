@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.SignIn"
+    android:background="#202732">
 
     <ScrollView
         android:id="@+id/ScrollView"
@@ -28,9 +30,10 @@
                 android:layout_width="255dp"
                 android:layout_height="56dp"
                 android:layout_marginStart="60dp"
-
                 android:gravity="center"
-                android:text="OUR STORE"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:text="SHOP"
                 android:textSize="40sp" />
 
             <LinearLayout
@@ -43,7 +46,7 @@
                 <TextView
                     android:id="@+id/nomUser"
                     android:layout_width="92dp"
-                    android:layout_height="22dp"
+                    android:layout_height="39dp"
                     android:layout_marginStart="190dp"
                     android:gravity="right"
                     android:text="TextView"
@@ -66,7 +69,9 @@
                 android:layout_marginLeft="30dp"
                 android:gravity="right"
                 android:text="Boards"
-                android:textSize="40sp" />
+                android:textStyle="bold"
+                android:textSize="40sp"
+                android:textColor="@color/white"/>
 
             <LinearLayout
                 android:id="@+id/ListGrey"
@@ -198,7 +203,10 @@
                 android:layout_marginLeft="30dp"
                 android:gravity="right"
                 android:text="Avatars"
-                android:textSize="40sp" />
+                android:textStyle="bold"
+                android:textSize="40sp"
+                android:textColor="@color/white"
+                />
 
             <LinearLayout
                 android:id="@+id/ListKnight"
