@@ -54,7 +54,8 @@ public class Ranking extends AppCompatActivity {
             public void onResponse(String response) {
                 Log.d("Exito: ", response);
                 try {
-                    JSONArray gamesRequests = new JSONArray((response));
+                    JSONObject respuesta = new JSONObject((response));
+                    JSONArray gamesRequests =respuesta.getJSONArray("rankingList");
                     JSONObject posJugador;
 
                     LinearLayout layout2 = new LinearLayout(getApplicationContext());
@@ -77,40 +78,38 @@ public class Ranking extends AppCompatActivity {
                     header.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
                     layout2.addView(header);
                     layoutInterno.addView(layout2);
+                    Log.d("Jugadores: ", Integer.toString(gamesRequests.length()) +" " + gamesRequests);
                     for (int i = 0; i < gamesRequests.length(); i++) {
-                       GradientDrawable border = new GradientDrawable();
-                        border.setStroke(1, 0xFFFFFFFF); //black border with full opacity
-                        posJugador = gamesRequests.getJSONObject(i);
-                         layout2 = new LinearLayout(getApplicationContext());
-                        layout2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                        layout2.setOrientation(LinearLayout.HORIZONTAL);
-                        Log.d("Amigo: ", posJugador.getString("Nickname"));
+                        Object obj = gamesRequests.get(i);
+                        if (obj != null && !obj.toString().equals("null")) {
 
-                        /*TextView position = new TextView(getApplicationContext());
-                        position.setLayoutParams(params);
-                        position.setPadding(20, 20, 10, 20);
-                        position.setText(posJugador.getString("position"));
-                        position.setTextColor(Color.parseColor("#FFFFFFFF"));
-                        position.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-                        layout2.addView(position);*/
+                            GradientDrawable border = new GradientDrawable();
+                            border.setStroke(1, 0xFFFFFFFF); //black border with full opacity
+                            posJugador = gamesRequests.getJSONObject(i);
+                            Log.d("Siguiente jugador: ", posJugador.toString());
 
-                        TextView username = new TextView(getApplicationContext());
-                        username.setLayoutParams(params);
-                        username.setPadding(20, 20, 10, 20);
-                        username.setText(posJugador.getString("Nickname"));
-                        username.setTextColor(Color.parseColor("#FFFFFFFF"));
-                        username.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-                        layout2.addView(username);
+                            layout2 = new LinearLayout(getApplicationContext());
+                            layout2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                            layout2.setOrientation(LinearLayout.HORIZONTAL);
 
-                        TextView puntos = new TextView(getApplicationContext());
-                        puntos.setLayoutParams(params);
-                        puntos.setPadding(100, 20, 10, 20);
-                        puntos.setTextColor(Color.parseColor("#FFFFFFFF"));
-                        puntos.setText(posJugador.getString("puntos"));
-                        puntos.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-                        layout2.addView(puntos);
-                        layout2.setBackground(border);
-                        layoutInterno.addView(layout2);
+                            TextView username = new TextView(getApplicationContext());
+                            username.setLayoutParams(params);
+                            username.setPadding(20, 20, 10, 20);
+                            username.setText(posJugador.getString("Nickname"));
+                            username.setTextColor(Color.parseColor("#FFFFFFFF"));
+                            username.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                            layout2.addView(username);
+
+                            TextView puntos = new TextView(getApplicationContext());
+                            puntos.setLayoutParams(params);
+                            puntos.setPadding(100, 20, 10, 20);
+                            puntos.setTextColor(Color.parseColor("#FFFFFFFF"));
+                            puntos.setText(posJugador.getString("puntos"));
+                            puntos.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                            layout2.addView(puntos);
+                            layout2.setBackground(border);
+                            layoutInterno.addView(layout2);
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -23,7 +23,8 @@ public class AiControl {
         ChessBoard.Movimiento miMov = null;//new ChessBoard.Movimiento(new ChessBoard.Pos(0,0), new ChessBoard.Pos(0,0));
         for(int i = 0;i < movsValidos.size();i++){
             ChessBoard.Movimiento m =  movsValidos.get(i);
-            //Log.d("d: ", "Mov valido para " + m.inicial.X + " " + m.inicial.Y);
+            Log.d("AiControl: ", "Mov valido para " + m.inicial.X + " " + m.inicial.Y + " " +
+                    m.fin.X + " " +m.fin.Y);
             viejoEnd =  boardMtx[m.fin.X][m.fin.Y]; // Guardar posición final antes de nuevo movimiento
             viejoIni =  boardMtx[m.inicial.X][m.inicial.Y]; // Guardar posición inicial antes de nuevo movimiento
             boardMtx[m.inicial.X][m.inicial.Y] = "--";

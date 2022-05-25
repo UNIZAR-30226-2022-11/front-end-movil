@@ -1,12 +1,11 @@
 package eina.unizar.ajedrez;
 
+import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,8 +24,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,8 +35,9 @@ public class Store extends AppCompatActivity {
     private String nickname;
     private int monedas;
     private RequestQueue queue;
-    private String actual = "1";
-    private String compradoBlue, compradoBrown,compradoKnight,compradoStar,compradoFootball, compradoHeart;
+    private String actual = "BoardGris";
+    private String avatarActual = "";
+   private  String compradoBlue, compradoBrown,compradoKnight,compradoStar,compradoFootball, compradoHeart;
     Button comprarGris, equiparGris;
     Button comprarAzul, equiparAzul;
     Button comprarMarron, equiparMarron;
@@ -55,14 +57,37 @@ public class Store extends AppCompatActivity {
         queue = Volley.newRequestQueue(this);
 
         nickname = getIntent().getExtras().getString("nickname");
+        avatarActual =  getIntent().getExtras().getString("avatar");
         TextView usuarioTienda = findViewById(R.id.nomUser);
         usuarioTienda.setText(nickname+": ");
-        setBoards();
-        setAvatars();
-        TextView numMonedas =  findViewById(R.id.monedas);
-        numMonedas.setText(String.valueOf(monedas));
+        infoTienda();
+        //setBoards();
+        //setAvatars();
+
 
     }
+
+    @Override
+    public void onBackPressed() {
+       // super.onBackPressed();
+        Intent i = new Intent(getApplicationContext(), MainPage.class);//OnlineActivity
+        i.putExtra("nickname", nickname);
+        i.putExtra("avatar", avatarActual);
+        startActivity(i);
+        //this.finish();
+    }
+
+   /* @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if ((keyCode == KeyEvent.KEYCODE_BACK))
+        {
+
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
+    }*/
+
 
     void setBoards(){
         comprarGris = findViewById(R.id.buyGris);
@@ -75,12 +100,21 @@ public class Store extends AppCompatActivity {
         equiparGris = findViewById((R.id.equiparGris));
         equiparAzul = findViewById((R.id.equiparBlue));
         equiparMarron = findViewById((R.id.equiparBrown));
+        Log.d("Tableros: ","Comprobando");
+        /*Iterator<String> setIterator = tablerosComprados.iterator();
+        while(setIterator.hasNext()){
+            Log.d("tableros comprados: ", "Uno mas");
+        }*/
 
-        infoTienda();
-        if(actual == "1"){
+
+        Log.d("Tableros: ","Despues de comprobar");
+        for (String s : tablerosComprados) {
+            Log.d("tableros comprados: ", s);
+        }
+        if(actual.equals("BoardGris")){
             equiparGris.setText("Equipado");
             equiparGris.setBackgroundColor(Color.GREEN);
-        }else if(actual == "2"){
+        }else if(actual.equals("BoardAzul")){
             equiparAzul.setText("Equipado");
             equiparAzul.setBackgroundColor(Color.GREEN);
         }else{
@@ -88,21 +122,24 @@ public class Store extends AppCompatActivity {
             equiparMarron.setBackgroundColor(Color.GREEN);
         }
         if(tablerosComprados.contains("BoardAzul")){
+            Log.d("Numero monedas: ", "Esta el azul");
+            compradoBlue = "1";
             comprarAzul.setText("Comprado");
             comprarAzul.setBackgroundColor(Color.GREEN);
         }
         if(tablerosComprados.contains("BoardMarron")){
+            compradoBrown ="1";
             comprarMarron.setText("Comprado");
             comprarMarron.setBackgroundColor(Color.GREEN);
         }
 
-        //comprarGris.setOnClickListener(view -> buyBoard(""));
-        comprarAzul.setOnClickListener(view -> buyBoard("Azul"));
-        comprarMarron.setOnClickListener(view -> buyBoard("Marron"));
+        comprarGris.setOnClickListener(view -> buyBoard("BoardGris","board"));
+        comprarAzul.setOnClickListener(view -> buyBoard("BoardAzul","board"));
+        comprarMarron.setOnClickListener(view -> buyBoard("BoardMarron","board"));
 
-        equiparGris.setOnClickListener(view -> equiparItem("Gris", "tablero"));
-        equiparAzul.setOnClickListener(view -> equiparItem("Azul","tablero"));
-        equiparMarron.setOnClickListener(view -> equiparItem("Marron","tablero"));
+        equiparGris.setOnClickListener(view -> equiparItem("BoardGris", "board"));
+        equiparAzul.setOnClickListener(view -> equiparItem("BoardAzul","board"));
+        equiparMarron.setOnClickListener(view -> equiparItem("BoardMarron","board"));
     }
 
     void setAvatars(){
@@ -117,48 +154,56 @@ public class Store extends AppCompatActivity {
         equiparFootball = findViewById((R.id.equiparFootball));
         equiparStar = findViewById((R.id.equiparStar));
         equiparHeart = findViewById((R.id.equiparHeart));
-        actual = "0";
-        if(actual == "1"){
+        //avatarActual = "knight_avatar";
+        Log.d("tableros comprados: ",  "Pasa por aqui");
+        for (String s : avataresComprados) {
+            Log.d("tableros comprados: ", s);
+        }
+        if(avatarActual.equals("knight_avatar")){
             equiparKnight.setText("Equipado");
             equiparKnight.setBackgroundColor(Color.GREEN);
-        }else if(actual == "2"){
+        }else if(avatarActual.equals("soccer_avatar")){
             equiparFootball.setText("Equipado");
             equiparFootball.setBackgroundColor(Color.GREEN);
-        }else if(actual == "3"){
+        }else if(avatarActual.equals("star_avatar")){
             equiparStar.setText("Equipado");
             equiparStar.setBackgroundColor(Color.GREEN);
-        }else if(actual == "4"){
+        }else if(avatarActual.equals("heart_avatar")){
             equiparHeart.setText("Equipado");
             equiparHeart.setBackgroundColor(Color.GREEN);
         }
         if(avataresComprados.contains("knight_avatar")){
+            compradoKnight = "1";
             comprarKnight.setText("Comprado");
             comprarKnight.setBackgroundColor(Color.GREEN);
         }
         if(avataresComprados.contains("soccer_avatar")){
+            compradoFootball = "1";
             comprarFootball.setText("Comprado");
             comprarFootball.setBackgroundColor(Color.GREEN);
         }
         if(avataresComprados.contains("star_avatar")){
+            compradoStar = "1";
             comprarStar.setText("Comprado");
             comprarStar.setBackgroundColor(Color.GREEN);
         }
         if(avataresComprados.contains("heart_avatar")){
+            compradoHeart = "1";
             comprarHeart.setText("Comprado");
             comprarHeart.setBackgroundColor(Color.GREEN);
         }
 
 
         //comprarGris.setOnClickListener(view -> buyBoard(""));
-        comprarKnight.setOnClickListener(view -> buyBoard("Azul"));
-        comprarFootball.setOnClickListener(view -> buyBoard("Marron"));
-        comprarStar.setOnClickListener(view -> buyBoard("Azul"));
-        comprarHeart.setOnClickListener(view -> buyBoard("Marron"));
+        comprarKnight.setOnClickListener(view -> buyBoard("knight_avatar","avatar"));
+        comprarFootball.setOnClickListener(view -> buyBoard("soccer_avatar","avatar"));
+        comprarStar.setOnClickListener(view -> buyBoard("star_avatar","avatar"));
+        comprarHeart.setOnClickListener(view -> buyBoard("heart_avatar","avatar"));
 
-        equiparKnight.setOnClickListener(view -> equiparItem("Knight","avatar"));
-        equiparFootball.setOnClickListener(view -> equiparItem("Soccer","avatar"));
-        equiparStar.setOnClickListener(view -> equiparItem("Star", "avatar"));
-        equiparHeart.setOnClickListener(view -> equiparItem("Heart", "avatar"));
+        equiparKnight.setOnClickListener(view -> equiparItem("knight_avatar","avatar"));
+        equiparFootball.setOnClickListener(view -> equiparItem("soccer_avatar","avatar"));
+        equiparStar.setOnClickListener(view -> equiparItem("star_avatar", "avatar"));
+        equiparHeart.setOnClickListener(view -> equiparItem("heart_avatar", "avatar"));
     }
 
     void infoTienda(){
@@ -171,8 +216,11 @@ public class Store extends AppCompatActivity {
                 Log.d("Exito: ", response );
                 try {
                     JSONObject obj = new JSONObject(response);
+                    obj = obj.getJSONObject("coins");
                     monedas = obj.getInt("coins");
                     Log.d("Numero monedas: ", String.valueOf(monedas));
+                    TextView numMonedas =  findViewById(R.id.monedas);
+                    numMonedas.setText(String.valueOf(monedas));
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -194,6 +242,40 @@ public class Store extends AppCompatActivity {
         };
         stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
+
+         URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getBoard?nickname="+nickname;
+        Log.d("Enviando: ", URL);
+
+         stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("Exito: ", response );
+                try {
+                    JSONArray obj = new JSONArray(response);
+                    JSONObject tablero = obj.getJSONObject(0);
+                    //obj = obj.getJSONObject("board");
+                    actual = tablero.getString("tablero");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("onErrorResponse: ", error.getLocalizedMessage() == null ? "" : error.getLocalizedMessage());
+            }
+        }){
+            @Override
+            public Map<String,String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String,String>();
+                params.put("content-type","application/json");
+                //  params.put("Access-Control-Allow-Origin","*");
+                return params;
+            }
+        };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(stringRequest);
+
 
          URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getShop?nickname="+nickname;
         Log.d("Enviando: ", URL);
@@ -240,7 +322,7 @@ public class Store extends AppCompatActivity {
        // monedas="4";
 
 
-        URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getInventory?nickname="+nickname;
+        URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/inventory?nickname="+nickname;
         Log.d("Enviando: ", URL);
 
         stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
@@ -248,21 +330,24 @@ public class Store extends AppCompatActivity {
             public void onResponse(String response) {
                 Log.d("Exito comprado: ", response );
                 try {
-                    JSONObject obj = new JSONObject(response);
+                  //  JSONObject obj = new JSONObject(response);
                     //Log.d("Numero monedas: ", String.valueOf(monedas));
-                    JSONArray shopItems = obj.getJSONArray("articulos");
+                    JSONArray shopItems = new JSONArray(response);
                     JSONObject item;
 
                     for(int i = 0;i < shopItems.length();i++){
                         item = shopItems.getJSONObject(i);
                         Log.d("Comprado: ", item.toString() );
                         if(item.getString("tipo").equals("table")){
-                            tablerosComprados.add(item.getString("nombre"));
+                            Log.d("XQ: ", " Añade table" );
+                            tablerosComprados.add(item.getString("ARTICULO_nombre"));
                         }else if(item.getString("tipo").equals("avatar")){
                             Log.d("XQ: ", " Añade avatar" );
-                            avataresComprados.add(item.getString("nombre"));
+                            avataresComprados.add(item.getString("ARTICULO_nombre"));
                         }
                     }
+                    setBoards();
+                    setAvatars();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -283,34 +368,77 @@ public class Store extends AppCompatActivity {
         };
         stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
+
+
+    }
+    private boolean checkBoards(String color){
+        if(compradoBlue == "1" && color.equals("BoardAzul") || compradoBrown == "1" && color.equals("BoardMarron") || color.equals("Gris")){
+            Toast.makeText(Store.this,"El tablero ya esta adquirido", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(monedas < 10 && color.equals("BoardMarron") || monedas < 5 && color.equals("BoardAzul")){ // Luego que haya dinero suficiente
+            Toast.makeText(Store.this,"No hay sufcientes monedas", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
-    private void buyBoard(String color){
-        if(monedas < 10 && color == "Marron" || monedas < 5 && color == "Azul"){
-            Toast.makeText(Store.this,"No hay sufcientes monedas", Toast.LENGTH_SHORT).show();
-        }else if(compradoBlue == "1" && color == "Azul" || compradoBrown == "1" && color == "Marron"){
-            Toast.makeText(Store.this,"El tablero ya esta adquirido", Toast.LENGTH_SHORT).show();
-        }
-        else {
-             String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/buyBoard?nickname=&color="+nickname;
-        Log.d("Enviando: ", URL);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+    private boolean checkAvatars(String color){
+        if(color.equals("knight_avatar") || compradoFootball == "1" && color.equals("soccer_avatar") ||
+                compradoStar == "1" && color.equals("star_avatar") || compradoHeart == "1" && color.equals("star_avatar") ){
+            Toast.makeText(Store.this,"El avatar ya esta adquirido", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(monedas < 10 && color.equals("soccer_avatar") || monedas < 5 && color.equals("star_avatar") ||
+                monedas < 15 && color.equals("heart_avatar")){ // Luego que haya dinero suficiente
+            Toast.makeText(Store.this,"No hay sufcientes monedas", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private void buyBoard(String color, String type){
+        // Primero comprobar que no esta comprado
+        if(type.equals("board") && checkBoards(color) || type.equals("avatar") && checkAvatars(color)){
+             String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/buyItem";
+        Log.d("Enviando: ", URL);
+            JSONObject jsonBody = new JSONObject();
+            try {
+                jsonBody.put("nickname", nickname);
+                jsonBody.put("nombre", color);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            final String requestBody = jsonBody.toString();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d("Exito: ", response );
                 try {
-                    JSONObject obj = new JSONObject(response);
-                    monedas = obj.getInt("coins");
-                    String res = obj.getString("resultado");
-                    Log.d("Numero monedas: ", String.valueOf(monedas));
-                    Toast.makeText(Store.this,res, Toast.LENGTH_SHORT).show();
-                    comprarGris = findViewById(R.id.buyGris);
-                    comprarGris.setText("Comprado");
-                    comprarGris.setBackgroundColor(Color.GREEN);
 
-                    TextView numMonedas =  findViewById(R.id.monedas);
-                    numMonedas.setText(monedas);
+                    JSONObject obj = new JSONObject(response);
+                    if(obj.getBoolean("exito")){
+                        Toast.makeText(Store.this,"Articulo adquirido", Toast.LENGTH_SHORT).show();
+                        if(type.equals("board")){
+                            tablerosComprados.add(color);
+                            setBoards();
+                        } else if(type.equals("avatar")){
+                            avataresComprados.add(color);
+                            setAvatars();
+                        }
+                        if(color.equals("BoardAzul") || color.equals("star_avatar")){
+                            monedas -= 5;
+                        }else if(color.equals("BoardMarron") || color.equals("football_avatar")){
+                            monedas -= 10;
+                        }else if(color.equals("heart_avatar")){
+                            monedas -= 15;
+                        }
+                        TextView numMonedas =  findViewById(R.id.monedas);
+                        numMonedas.setText(String.valueOf(monedas));
+
+                    }else  Toast.makeText(Store.this,"Ha habido un error durante la compra", Toast.LENGTH_SHORT).show();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -323,6 +451,15 @@ public class Store extends AppCompatActivity {
             }
         }){
             @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    Log.d("d: " ,"Falla aqui");
+                    return null;
+                }
+            }
+            @Override
             public Map<String,String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String,String>();
                 params.put("content-type","application/json");
@@ -334,37 +471,96 @@ public class Store extends AppCompatActivity {
         queue.add(stringRequest);
         }
     }
-    private void equiparItem(String color,String tipo){
-        if(color == "Gris" && actual == "1" || color == "Azul" && actual == "2" || color == "Marron" && actual == "3"){
+    private boolean checkSelectedBoard(String color){
+        if(actual.equals(color)){
             Toast.makeText(Store.this,"Este color ya esta elegido", Toast.LENGTH_SHORT).show();
-        }else if(compradoBlue != "1" && color == "Azul" || compradoBrown != "1" && color == "Marron"){
+            return false;
+        }else if(compradoBlue != "1" && color == "BoardAzul" || compradoBrown != "1" && color == "BoardMarron"){
             Toast.makeText(Store.this,"Hay que comprar el tablero para escogerlo", Toast.LENGTH_SHORT).show();
+            return false;
         }
-        else{
+        return true;
+    }
+
+    private boolean checkSelectedAvatar(String color){
+        if(avatarActual.equals(color)){
+            Toast.makeText(Store.this,"El avatar ya esta elegido", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(compradoFootball != "1" && color.equals("soccer_avatar") || compradoStar != "1" && color.equals("star_avatar") ||
+                compradoHeart != "1" && color.equals("heart_avatar") ){ // Luego que haya dinero suficiente
+            Toast.makeText(Store.this,"Hay que comprar el avatar para escogerlo", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private void equiparItem(String color,String tipo){
+       if(tipo.equals("board") && checkSelectedBoard(color) || tipo.equals("avatar") && checkSelectedAvatar(color) ){
             String URL = "";
-            if(tipo.equals("tablero")) {
-                 URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/setBoard?nickname=&color=" + nickname;
+           JSONObject jsonBody = new JSONObject();
+
+            if(tipo.equals("board")) {
+                 URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/updateTable";
+                try {
+                    jsonBody.put("nickname", nickname);
+                    jsonBody.put("table", color);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }else if(tipo.equals("avatar")){
-
+                URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/updateAvatar";
+                try {
+                    jsonBody.put("nickname", nickname);
+                    jsonBody.put("avatar", color);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
-            Log.d("Enviando: ", URL);
+           final String requestBody = jsonBody.toString();
+           Log.d("Enviando: ", requestBody);
 
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     Log.d("Exito: ", response );
                     try {
                         JSONObject obj = new JSONObject(response);
-                        monedas = obj.getInt("monedas");
-                        String res = obj.getString("resultado");
-                        Log.d("Numero monedas: ", String.valueOf(monedas));
-                        Toast.makeText(Store.this,res, Toast.LENGTH_SHORT).show();
-                        equiparGris = findViewById((R.id.equiparGris));
-                        equiparGris.setText("Equipado");
-                        equiparGris.setBackgroundColor(Color.GREEN);
+                        if(obj.getBoolean("exito")){
+                            Toast.makeText(Store.this,"Eleccion guardada", Toast.LENGTH_SHORT).show();
+                            int DEFAULT_GREY = Color.rgb(90,90,90);
+                            if(tipo.equals("board")){
+                                if(actual.equals("BoardGris")){
+                                    equiparGris.setText("SET DEFAULT");
+                                    equiparGris.setBackgroundColor(DEFAULT_GREY);
+                                }else if(actual.equals("BoardAzul")){
+                                    equiparAzul.setText("SET DEFAULT");
+                                    equiparAzul.setBackgroundColor(DEFAULT_GREY);
+                                }else if(actual.equals("BoardMarron")){
+                                    equiparMarron.setText("SET DEFAULT");
+                                    equiparMarron.setBackgroundColor(DEFAULT_GREY);
+                                }
+                                actual = color;
+                                setBoards();
+                            } else if(tipo.equals("avatar")){
+                                if(avatarActual.equals("knight_avatar")){
+                                    equiparKnight.setText("SET DEFAULT");
+                                    equiparKnight.setBackgroundColor(DEFAULT_GREY);
+                                }else if(avatarActual.equals("soccer_avatar")){
+                                    equiparFootball.setText("SET DEFAULT");
+                                    equiparFootball.setBackgroundColor(DEFAULT_GREY);
+                                }else if(avatarActual.equals("star_avatar")){
+                                    equiparStar.setText("SET DEFAULT");
+                                    equiparStar.setBackgroundColor(DEFAULT_GREY);
+                                }else if(avatarActual.equals("heart_avatar")){
+                                    equiparHeart.setText("SET DEFAULT");
+                                    equiparHeart.setBackgroundColor(DEFAULT_GREY);
+                                }
+                                avatarActual = color;
+                                setAvatars();
+                            }
 
-                        TextView numMonedas =  findViewById(R.id.monedas);
-                        numMonedas.setText(monedas);
+                        }else  Toast.makeText(Store.this,"Ha habido un error durante la compra", Toast.LENGTH_SHORT).show();
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -377,6 +573,15 @@ public class Store extends AppCompatActivity {
                 }
             }){
                 @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        Log.d("d: " ,"Falla aqui");
+                        return null;
+                    }
+                }
+                @Override
                 public Map<String,String> getHeaders() throws AuthFailureError {
                     Map<String,String> params = new HashMap<String,String>();
                     params.put("content-type","application/json");
@@ -388,5 +593,4 @@ public class Store extends AppCompatActivity {
             queue.add(stringRequest);
         }
     }
-
 }

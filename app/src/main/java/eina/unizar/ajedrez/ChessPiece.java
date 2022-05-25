@@ -30,6 +30,12 @@ public class ChessPiece {
         return col ==  (this.col-65)/80 && fila == (this.fila-185)/80;
     }
 
+    public boolean alreadyMoved(){
+        return alreadyMoved;
+    }
+    public void setAlreadyMoved(){
+        this.alreadyMoved = true;
+    }
     public void newCoord(int col, int fila) {
         String TAG = "d";
         if(checkMove(col,fila)){
@@ -98,19 +104,28 @@ public class ChessPiece {
                 (fila == (this.fila-185)/80) && (Math.abs(((this.col-65)/80) -  col) == 1)) {
             return true;
         }
-        Log.d("d", "King fallo " +(this.fila-185)/80 + " " + (this.col-65)/80+ "hasta" + +fila+ "  "+col);
+        else if(!alreadyMoved &&(fila == (this.fila-185)/80) && (col == 0 || col == 7)){
+            if(col == 0){
+                this.col = 65 + (1*80);
+            }else{
+                this.col = 65+(5*80);
+            }
+            return true;
+        }
+
+        //Log.d("d", "King fallo " +(this.fila-185)/80 + " " + (this.col-65)/80+ "hasta" + +fila+ "  "+col);
         return false;
     }
 
     private boolean checkPawn(int col, int fila){
         if(this.color == "b" && this.side == "0" || this.color == "w" && this.side == "1") {
             if ((fila == ((this.fila-185)/80) + 1 || (fila == ((this.fila-185)/80) + 2 && !alreadyMoved)) && col == (this.col-65)/80) {
-                Log.d("d", "Valid move black  pawn");
+                //Log.d("d", "Valid move black  pawn");
                 return true;
             }
 
             if (fila == (this.fila-185)/80 + 1 && (col == (this.col-65)/80 + 1 || col == (this.col-65)/80 - 1)) {
-                Log.d("d", "eat pawn");
+               // Log.d("Chess Piece", "eat pawn");
                 return true;
             }
         }
@@ -131,14 +146,14 @@ public class ChessPiece {
     }
     private boolean checkRook(int col, int fila){
         if(col == (this.col-65)/80 || fila == (this.fila-185)/80){
-            Log.d("d", "Valid move " );
+         //   Log.d("d", "Valid move " );
             return true;
         }
         return false;
     }
 
     private boolean checkBishop(int col, int fila){
-        Log.d("d", "Valid move  bishop" + fila + " " + col );
+      //  Log.d("d", "Valid move  bishop" + fila + " " + col );
         if(Math.abs(((this.col-65)/80) -  col) ==  Math.abs(((this.fila-185)/80) - fila)){
             return true;
         }
