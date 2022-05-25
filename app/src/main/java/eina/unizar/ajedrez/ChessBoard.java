@@ -206,7 +206,7 @@ public class ChessBoard extends View {
                                 }
                                 Log.d(TAG, "Pos pieza"+ posFinY+ " "+posFinX);
                                 if(changePos.getType().equals("Pawn") && (posFinY == 0 || posFinY == 7)) { // Coronacion de peon
-                                    if (turno.equals("w")) {
+                                    if (side.equals("1")) {
                                         Bitmap wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_queen);
                                         pieceSet.put(numPieza, new ChessPiece(x0 + (squareSize*posFinX), y0 +(squareSize * posFinY), "Queen", squareSize, "w", wQueen, side));
 
@@ -215,7 +215,7 @@ public class ChessBoard extends View {
                                         pieceSet.put(numPieza, new ChessPiece(x0 + (squareSize*posFinX), y0 +(squareSize * posFinY), "Queen", squareSize, "b", bQueen, side));
                                     }
                                 }else {
-                                    if(turno == "w" && changePos.getType().equals("King")){
+                                    if(side.equals("1") && changePos.getType().equals("King")){
                                         if(cuidadoEnroque && posFinX == 0) {
                                             posReyBlanco.X = posVieja.X; posReyBlanco.Y = 1;
                                             posFinY = 1;

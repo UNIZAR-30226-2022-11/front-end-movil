@@ -104,7 +104,7 @@ public class MainPage extends AppCompatActivity {
                     JSONArray obj = new JSONArray(response);
                     JSONObject tablero = obj.getJSONObject(0);
                     String board = tablero.getString("tablero");
-                    Intent i = new Intent(getApplicationContext(), AiActivity.class);
+                    Intent i = new Intent(getApplicationContext(), OnlineActivity.class);
                     i.putExtra("nickname", nickname);
                     i.putExtra("time", min);
                     i.putExtra("avatar", avatar);
@@ -130,7 +130,7 @@ public class MainPage extends AppCompatActivity {
         };
         stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
-        
+
 
 
     }
