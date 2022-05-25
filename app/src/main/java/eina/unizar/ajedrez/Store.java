@@ -58,6 +58,7 @@ public class Store extends AppCompatActivity {
 
         nickname = getIntent().getExtras().getString("nickname");
         avatarActual =  getIntent().getExtras().getString("avatar");
+        actual =  getIntent().getExtras().getString("board");
         TextView usuarioTienda = findViewById(R.id.nomUser);
         usuarioTienda.setText(nickname+": ");
         infoTienda();
