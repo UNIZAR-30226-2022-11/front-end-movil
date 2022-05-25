@@ -206,7 +206,7 @@ public class ChessBoard extends View {
                                 }
                                 Log.d(TAG, "Pos pieza"+ posFinY+ " "+posFinX);
                                 if(changePos.getType().equals("Pawn") && (posFinY == 0 || posFinY == 7)) { // Coronacion de peon
-                                    if (side.equals("1")) {
+                                    if (side.equals("0")) {
                                         Bitmap wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_queen);
                                         pieceSet.put(numPieza, new ChessPiece(x0 + (squareSize*posFinX), y0 +(squareSize * posFinY), "Queen", squareSize, "w", wQueen, side));
 
@@ -323,11 +323,11 @@ public class ChessBoard extends View {
                     coronar = false;
                     if (side.equals("1")) {
                         Bitmap wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_queen);
-                        pieceSet.put(numPieza, new ChessPiece(x0 + (squareSize*columnaFin), y0 +(squareSize * filaFin), "Queen", squareSize, "w", wQueen, side));
+                        pieceSet.put(val, new ChessPiece(x0 + (squareSize*columnaFin), y0 +(squareSize * filaFin), "Queen", squareSize, "w", wQueen, side));
 
                     }else{
                         Bitmap bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_queen);
-                        pieceSet.put(numPieza, new ChessPiece(x0 + (squareSize*columnaFin), y0 +(squareSize * filaFin), "Queen", squareSize, "b", bQueen, side));
+                        pieceSet.put(val, new ChessPiece(x0 + (squareSize*columnaFin), y0 +(squareSize * filaFin), "Queen", squareSize, "b", bQueen, side));
                     }
                 }else if(esEnroque){
                     esEnroque = false;
