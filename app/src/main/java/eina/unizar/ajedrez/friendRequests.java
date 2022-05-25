@@ -40,6 +40,7 @@ import io.socket.client.Socket;
 public class friendRequests extends AppCompatActivity {
     private RequestQueue queue;
     private String nickname;
+    String avatar;
     private FriendsRequestsBinding binding;
     //private Socket mSocket;
     private List<String> pendientes = new ArrayList<>();;
@@ -51,6 +52,7 @@ public class friendRequests extends AppCompatActivity {
         setContentView(view);
 
         nickname = getIntent().getExtras().getString("nickname");
+        avatar = getIntent().getExtras().getString("avatar");
         queue = Volley.newRequestQueue(this);
 
         try {
@@ -166,6 +168,7 @@ public class friendRequests extends AppCompatActivity {
                 Toast.makeText(friendRequests.this,"Nuevo amigo " + nuevoAmigo, Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(getApplicationContext(), MainPage.class);
                 i.putExtra("nickname", nickname);
+                i.putExtra("avatar",avatar);
                 startActivity(i);
             }
         }, new Response.ErrorListener() {
@@ -212,6 +215,7 @@ public class friendRequests extends AppCompatActivity {
                 Toast.makeText(friendRequests.this,"Peticion rechazada a " + nuevoAmigo + " añadido.", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(getApplicationContext(), MainPage.class);
                 i.putExtra("nickname", nickname);
+                i.putExtra("avatar",avatar);
                 startActivity(i);
             }
         }, new Response.ErrorListener() {
