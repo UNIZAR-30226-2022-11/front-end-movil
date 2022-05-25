@@ -215,7 +215,7 @@ public class ChessBoard extends View {
                                         pieceSet.put(numPieza, new ChessPiece(x0 + (squareSize*posFinX), y0 +(squareSize * posFinY), "Queen", squareSize, "b", bQueen, side));
                                     }
                                 }else {
-                                    if(side.equals("1") && changePos.getType().equals("King")){
+                                    if(side.equals("0") && changePos.getType().equals("King")){
                                         if(cuidadoEnroque && posFinX == 0) {
                                             posReyBlanco.X = posVieja.X; posReyBlanco.Y = 1;
                                             posFinY = 1;
@@ -239,7 +239,7 @@ public class ChessBoard extends View {
                                         }
                                     }
                                         cuidadoEnroque = false;
-                                    Log.d(TAG, "Rey en: " + posFinY + " y " + posFinX + " boardMtx: " + boardMtx[posFinY][posFinX]);
+                                    Log.d(TAG, "Rey en: " + posFinY + " y " + posFinX + " boardMtx: " + boardMtx[posFinY][posFinX] + " siendo boardMtx inicial: " + boardMtx[7][3]);
                                     changePos.newCoord(posFinX, posFinY); // Cambiar posición a la pieza
                                     pieceSet.put(numPieza, changePos);
                                 }

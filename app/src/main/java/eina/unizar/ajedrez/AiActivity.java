@@ -212,13 +212,16 @@ public class AiActivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        Log.d("d: ", "Fin actividad");
+        // super.onBackPressed();
         stopTimer();
-        this.finish();
+        Intent i = new Intent(getApplicationContext(), MainPage.class);//OnlineActivity
+        i.putExtra("nickname", nickname);
+        i.putExtra("avatar", avatar);
+        startActivity(i);
+        //this.finish();
     }
 
-    @Override
+    /*@Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
         if ((keyCode == KeyEvent.KEYCODE_BACK))
@@ -227,7 +230,7 @@ public class AiActivity extends AppCompatActivity {
             finish();
         }
         return super.onKeyDown(keyCode, event);
-    }
+    }*/
 
     public void startStop(){
         if(timerRunning){

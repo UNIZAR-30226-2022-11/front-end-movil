@@ -84,8 +84,19 @@ public class OnlineActivity extends AppCompatActivity {
 
          dialog=new ProgressDialog(this);
         dialog.setMessage("Esperando rival");
-        dialog.setCancelable(true);
+        dialog.setCancelable(false);
         dialog.setInverseBackgroundForced(true);
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mSocket.disconnect();
+               // stopTimer();
+                Intent i = new Intent(getApplicationContext(), MainPage.class);
+                i.putExtra("nickname", nickname);
+                i.putExtra("avatar",avatar);
+                startActivity(i);
+            }
+        });
         dialog.show();
 
         nickname = getIntent().getExtras().getString("nickname");
