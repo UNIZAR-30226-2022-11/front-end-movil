@@ -54,9 +54,9 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:typeface="sans"
-                android:hint="RESULT"
+                android:hint="WINNER"
                 android:layout_marginTop="20dp"
-                android:layout_marginStart="90dp"
+                android:layout_marginStart="85dp"
                 android:textSize="20sp"
                 android:id="@+id/resultGames"
                 android:minHeight="50dp" />

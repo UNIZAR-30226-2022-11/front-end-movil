@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,11 +16,23 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -35,9 +48,11 @@ public class OnlineActivity extends AppCompatActivity {
     char turno = 'w';
     boolean pulsado = false;
     int time;
-    String side,side2;
+    String side, side2;
     String idSocket,idSocket2;
     String nickname;
+    String avatar;
+    String board;
     boolean finPartida =  false;
     ProgressDialog dialog;
 
@@ -46,10 +61,9 @@ public class OnlineActivity extends AppCompatActivity {
     private Socket mSocket, mSocket2;
     {
         try {
-            //mSocket = IO.socket("http://10.0.2.2:3000");
-           // mSocket2 = IO.socket("http://10.0.2.2:3000");
-            mSocket = IO.socket("http://ec2-18-206-137-85.compute-1.amazonaws.com:3000");
-           // mSocket2 = IO.socket("http://ec2-18-206-137-85.compute-1.amazonaws.com:3000");
+           // mSocket = IO.socket("http://10.0.2.2:3000");
+            //mSocket2 = IO.socket("http://10.0.2.2:3000");
+           mSocket = IO.socket("http://ec2-18-206-137-85.compute-1.amazonaws.com:3000");
         } catch (URISyntaxException e) {
             Log.d("Socket: ",   e.toString());
         }
@@ -64,7 +78,7 @@ public class OnlineActivity extends AppCompatActivity {
         //mSocket.disconnect();
        // mSocket2.disconnect();
         mSocket.connect();
-      //  mSocket2.connect();
+        //mSocket2.connect();
 
 
 
@@ -75,9 +89,13 @@ public class OnlineActivity extends AppCompatActivity {
         dialog.show();
 
         nickname = getIntent().getExtras().getString("nickname");
+        avatar = getIntent().getExtras().getString("avatar");
         time = getIntent().getExtras().getInt("time");
+        board = getIntent().getExtras().getString("board");
         if(time != 0 )timeLeftInMilliseconds = (long) time*60*1000;
         timeLeftInMillisecondsRival = (long) time*60*1000;
+        mSocket.emit("buscarPartida",nickname,nickname,Integer.toString(time));
+        //mSocket2.emit("buscarPartida","Juan","Juan",Integer.toString(time));
       //  TextView nameUser = findViewById(R.id.nomUser);
        // nameUser.setText(nickname);
         TextView timerUser = findViewById(R.id.timerUser);
@@ -99,54 +117,59 @@ public class OnlineActivity extends AppCompatActivity {
             mSocket.on("getGameMove", new Emitter.Listener() {
                  @Override
                  public void call(Object... args) {
-                     JSONObject data = (JSONObject)args[0];
-                     Log.d("Socket: ", "Despues de esperar " + data.toString());
-//here the data is in JSON Format
-                     try {
-                         cInicial = data.getString("cI");
-                         fInicial = data.getString("fI");
-                         cFinal = data.getString("cF");
-                         fFinal = data.getString("fF");
-                         myCanvas.hacerMovimientoRival(Integer.parseInt(fInicial),Integer.parseInt(cInicial),Integer.parseInt(fFinal),Integer.parseInt(cFinal));
-                         if(turno == 'w') turno = 'b';
-                         else turno = 'w';
-                         if(side.equals("0")) side = "1";
-                         else side = "0";
-                         if (!myCanvas.isMate()) {
-                             runOnUiThread(new Runnable() {
-                                 @Override
-                                 public void run() {
-                                     startTimer();
-                                     stopTimerRival();
-                                 }
-                             });
+                     if(turno == 'w' && side.equals("1") || turno == 'b' && side.equals("0")){
+                         JSONObject data = (JSONObject)args[0];
+                         Log.d("Socket: ", "Despues de esperar " + data.toString());
+    //here the data is in JSON Format
+                         try {
+                             cInicial = data.getString("cI");
+                             fInicial = data.getString("fI");
+                             cFinal = data.getString("cF");
+                             fFinal = data.getString("fF");
+                             myCanvas.hacerMovimientoRival(Integer.parseInt(fInicial),Integer.parseInt(cInicial),Integer.parseInt(fFinal),Integer.parseInt(cFinal));
+                             if(turno == 'w') turno = 'b';
+                             else turno = 'w';
+                            // if(side.equals("0")) side = "1";
+                          //   else side = "0";
+                             if (!myCanvas.isMate()) {
+                                 runOnUiThread(new Runnable() {
+                                     @Override
+                                     public void run() {
+                                         startTimer();
+                                         stopTimerRival();
+                                     }
+                                 });
 
-
-                         }else{
-                             runOnUiThread(new Runnable() {
-                                 @Override
-                                 public void run() {stopTimer();}
-                             });
-
-                             Log.d("d: ", "Fin partida");
-                             Toast.makeText(getApplicationContext(), "Derrota" , Toast.LENGTH_SHORT).show();
-                             AlertDialog.Builder builder = new AlertDialog.Builder(OnlineActivity.this);
-                             builder.setMessage("Derrota :(");
-                             builder.setPositiveButton("Volver", new DialogInterface.OnClickListener() {
-                                 @Override
-                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                     Intent x = new Intent(getApplicationContext(), MainPage.class);
-                                     startActivity(x);
-                                 }
-                             });
-                             builder.show();
+                             }else{
+                                 mSocket.disconnect();
+                                 runOnUiThread(new Runnable() {
+                                     @Override
+                                     public void run() {
+                                         stopTimer();
+                                         Log.d("d: ", "Fin partida");
+                                         Toast.makeText(getApplicationContext(), "Derrota" , Toast.LENGTH_SHORT).show();
+                                         AlertDialog.Builder builder = new AlertDialog.Builder(OnlineActivity.this);
+                                         builder.setMessage("Derrota :(");
+                                         builder.setPositiveButton("Volver", new DialogInterface.OnClickListener() {
+                                             @Override
+                                             public void onClick(DialogInterface dialogInterface, int i) {
+                                                 Intent x = new Intent(getApplicationContext(), MainPage.class);
+                                                 x.putExtra("nickname",nickname);
+                                                 x.putExtra("avatar",avatar);
+                                                 startActivity(x);
+                                             }
+                                         });
+                                         builder.show();
+                                     }
+                                 });
+                             }
+                         } catch (JSONException e) {
+                             e.printStackTrace();
                          }
-                     } catch (JSONException e) {
-                         e.printStackTrace();
+                         Log.d("Socket: ", data.toString());
                      }
-                     Log.d("Socket: ", data.toString());
 
-                 }
+                    }
              });
 
      }
@@ -160,13 +183,16 @@ public class OnlineActivity extends AppCompatActivity {
                 //Pulsa un boton, comprobar si es mi turno. Sino, sudar de la comprobación
                     if (myCanvas.checkCorrectMov(turno)) { // Pasar parametro donde se guarde movimiento correcto
                         int[] pos = myCanvas.getPos();
-                        mSocket.emit("sendGameMove",idSocket,pos[0],pos[1],pos[2],pos[3]);
+                        Log.d("d: ", "Comprobando emit");
+                        mSocket.emit("sendGameMove",pos[1],pos[0],pos[3],pos[2]);
                         if (turno == 'w')  turno = 'b';
                         else turno = 'w';
                         if (!myCanvas.isMate()) {
                             stopTimer();
                             startTimerRival();
+                            playGame();
                         } else { // Enviar datos de la partida al server y liberar el socket
+                            mSocket.disconnect();
                             stopTimer();
                             AlertDialog.Builder builder = new AlertDialog.Builder(OnlineActivity.this);
                             builder.setMessage("Victoria!");
@@ -174,7 +200,10 @@ public class OnlineActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     guardarPartida();
+
                                     Intent x = new Intent(getApplicationContext(), MainPage.class);
+                                    x.putExtra("nickname",nickname);
+                                    x.putExtra("avatar",avatar);
                                     startActivity(x);
                                 }
                             });
@@ -192,12 +221,12 @@ public class OnlineActivity extends AppCompatActivity {
             public void run() {
                 if (side.equals("0")){
                     Log.d("Tablero : ", "Tablero blanco " + side);
-                    myCanvas = new ChessBoard(getApplicationContext(), "0");
+                    myCanvas = new ChessBoard(getApplicationContext(), "0",board);
                     LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
                     layout.addView(myCanvas);
                 }
                 else{
-                    myCanvas = new ChessBoard(getApplicationContext(), "1");
+                    myCanvas = new ChessBoard(getApplicationContext(), "1",board);
                     LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
                     layout.addView(myCanvas);
                     playGame();
@@ -216,9 +245,18 @@ public class OnlineActivity extends AppCompatActivity {
                        JSONObject data = (JSONObject) args[0];
                        //here the data is in JSON Format
                        try {
-                           idSocket = data.getString("id");
+                           idSocket = data.getString("opNick");
                            side = String.valueOf(data.getInt("side"));
                            dialog.dismiss();
+                           runOnUiThread(new Runnable() {
+                               @Override
+                               public void run() {
+                                   TextView rival = findViewById(R.id.nombreUser);
+                                   rival.setText(idSocket);
+                               }
+                           });
+
+                        //   mSocket.emit("sendGameMove",0,0,2,2);
                            cambiarTabler(side);
 
                        } catch (JSONException e) {
@@ -228,7 +266,7 @@ public class OnlineActivity extends AppCompatActivity {
                    }
        });
 
-  /*    Log.d("Socket2: ", "Socket conectado");
+ /*    Log.d("Socket2: ", "Socket conectado");
        Log.d("Socket2: ", "Esperando rival");
        mSocket2.on("getOpponent", new Emitter.Listener() {
            @Override
@@ -236,8 +274,16 @@ public class OnlineActivity extends AppCompatActivity {
                JSONObject data = (JSONObject) args[0];
 //here the data is in JSON Format
                try {
-                   idSocket2 = data.getString("id");
+                   idSocket2 = data.getString("opNick");
                    side2 = data.getString("side");
+                   runOnUiThread(new Runnable() {
+                       @Override
+                       public void run() {
+                           TextView rival = findViewById(R.id.nombreRival);
+                           rival.setText(idSocket2);
+                       }
+                   });
+                   //mSocket2.emit("sendGameMove",0,0,2,2);
                    playGame();
                    dialog.dismiss();
                } catch (JSONException e) {
@@ -247,12 +293,83 @@ public class OnlineActivity extends AppCompatActivity {
                // Toast.makeText(FriendsList.this, data.toString(), Toast.LENGTH_SHORT).show();
            }
        });*/
-
     }
 
     private void guardarPartida(){
+        RequestQueue queue;
+        queue = Volley.newRequestQueue(this);
+        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getFriendRequest";
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("nickname", nickname);
+            jsonBody.put("rival", "c");
+            jsonBody.put("result", nickname);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
+        final String requestBody = jsonBody.toString();;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("Exito: ", response );
+                try {
+                    JSONObject obj = new JSONObject((response));
+                    board = obj.getString("board");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("onErrorResponse: ", error.getLocalizedMessage() == null ? "" : error.getLocalizedMessage());
+            }
+        }){
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    Log.d("d: " ,"Falla aqui");
+                    return null;
+                }
+            }
+            @Override
+            public Map<String,String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String,String>();
+                params.put("content-type","application/json");
+                params.put("Access-Control-Allow-Origin","*");
+                return params;
+            }
+        };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(stringRequest);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mSocket2.disconnect();
+        mSocket.disconnect();
+        Log.d("d: ", "Fin actividad");
+        stopTimer();
+        this.finish();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if ((keyCode == KeyEvent.KEYCODE_BACK))
+        {
+            mSocket2.disconnect();
+            mSocket.disconnect();
+            stopTimer();
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 
     public void startStop(){
         if(timerRunning){
@@ -322,4 +439,6 @@ public class OnlineActivity extends AppCompatActivity {
         timeLeftText += secondsRival;
         countdownTextRival.setText(timeLeftText);
     }
+
+
 }

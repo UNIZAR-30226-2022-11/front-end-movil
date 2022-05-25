@@ -78,7 +78,7 @@ public class GameRecord  extends AppCompatActivity {
 
                         TextView rival = new TextView(getApplicationContext());
                         rival.setLayoutParams(params);
-                        rival.setPadding(20, 20, 10, 20);
+                        rival.setPadding(170, 20, 10, 20);
                         rival.setText(partida.getString("rival"));
                         rival.setTextColor(Color.parseColor("#FFFFFFFF"));
                         rival.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
@@ -86,11 +86,12 @@ public class GameRecord  extends AppCompatActivity {
 
                         TextView resultado = new TextView(getApplicationContext());
                         resultado.setLayoutParams(params);
-                        resultado.setPadding(20, 20, 10, 20);
-                        if(partida.getString("empate") == "true"){
-                            resultado.setText("Empate");
-                        }else{
-                            resultado.setText(partida.getString("ganador"));
+                        resultado.setPadding(270, 20, 10, 20);
+                        if(partida.getString("empate") == "true") resultado.setText("Empate");
+                        else{
+                            if(partida.getBoolean("ganador"))resultado.setText(nickname);
+                            else resultado.setText(partida.getString("rival"));
+
                         }
                         resultado.setTextColor(Color.parseColor("#FFFFFFFF"));
                         resultado.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);

@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.SignIn"
+    android:background="#202732" >
     <ScrollView
         android:id="@+id/ScrollView"
         android:layout_width="fill_parent"
@@ -13,251 +15,271 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="33dp">
 
-    <LinearLayout
-        android:layout_width="391dp"
-        android:layout_height="827dp"
-        android:orientation="vertical"
+        <LinearLayout
+            android:layout_width="391dp"
+            android:layout_height="827dp"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical">
 
-        android:layout_gravity="center_vertical">
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
-
-        <TextView
-            android:id="@+id/editTextTextPersonName2"
-            android:layout_width="match_parent"
-            android:layout_height="71dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:minHeight="48dp"
-            android:textSize="30dp"
-            android:text="Play online"
-            android:gravity="center"/>
-        <LinearLayout
-            android:id="@+id/linearLayout1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp"
-            android:orientation="horizontal" >
-            <Button
-                android:id="@+id/online3"
-                android:layout_marginStart="22dp"
-                android:textSize="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="3 mins" />
-            <Button
-                android:id="@+id/online10"
-                android:textSize="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="10 mins" />
-            <Button
-                android:id="@+id/online30"
-                android:textSize="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="30 mins" />
-            <Button
-                android:id="@+id/onlineNoTime"
-                android:textSize="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="No time" />
-        </LinearLayout>
-        <TextView
-            android:id="@+id/TextPlayAI"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:minHeight="35dp"
-            android:textSize="30dp"
-            android:text="Play against computer"
-            android:gravity="center"/>
-        <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp"
-            android:orientation="horizontal" >
-            <Button
-                android:id="@+id/playAI3"
-                android:layout_marginStart="22dp"
-                android:textSize="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="3 mins" />
-            <Button
-                android:id="@+id/playAI10"
-                android:textSize="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="10 mins" />
-            <Button
-                android:id="@+id/playAI30"
-                android:textSize="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="30 mins" />
-            <Button
-                android:id="@+id/playAINoTime"
-                android:textSize="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="No time" />
-        </LinearLayout>
-        <TextView
-            android:id="@+id/TextFriends"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:minHeight="35dp"
-            android:textSize="30dp"
-            android:text="Friends"
-            android:gravity="center"/>
-        <LinearLayout
-            android:id="@+id/linearLayoutFriends"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal" >
-            <Button
-                android:id="@+id/buttonSeeFriends"
-                android:textSize="12dp"
-                android:layout_marginStart="22dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="175dp"
-                android:text="My friends" />
-            <Button
-                android:id="@+id/buttonRequests"
-                android:textSize="12dp"
-                android:minWidth="175dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Requests" />
-        </LinearLayout>
-        <TextView
-            android:id="@+id/TextTournament"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:minHeight="35dp"
-            android:textSize="30dp"
-            android:text="Tournaments"
-            android:gravity="center"/>
-        <LinearLayout
-            android:id="@+id/linearLayoutTournaments"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp"
-            android:orientation="horizontal" >
-            <Button
-                android:id="@+id/buttonJoinTournament"
-                android:textSize="12dp"
-                android:layout_marginStart="22dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="175dp"
-                android:text="Join tournament" />
-            <Button
-                android:id="@+id/buttonCreateTournament"
-                android:textSize="12dp"
-                android:minWidth="170dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Create tournament" />
-        </LinearLayout>
-        <TextView
-            android:id="@+id/TextRecord"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:minHeight="35dp"
-            android:textSize="30dp"
-            android:text="My records"
-            android:gravity="center"/>
-        <LinearLayout
-            android:id="@+id/linearLayoutRecord"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/Record"
-                android:textSize="12dp"
-                android:layout_marginStart="22dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="175dp"
-                android:text="My record" />
-
-            <Button
-                android:id="@+id/ranking"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="175dp"
-                android:text="My ranking"
-                android:textSize="12dp" />
-        </LinearLayout>
-        <TextView
-            android:id="@+id/extras"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:textSize="30dp"
-            android:minHeight="35dp"
-            android:text="Extras"
-            android:gravity="center"/>
-
-        <LinearLayout
-            android:id="@+id/linearLayoutExtras"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/shop"
+            <View
+                android:id="@+id/divider"
                 android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/editTextTextPersonName2"
+                android:layout_width="match_parent"
+                android:layout_height="71dp"
+                android:ems="10"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:text="@string/play_online"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+            <LinearLayout
+                android:id="@+id/linearLayout1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="52dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:minWidth="300dp"
-                android:text="Visit shop"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+                android:layout_marginBottom="15dp"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/online3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="22dp"
+                    android:background="@drawable/button_rounded_border2"
+                    android:text="@string/_3_mins"
+                    android:textSize="12sp" />
+                <Button
+                    android:id="@+id/online10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_rounded_border2"
+                    android:text="@string/_10_mins"
+                    android:textSize="12sp" />
+                <Button
+                    android:id="@+id/online30"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_rounded_border2"
+                    android:text="@string/_30_mins"
+                    android:textSize="12sp" />
+                <Button
+                    android:id="@+id/onlineNoTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_rounded_border2"
+                    android:text="@string/no_time"
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/TextPlayAI"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:ems="10"
+                android:gravity="center"
+                android:minHeight="35dp"
+                android:text="@string/play_against_computer"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="15dp"
+                android:orientation="horizontal" >
+                <Button
+                    android:id="@+id/playAI3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="22dp"
+                    android:background="@drawable/button_rounded_border2"
+                    android:text="@string/_3_mins"
+                    android:textSize="12sp" />
+                <Button
+                    android:id="@+id/playAI10"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_rounded_border2"
+                    android:text="@string/_10_mins" />
+                <Button
+                    android:id="@+id/playAI30"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_rounded_border2"
+                    android:text="@string/_30_mins"
+                    android:textSize="12sp" />
+                <Button
+                    android:id="@+id/playAINoTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_rounded_border2"
+                    android:text="@string/no_time"
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/TextFriends"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:ems="10"
+                android:gravity="center"
+                android:minHeight="35dp"
+                android:text="@string/friends"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+            <LinearLayout
+                android:id="@+id/linearLayoutFriends"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal" >
+                <Button
+                    android:id="@+id/buttonSeeFriends"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="22dp"
+                    android:background="@drawable/button_rounded_border2"
+                    android:minWidth="175dp"
+                    android:text="@string/my_friends"
+                    android:textSize="12dp" />
+                <Button
+                    android:id="@+id/buttonRequests"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_rounded_border2"
+                    android:minWidth="175dp"
+                    android:text="@string/requests"
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/TextTournament"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:ems="10"
+                android:gravity="center"
+                android:minHeight="35dp"
+                android:text="@string/tournaments"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+            <LinearLayout
+                android:id="@+id/linearLayoutTournaments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="15dp"
+                android:orientation="horizontal" >
+                <Button
+                    android:id="@+id/buttonJoinTournament"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="22dp"
+                    android:background="@drawable/button_rounded_border2"
+                    android:minWidth="175dp"
+                    android:text="@string/join_tournament"
+                    android:textSize="12sp" />
+                <Button
+                    android:id="@+id/buttonCreateTournament"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_rounded_border2"
+                    android:minWidth="170dp"
+                    android:text="@string/create_tournament"
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/TextRecord"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:ems="10"
+                android:gravity="center"
+                android:minHeight="35dp"
+                android:text="@string/my_records"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+            <LinearLayout
+                android:id="@+id/linearLayoutRecord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/Record"
+                    android:textSize="12sp"
+                    android:background="@drawable/button_rounded_border2"
+                    android:layout_marginStart="22dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="175dp"
+                    android:text="@string/my_record" />
+
+                <Button
+                    android:id="@+id/ranking"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_rounded_border2"
+                    android:minWidth="175dp"
+                    android:text="@string/my_ranking"
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/extras"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:ems="10"
+                android:gravity="center"
+                android:minHeight="35dp"
+                android:text="@string/extras"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/linearLayoutExtras"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/shop"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="52dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/button_rounded_border2"
+                    android:minWidth="300dp"
+                    android:text="@string/visit_shop"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+            </LinearLayout>
+
+
         </LinearLayout>
-
-
-    </LinearLayout>
     </ScrollView>
 </ScrollView>

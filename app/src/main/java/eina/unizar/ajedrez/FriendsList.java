@@ -94,7 +94,8 @@ public class FriendsList extends AppCompatActivity {
         binding.searchfriend.setOnClickListener(vista -> {
             String username = binding.username.getText().toString();
             try {
-                searchForUser(username,nickname);
+                if(!username.isEmpty()) searchForUser(username,nickname);
+                else  Toast.makeText(FriendsList.this,"Introduzca un nombre de usuario", Toast.LENGTH_SHORT).show();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -165,7 +166,7 @@ public class FriendsList extends AppCompatActivity {
             }
         });*/
 
-        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getFriends?nickname="+nickname;
+        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getFriendList?nickname="+nickname;
         Log.d("Exito: ", "Se va a buscar a  "+ URL);
 
         LinearLayout relativeLayout = (LinearLayout) findViewById(R.id.Listfriends);
@@ -176,7 +177,9 @@ public class FriendsList extends AppCompatActivity {
             public void onResponse(String response) {
 
                 try {
-                    JSONArray friendRequests = new JSONArray((response));
+                    JSONObject respuesta = new JSONObject((response));
+                    JSONArray friendRequests =respuesta.getJSONArray("friendList");
+                    Log.d("Amigo: ", friendRequests.toString());
                     JSONObject requester;
 
                     for(int i = 0;i < friendRequests.length();i++){
@@ -214,14 +217,15 @@ public class FriendsList extends AppCompatActivity {
         queue.add(stringRequest);
     }
 
-    private void searchForUser(String nickname, String username) throws JSONException {
+    private void searchForUser(String friend, String username) throws JSONException {
 
-        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/friendRequest";
+        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getFriendRequest";
         JSONObject jsonBody = new JSONObject();
         jsonBody.put("nickname", username);
-        jsonBody.put("amigo", nickname);
-        Log.d("Enviando: ", username + " " + nickname);
+        jsonBody.put("amigo", friend);
+
         final String requestBody = jsonBody.toString();
+        Log.d("Enviando: ", requestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

@@ -61,7 +61,7 @@ public class friendRequests extends AppCompatActivity {
     }
 
     private void searchRequests( String username) throws JSONException {
-        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/friendRequest?nickname="+username;
+        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getFriendRequest?nickname="+username;
         Log.d("Enviando: ", URL);
 
         LinearLayout layoutInterno = (LinearLayout) findViewById(R.id.ListRequests);
@@ -73,7 +73,8 @@ public class friendRequests extends AppCompatActivity {
             public void onResponse(String response) {
                 Log.d("Exito: ", response );
                 try {
-                    JSONArray friendRequests = new JSONArray((response));
+                    JSONObject respuesta = new JSONObject((response));
+                    JSONArray friendRequests = respuesta.getJSONArray("friendRequests");
                     JSONObject requester;
 
                     for(int i = 0;i < friendRequests.length();i++){
