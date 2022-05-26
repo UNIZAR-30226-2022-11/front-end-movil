@@ -216,14 +216,17 @@ public class OnlineActivity extends AppCompatActivity {
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 Log.d("Online Activity fuera: ", "Pre comprobacion "+ turno + " side: " + side);
-                if(turno == 'w' && side.equals("0") || turno == 'b' && side.equals( "1")){
+
+                if(turno == 'w' && side.equals("0") || turno == 'b' && side.equals("1")){
                 //Pulsa un boton, comprobar si es mi turno. Sino, sudar de la comprobación
                     if (!pulsado) {
-                        pulsado = true;
+                        Log.d("Online Activity fuera: ", "Primera pulsacion");
+                        pulsado = myCanvas.getCheckClick();
                     }else {
                        // Handler handler = new Handler();
                       //  handler.postDelayed(new Runnable() {
                       //      public void run() {
+                        Log.d("Online Activity fuera: ", "Segunda");
                                 if (myCanvas.checkCorrectMov(turno)) { // Pasar parametro donde se guarde movimiento correcto
 
                                     int[] pos = myCanvas.getPos();
@@ -260,7 +263,7 @@ public class OnlineActivity extends AppCompatActivity {
 
                         pulsado = false;
                     }
-                }else pulsado = true;
+                }else pulsado = false;
         }
         return super.onTouchEvent(e);
     }
@@ -535,7 +538,7 @@ public class OnlineActivity extends AppCompatActivity {
         mSocket.off();
         mSocket.disconnect();
         mSocket.close();
-        stopTimer();
+        if(time != 0) stopTimer();
         Intent i = new Intent(getApplicationContext(), MainPage.class);//OnlineActivity
         i.putExtra("nickname", nickname);
         i.putExtra("avatar", avatar);
@@ -552,7 +555,7 @@ public class OnlineActivity extends AppCompatActivity {
             mSocket.off();
             mSocket.disconnect();
             mSocket.close();
-            stopTimer();
+            if(time != 0)stopTimer();
             finish();
         }
         return super.onKeyDown(keyCode, event);
