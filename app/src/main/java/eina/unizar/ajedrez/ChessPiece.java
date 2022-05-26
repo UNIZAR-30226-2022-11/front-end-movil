@@ -98,7 +98,7 @@ public class ChessPiece {
 
     private boolean checkKing(int col, int fila){
         if(Math.abs(((this.col-x0)/squareSize) -  col) ==  Math.abs(((this.fila-y0)/squareSize) - fila)
-            && Math.abs(((this.col-x0)/squareSize) -  col) == 1) {
+                && Math.abs(((this.col-x0)/squareSize) -  col) == 1) {
             return true;
         }
         else if((col == (this.col-x0)/squareSize && Math.abs(((this.fila-y0)/squareSize) - fila) == 1) ||
@@ -126,7 +126,7 @@ public class ChessPiece {
             }
 
             if (fila == (this.fila-y0)/squareSize + 1 && (col == (this.col-x0)/squareSize + 1 || col == (this.col-x0)/squareSize - 1)) {
-               // Log.d("Chess Piece", "eat pawn");
+                // Log.d("Chess Piece", "eat pawn");
                 return true;
             }
         }
@@ -142,19 +142,19 @@ public class ChessPiece {
                 return true;
             }
         }
-       // Log.d("d", "invalid move pawn");
+        // Log.d("d", "invalid move pawn");
         return false;
     }
     private boolean checkRook(int col, int fila){
         if(col == (this.col-x0)/squareSize || fila == (this.fila-y0)/squareSize){
-         //   Log.d("d", "Valid move " );
+            //   Log.d("d", "Valid move " );
             return true;
         }
         return false;
     }
 
     private boolean checkBishop(int col, int fila){
-      //  Log.d("d", "Valid move  bishop" + fila + " " + col );
+        //  Log.d("d", "Valid move  bishop" + fila + " " + col );
         if(Math.abs(((this.col-x0)/squareSize) -  col) ==  Math.abs(((this.fila-y0)/squareSize) - fila)){
             return true;
         }
@@ -163,7 +163,7 @@ public class ChessPiece {
 
     private boolean checkKnight(int col, int fila){
         if(Math.abs(((this.col-x0)/squareSize) -  col) == 2 &&  Math.abs(((this.fila-y0)/squareSize) - fila) == 1
-            || Math.abs(((this.col-x0)/squareSize) -  col) == 1 &&  Math.abs(((this.fila-y0)/squareSize) - fila) == 2){
+                || Math.abs(((this.col-x0)/squareSize) -  col) == 1 &&  Math.abs(((this.fila-y0)/squareSize) - fila) == 2){
             return true;
         }
         return false;

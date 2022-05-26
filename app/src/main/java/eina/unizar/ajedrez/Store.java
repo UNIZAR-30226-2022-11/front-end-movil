@@ -37,7 +37,7 @@ public class Store extends AppCompatActivity {
     private RequestQueue queue;
     private String actual = "BoardGris";
     private String avatarActual = "";
-   private  String compradoBlue, compradoBrown,compradoKnight,compradoStar,compradoFootball, compradoHeart;
+    private  String compradoBlue, compradoBrown,compradoKnight,compradoStar,compradoFootball, compradoHeart;
     Button comprarGris, equiparGris;
     Button comprarAzul, equiparAzul;
     Button comprarMarron, equiparMarron;
@@ -71,7 +71,7 @@ public class Store extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-       // super.onBackPressed();
+        // super.onBackPressed();
         Intent i = new Intent(getApplicationContext(), MainPage.class);//OnlineActivity
         i.putExtra("nickname", nickname);
         i.putExtra("avatar", avatarActual);
@@ -84,7 +84,6 @@ public class Store extends AppCompatActivity {
     {
         if ((keyCode == KeyEvent.KEYCODE_BACK))
         {
-
             finish();
         }
         return super.onKeyDown(keyCode, event);
@@ -209,7 +208,7 @@ public class Store extends AppCompatActivity {
     }
 
     void infoTienda(){
-       String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getCoins?nickname="+nickname;
+        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getCoins?nickname="+nickname;
         Log.d("Enviando: ", URL);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
@@ -246,10 +245,10 @@ public class Store extends AppCompatActivity {
         stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
 
-         URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getBoard?nickname="+nickname;
+        URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getBoard?nickname="+nickname;
         Log.d("Enviando: ", URL);
 
-         stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+        stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d("Exito: ", response );
@@ -280,10 +279,10 @@ public class Store extends AppCompatActivity {
         queue.add(stringRequest);
 
 
-         URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getShop?nickname="+nickname;
+        URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getShop?nickname="+nickname;
         Log.d("Enviando: ", URL);
 
-         stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+        stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d("Exito tienda: ", response );
@@ -322,7 +321,7 @@ public class Store extends AppCompatActivity {
         };
         stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
-       // monedas="4";
+        // monedas="4";
 
 
         URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/inventory?nickname="+nickname;
@@ -333,7 +332,7 @@ public class Store extends AppCompatActivity {
             public void onResponse(String response) {
                 Log.d("Exito comprado: ", response );
                 try {
-                  //  JSONObject obj = new JSONObject(response);
+                    //  JSONObject obj = new JSONObject(response);
                     //Log.d("Numero monedas: ", String.valueOf(monedas));
                     JSONArray shopItems = new JSONArray(response);
                     JSONObject item;
@@ -404,8 +403,8 @@ public class Store extends AppCompatActivity {
     private void buyBoard(String color, String type){
         // Primero comprobar que no esta comprado
         if(type.equals("board") && checkBoards(color) || type.equals("avatar") && checkAvatars(color)){
-             String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/buyItem";
-        Log.d("Enviando: ", URL);
+            String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/buyItem";
+            Log.d("Enviando: ", URL);
             JSONObject jsonBody = new JSONObject();
             try {
                 jsonBody.put("nickname", nickname);
@@ -415,63 +414,63 @@ public class Store extends AppCompatActivity {
             }
 
             final String requestBody = jsonBody.toString();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d("Exito: ", response );
-                try {
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.d("Exito: ", response );
+                    try {
 
-                    JSONObject obj = new JSONObject(response);
-                    if(obj.getBoolean("exito")){
-                        Toast.makeText(Store.this,"Articulo adquirido", Toast.LENGTH_SHORT).show();
-                        if(type.equals("board")){
-                            tablerosComprados.add(color);
-                            setBoards();
-                        } else if(type.equals("avatar")){
-                            avataresComprados.add(color);
-                            setAvatars();
-                        }
-                        if(color.equals("BoardAzul") || color.equals("star_avatar")){
-                            monedas -= 5;
-                        }else if(color.equals("BoardMarron") || color.equals("football_avatar")){
-                            monedas -= 10;
-                        }else if(color.equals("heart_avatar")){
-                            monedas -= 15;
-                        }
-                        TextView numMonedas =  findViewById(R.id.monedas);
-                        numMonedas.setText(String.valueOf(monedas));
+                        JSONObject obj = new JSONObject(response);
+                        if(obj.getBoolean("exito")){
+                            Toast.makeText(Store.this,"Articulo adquirido", Toast.LENGTH_SHORT).show();
+                            if(type.equals("board")){
+                                tablerosComprados.add(color);
+                                setBoards();
+                            } else if(type.equals("avatar")){
+                                avataresComprados.add(color);
+                                setAvatars();
+                            }
+                            if(color.equals("BoardAzul") || color.equals("star_avatar")){
+                                monedas -= 5;
+                            }else if(color.equals("BoardMarron") || color.equals("football_avatar")){
+                                monedas -= 10;
+                            }else if(color.equals("heart_avatar")){
+                                monedas -= 15;
+                            }
+                            TextView numMonedas =  findViewById(R.id.monedas);
+                            numMonedas.setText(String.valueOf(monedas));
 
-                    }else  Toast.makeText(Store.this,"Ha habido un error durante la compra", Toast.LENGTH_SHORT).show();
+                        }else  Toast.makeText(Store.this,"Ha habido un error durante la compra", Toast.LENGTH_SHORT).show();
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("onErrorResponse: ", error.getLocalizedMessage() == null ? "" : error.getLocalizedMessage());
-            }
-        }){
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                try {
-                    return requestBody == null ? null : requestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    Log.d("d: " ,"Falla aqui");
-                    return null;
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("onErrorResponse: ", error.getLocalizedMessage() == null ? "" : error.getLocalizedMessage());
                 }
-            }
-            @Override
-            public Map<String,String> getHeaders() throws AuthFailureError {
-                Map<String,String> params = new HashMap<String,String>();
-                params.put("content-type","application/json");
-                //  params.put("Access-Control-Allow-Origin","*");
-                return params;
-            }
-        };
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        queue.add(stringRequest);
+            }){
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        Log.d("d: " ,"Falla aqui");
+                        return null;
+                    }
+                }
+                @Override
+                public Map<String,String> getHeaders() throws AuthFailureError {
+                    Map<String,String> params = new HashMap<String,String>();
+                    params.put("content-type","application/json");
+                    //  params.put("Access-Control-Allow-Origin","*");
+                    return params;
+                }
+            };
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            queue.add(stringRequest);
         }
     }
     private boolean checkSelectedBoard(String color){
@@ -499,12 +498,12 @@ public class Store extends AppCompatActivity {
     }
 
     private void equiparItem(String color,String tipo){
-       if(tipo.equals("board") && checkSelectedBoard(color) || tipo.equals("avatar") && checkSelectedAvatar(color) ){
+        if(tipo.equals("board") && checkSelectedBoard(color) || tipo.equals("avatar") && checkSelectedAvatar(color) ){
             String URL = "";
-           JSONObject jsonBody = new JSONObject();
+            JSONObject jsonBody = new JSONObject();
 
             if(tipo.equals("board")) {
-                 URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/updateTable";
+                URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/updateTable";
                 try {
                     jsonBody.put("nickname", nickname);
                     jsonBody.put("table", color);
@@ -520,8 +519,8 @@ public class Store extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-           final String requestBody = jsonBody.toString();
-           Log.d("Enviando: ", requestBody);
+            final String requestBody = jsonBody.toString();
+            Log.d("Enviando: ", requestBody);
 
             StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
                 @Override

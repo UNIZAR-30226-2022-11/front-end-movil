@@ -125,6 +125,21 @@ public class ChessBoard extends View {
         controlador = new AiControl();
     }
 
+    public ChessBoard(Context context, String[][] board, String side, String turno, String boardC){
+        super(context);
+        p  = new Paint();
+        q = new Paint();
+        Rec = new Rect();
+        this.side = side;
+        setPieceSetAhogado();
+        //setPieceSetAhogado();
+        // setMatrixAhogado();
+        this.turno = turno;
+        boardColor = boardC;
+        //posReyNegro = new Pos(0,0);
+        //posReyBlanco = new Pos(1,2);
+        controlador = new AiControl();
+    }
     public boolean checkCorrectMov(char turno){ // Añadir parametro para devolver las posiciones
         boolean info = movimientoCorrecto && turno == this.turno.charAt(0);
         boolean guardaJaque = jaque;
@@ -291,6 +306,7 @@ public class ChessBoard extends View {
     public boolean getIsAClick(){
         return isAClick(posX, posFinX, posY, posFinY);
     }
+
     public void hacerMovimientoRival(int fI,int cI, int fF, int cF){
         int filaFin =  Math.abs(fF -7);
         int columnaFin =  Math.abs(cF -7);
@@ -299,16 +315,23 @@ public class ChessBoard extends View {
         Log.d("d", "Movimiento "+filaIni + " " + columnaIni + " hasta " +filaFin + " " + columnaFin +" turno " +turno);
         boolean esEnroque = false;
         boolean coronar = false;
-        if(filaIni == 0 && (columnaFin == 0 || columnaFin == 7) && columnaIni == 4
+        if(filaIni == 0 && (columnaFin == 0 || columnaFin == 7) && (columnaIni == 4 || columnaIni == 3)
                 && boardMtx[filaIni][columnaIni].charAt(1) == 'K'){ // Enroque
             esEnroque = true;
-            if(columnaFin == 0){
+            if(columnaFin == 0 && columnaIni == 3){ // Enroque negras izda
+                boardMtx[filaFin][columnaFin+1] = boardMtx[filaIni][columnaIni];
+                boardMtx[filaFin][columnaIni-1] = boardMtx[filaFin][columnaFin];
+            }else if(columnaFin == 7 && columnaIni == 3){
+                boardMtx[filaFin][columnaFin-2] = boardMtx[filaIni][columnaIni];
+                boardMtx[filaFin][columnaIni+1] = boardMtx[filaFin][columnaFin];
+            }else if(columnaFin == 0 && columnaIni == 4){ // Enroque blancas izda
                 boardMtx[filaFin][columnaFin+2] = boardMtx[filaIni][columnaIni];
                 boardMtx[filaFin][columnaIni-1] = boardMtx[filaFin][columnaFin];
-            }else{
+            }else if(columnaFin == 7 && columnaIni == 4){
                 boardMtx[filaFin][columnaFin-1] = boardMtx[filaIni][columnaIni];
                 boardMtx[filaFin][columnaIni+1] = boardMtx[filaFin][columnaFin];
             }
+            Log.d("d", "Reconoce el enroque ");
             boardMtx[filaIni][columnaIni] = "--";
             boardMtx[filaFin][columnaFin] = "--";
         }else if(boardMtx[filaIni][columnaIni].charAt(1) == 'p' && filaFin == 7){ // Coronar
@@ -346,6 +369,7 @@ public class ChessBoard extends View {
                         pieceSet.put(val, new ChessPiece(x0 + (squareSize*columnaFin), y0 +(squareSize * filaFin), "Queen", squareSize, "b", bQueen, side));
                     }
                 }else if(esEnroque){
+                    Log.d("d", "Cambiando piezad enroque");
                     esEnroque = false;
                     for(Map.Entry<Integer,ChessPiece> entry2 : pieceSet.entrySet()) {
                         ChessPiece Torre = entry.getValue();
@@ -359,8 +383,10 @@ public class ChessBoard extends View {
                         }
 
                     }
-                    if(columnaFin == 0) p.newCoord(columnaFin+2, filaFin);
-                    else p.newCoord(columnaFin-1, filaFin);
+                    if(columnaFin == 0 && columnaIni==4) p.newCoord(columnaFin+2, filaFin);
+                    else if(columnaFin== 7 && columnaIni == 4) p.newCoord(columnaFin-1, filaFin);
+                    else if(columnaFin== 0 && columnaIni == 3) p.newCoord(columnaFin+1, filaFin);
+                    else if(columnaFin== 7 && columnaIni == 3) p.newCoord(columnaFin-2, filaFin);
                     pieceSet.put(val, p);
 
                 } else{
@@ -1396,6 +1422,76 @@ public class ChessBoard extends View {
         for(Map.Entry<Integer,ChessPiece> entry : pieceSet.entrySet()){
             ChessPiece nextPiece = entry.getValue();
             canvas.drawBitmap(nextPiece.getPiece(), null, new Rect(nextPiece.getX(),nextPiece.getY(),nextPiece.getX()+squareSize,nextPiece.getY()+squareSize), p);
+        }
+    }
+
+    void setNewSetPiece(String[][] board, String side, String turno, String boardC){
+        this.side= side;
+        this.turno = turno;
+        int num = 0;
+        boardColor = boardC;
+        Bitmap bPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_pawn);
+        Bitmap wPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_pawn);
+        Bitmap bRook= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_rook);
+        Bitmap wRook = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_rook);
+        Bitmap bKnight= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_knight);
+        Bitmap wKnight = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_knight);
+        Bitmap bBishop= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_bishop);
+        Bitmap wBishop = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_bishop);
+        Bitmap bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_queen);
+        Bitmap wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_queen);
+        Bitmap bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_king);
+        Bitmap wKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_king);
+        pieceSet = new HashMap<Integer,ChessPiece>();
+        for(int i = 0;i < NUM_FILCOL;i++){
+            for(int j = 0; j < NUM_FILCOL;j++){
+                boardMtx[i][j] = board[i][j];
+                if(!board[i][j].equals("--")){ // Añadir una pieza al piece set
+                    if(board[i][j].charAt(1) == 'p'){
+                        if(board[i][j].charAt(0) == 'w'){
+                            pieceSet.put(num,new ChessPiece(x0+(i*squareSize),y0+(i*squareSize),"Pawn",squareSize,"w",wPawn,side)); num++;
+                        }else{
+                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Pawn",squareSize,"b",bPawn,side)); num++;
+                        }
+                    }
+                    }else if(board[i][j].charAt(1) == 'R'){
+                        if(board[i][j].charAt(0) == 'w'){
+                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Rook",squareSize,"w",wRook,side)); num++;
+
+                        }else{
+                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Rook",squareSize,"b",bRook,side)); num++;
+                        }
+                    }else if(board[i][j].charAt(1) == 'N'){
+                        if(board[i][j].charAt(0) == 'w'){
+                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Knight",squareSize,"w",wKnight,side)); num++;
+
+                        }else{
+                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Knight",squareSize,"b",bKnight,side)); num++;
+                        }
+                    }else if(board[i][j].charAt(1) == 'B'){
+                        if(board[i][j].charAt(0) == 'w'){
+                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Bishop",squareSize,"w",wBishop,side)); num++;
+
+                        }else{
+                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Bishop",squareSize,"b",bBishop,side)); num++;
+                        }
+                    }else if(board[i][j].charAt(1) == 'Q'){
+                        if(board[i][j].charAt(0) == 'w'){
+                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Queen",squareSize,"w",wQueen,side)); num++;
+
+                        }else{
+                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Queen",squareSize,"b",bQueen,side)); num++;
+                        }
+                    }else if(board[i][j].charAt(1) == 'K'){
+                        if(board[i][j].charAt(0) == 'w'){
+                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Queen",squareSize,"w",wKing,side)); num++;
+                            posReyBlanco.X=i; posReyBlanco.Y=j;
+                        }else{
+                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Queen",squareSize,"b",bKing,side)); num++;
+                            posReyNegro.X=i; posReyNegro.Y=j;
+                        }
+                    }
+            }
         }
     }
 }

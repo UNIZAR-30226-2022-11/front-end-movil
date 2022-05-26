@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -157,15 +158,18 @@ public class friendRequests extends AppCompatActivity {
         String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/acceptFriendRequest";
         Log.d("Enviando: ", URL);
         JSONObject jsonBody = new JSONObject();
-        jsonBody.put("nickname", nuevoAmigo);
-        jsonBody.put("amigo", nickname);
+        jsonBody.put("nickname", nickname);
+        jsonBody.put("amigo", nuevoAmigo);
         Log.d("Enviando: ", nuevoAmigo + " " + nickname);
         final String requestBody = jsonBody.toString();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d("d: ", "Nuevo amigo añadido" +response );
-                Toast.makeText(friendRequests.this,"Nuevo amigo " + nuevoAmigo, Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(friendRequests.this,"Nuevo amigo " + nuevoAmigo, Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(friendRequests.this, "Nuevo amigo " + nuevoAmigo + " añadido.", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
                 Intent i = new Intent(getApplicationContext(), MainPage.class);
                 i.putExtra("nickname", nickname);
                 i.putExtra("avatar",avatar);
@@ -204,15 +208,18 @@ public class friendRequests extends AppCompatActivity {
         String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/declineFriendRequest";
         Log.d("Enviando: ", URL);
         JSONObject jsonBody = new JSONObject();
-        jsonBody.put("nickname", nuevoAmigo );
-        jsonBody.put("amigo", nickname);
+        jsonBody.put("nickname", nickname );
+        jsonBody.put("amigo", nuevoAmigo);
         Log.d("Enviando: ", nuevoAmigo + " " + nickname);
         final String requestBody = jsonBody.toString();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d("d: ", "Peticion rechazada a " +response );
-                Toast.makeText(friendRequests.this,"Peticion rechazada a " + nuevoAmigo + " añadido.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(friendRequests.this,"Peticion rechazada a " + nuevoAmigo + " añadido.", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(friendRequests.this, "Peticion rechazada a " + nuevoAmigo, Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
                 Intent i = new Intent(getApplicationContext(), MainPage.class);
                 i.putExtra("nickname", nickname);
                 i.putExtra("avatar",avatar);

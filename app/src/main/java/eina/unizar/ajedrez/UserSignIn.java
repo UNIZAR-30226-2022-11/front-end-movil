@@ -3,6 +3,7 @@ package eina.unizar.ajedrez;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
@@ -95,7 +96,10 @@ public class UserSignIn extends AppCompatActivity{
                 e.printStackTrace();
             }
         }, error -> {
-            Toast.makeText(UserSignIn.this,"Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+            Toast toast = Toast.makeText(UserSignIn.this, "Usuario o contrseña incorrectos", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+            //Toast.makeText(UserSignIn.this,"Usuario o contraseña incorrectos", Toast.LENGTH_SHORT,).show();
             Log.e("onErrorResponse", error.getLocalizedMessage() == null ? "" : error.getLocalizedMessage());
         }){
             @Override

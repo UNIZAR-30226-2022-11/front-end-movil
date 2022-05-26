@@ -54,6 +54,7 @@ public class OnlineActivity extends AppCompatActivity {
     String avatar;
     String board;
     boolean finPartida =  false;
+    boolean finTiempo = false;
     ProgressDialog dialog;
 
     String cInicial,cFinal,fInicial,fFinal;
@@ -61,9 +62,9 @@ public class OnlineActivity extends AppCompatActivity {
     private Socket mSocket, mSocket2;
     {
         try {
-           // mSocket = IO.socket("http://10.0.2.2:3000");
-            //mSocket2 = IO.socket("http://10.0.2.2:3000");
-           mSocket = IO.socket("http://ec2-18-206-137-85.compute-1.amazonaws.com:3000");
+           mSocket = IO.socket("http://10.0.2.2:3000");
+            mSocket2 = IO.socket("http://10.0.2.2:3000");
+          // mSocket = IO.socket("http://ec2-18-206-137-85.compute-1.amazonaws.com:3000");
         } catch (URISyntaxException e) {
             Log.d("Socket: ",   e.toString());
         }
@@ -75,10 +76,10 @@ public class OnlineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //myCanvas = new ChessBoard(this,"0");
         setContentView(R.layout.activity_online);
-        //mSocket.disconnect();
-       // mSocket2.disconnect();
+        mSocket.disconnect();
+        mSocket2.disconnect();
         mSocket.connect();
-        //mSocket2.connect();
+        mSocket2.connect();
 
 
 
@@ -105,8 +106,8 @@ public class OnlineActivity extends AppCompatActivity {
         board = getIntent().getExtras().getString("board");
         if(time != 0 )timeLeftInMilliseconds = (long) time*60*1000;
         timeLeftInMillisecondsRival = (long) time*60*1000;
-        mSocket.emit("buscarPartida",nickname,Integer.toString(time));
-        //mSocket2.emit("buscarPartida","Juan","Juan",Integer.toString(time));
+        mSocket.emit("buscarPartida",nickname,time,avatar,"0");
+        mSocket2.emit("buscarPartida","Juan",Integer.toString(time),avatar,"0");
        TextView nameUser = findViewById(R.id.nombreUser);
         nameUser.setText(nickname);
         TextView timerUser = findViewById(R.id.timerUser);
@@ -245,8 +246,34 @@ public class OnlineActivity extends AppCompatActivity {
                 startStop();
             }
         });
+    }
+
+    private void recuperarPartida(String[][]oldBoard,String turnoActual,String tiempo, String tiempoRival){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (side.equals("0")){
+                    Log.d("Tablero : ", "Tablero blanco " + side);
+                    myCanvas = new ChessBoard(getApplicationContext(), oldBoard,"0", turnoActual,board);
+                    LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
+                    layout.addView(myCanvas);
+                }
+                else{
+                    myCanvas = new ChessBoard(getApplicationContext(),oldBoard, "1",turnoActual,board);
+                    LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
+                    layout.addView(myCanvas);
+                    playGame();
+                }
+                TextView timerUser = findViewById(R.id.timerUser);
+                timerUser.setText(tiempo);
+                TextView timerRival = findViewById(R.id.timerRival);
+                timerRival.setText(tiempoRival);
+                startStop();
+            }
+        });
 
     }
+
    private void esperaRival(){
         Log.d("Socket: ", "Esperando rival");
        mSocket.on("getOpponent", new Emitter.Listener() {
@@ -258,17 +285,38 @@ public class OnlineActivity extends AppCompatActivity {
                        try {
                            idSocket = data.getString("opNick");
                            side = String.valueOf(data.getInt("side"));
-                           dialog.dismiss();
-                           runOnUiThread(new Runnable() {
-                               @Override
-                               public void run() {
-                                   TextView rival = findViewById(R.id.nombreRival);
-                                   rival.setText(idSocket);
-                               }
-                           });
+                           String load = String.valueOf((data.getInt("load")));
+                           if(load.equals("1")){
+                               String turnoActual = String.valueOf(data.getString("turn"));
+                               String tiempo = String.valueOf(data.getString("t1"));
+                               String tiempoRival = String.valueOf(data.getString("t1"));
 
-                        //   mSocket.emit("sendGameMove",0,0,2,2);
-                           cambiarTabler(side);
+                               JSONArray myBoard = data.getJSONArray("board");
+                               JSONObject casilla;
+                               String boardMtx[][] = new String[8][8];
+                               for(int i = 0;i < myBoard.length();i++){
+                                   casilla =  myBoard.getJSONObject(i);
+                                   int posI =  casilla.getInt("i");
+                                   int posJ =  casilla.getInt("j");
+                                   boardMtx[posI][posJ] =  casilla.getString("pieza");
+                               }
+                               recuperarPartida(boardMtx,turnoActual,tiempo,tiempoRival);
+                           }else{
+                               runOnUiThread(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       TextView rival = findViewById(R.id.nombreRival);
+                                       rival.setText(idSocket);
+                                   }
+                               });
+
+                               //   mSocket.emit("sendGameMove",0,0,2,2);
+                               cambiarTabler(side);
+                           }
+
+                           dialog.dismiss();
+                           esperarAbandono();
+                           esperarRecuperacion();
 
                        } catch (JSONException e) {
                            e.printStackTrace();
@@ -277,7 +325,7 @@ public class OnlineActivity extends AppCompatActivity {
                    }
        });
 
- /*    Log.d("Socket2: ", "Socket conectado");
+    Log.d("Socket2: ", "Socket conectado");
        Log.d("Socket2: ", "Esperando rival");
        mSocket2.on("getOpponent", new Emitter.Listener() {
            @Override
@@ -295,7 +343,9 @@ public class OnlineActivity extends AppCompatActivity {
                        }
                    });
                    //mSocket2.emit("sendGameMove",0,0,2,2);
-                   playGame();
+                   //playGame();
+                   cambiarTabler(side);
+                   esperarRecuperacion();
                    dialog.dismiss();
                } catch (JSONException e) {
                    e.printStackTrace();
@@ -303,9 +353,108 @@ public class OnlineActivity extends AppCompatActivity {
                Log.d("Socket2: ", data.toString());
                // Toast.makeText(FriendsList.this, data.toString(), Toast.LENGTH_SHORT).show();
            }
-       });*/
+       });
+    }
+    private void esperarAbandono(){
+        mSocket.on("oponenteDesconectado", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                mSocket.disconnect();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        stopTimer();
+                        Log.d("d: ", "Fin partida");
+                        Toast.makeText(getApplicationContext(), "El rival ha abandonado la partida" , Toast.LENGTH_SHORT).show();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(OnlineActivity.this);
+                        builder.setMessage("El rival ha abandonado la partida");
+                        builder.setPositiveButton("Volver", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                guardarPartida();
+                                Intent x = new Intent(getApplicationContext(), MainPage.class);
+                                x.putExtra("nickname",nickname);
+                                x.putExtra("avatar",avatar);
+                                startActivity(x);
+                            }
+                        });
+                        builder.show();
+                    }
+                });
+            }
+        });
     }
 
+    private void esperarRecuperacion() throws JSONException {
+        JSONArray infoTablero = new JSONArray();
+        String tablero[][] = new String[8][8];   ;//= myCanvas.devolverTablero();
+
+        for(int i = 0;i < 8;i++){
+            for(int j = 0; j < 8;j++) {
+                tablero[i][j] = "--";
+                JSONObject jsonBody = new JSONObject();
+                try {
+                    jsonBody.put("i", i);
+                    jsonBody.put("j", j);
+                    jsonBody.put("pieza", tablero[i][j]);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                infoTablero.put(jsonBody);
+            }    }
+
+
+                final String requestBody2 = infoTablero.toString();
+                Log.d("d: " ,"Info tablero "+requestBody2);
+        JSONObject casilla;
+        String boardMtx[][] = new String[8][8];
+        for(int i = 0;i < infoTablero.length();i++){
+            casilla =  infoTablero.getJSONObject(i);
+            int posI =  casilla.getInt("i");
+            int posJ =  casilla.getInt("j");
+            boardMtx[posI][posJ] =  casilla.getString("pieza");
+        }
+        for(int i = 0;i < 8;i++) {
+            for (int j = 0; j < 8; j++) {
+                Log.d("d: ", boardMtx[i][j]);
+            }
+        }
+        mSocket.on("enviarTablero", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                int minutes =  (int) timeLeftInMilliseconds / 60000;
+                int seconds =  (int) timeLeftInMilliseconds % 60000 / 1000;
+                String myTime = Integer.toString(minutes);//
+                myTime +=  ":";
+                myTime += Integer.toString(seconds);
+                int minutesRival =  (int) timeLeftInMillisecondsRival / 60000;
+                int secondsRival =  (int) timeLeftInMillisecondsRival % 60000 / 1000;
+                String timeRival = Integer.toString(minutesRival);//
+                timeRival +=  ":";
+                timeRival += Integer.toString(secondsRival);
+                String [][] tablero = myCanvas.devolverTablero();
+                JSONArray infoTablero = new JSONArray();
+
+
+                for(int i = 0;i < 8;i++){
+                    for(int j = 0; j < 8;j++){
+                       // tablero[i][j] = "--";
+                        JSONObject jsonBody = new JSONObject();
+                        try {
+                            jsonBody.put("i", i);
+                            jsonBody.put("j", j);
+                            jsonBody.put("pieza",tablero[i][j]);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        infoTablero.put(jsonBody);
+                    }
+                }
+
+                mSocket.emit("recibirTablero",side, infoTablero,turno,myTime,timeRival);
+            }
+        });
+    }
     private void guardarPartida(){
         RequestQueue queue;
         queue = Volley.newRequestQueue(this);
@@ -360,15 +509,17 @@ public class OnlineActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-       // mSocket2.disconnect();
+        //mSocket2.disconnect();
+        Log.d("backPressed: " ,"Sale de la actividad");
         mSocket.disconnect();
-        Log.d("d: ", "Fin actividad");
-        stopTimer();
-        this.finish();
+      //  stopTimer();
+        Intent i = new Intent(getApplicationContext(), MainPage.class);//OnlineActivity
+        i.putExtra("nickname", nickname);
+        i.putExtra("avatar", avatar);
+        startActivity(i);
     }
 
-    @Override
+   /* @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
         if ((keyCode == KeyEvent.KEYCODE_BACK))
@@ -379,7 +530,7 @@ public class OnlineActivity extends AppCompatActivity {
             finish();
         }
         return super.onKeyDown(keyCode, event);
-    }
+    }*/
 
 
     public void startStop(){
@@ -435,7 +586,21 @@ public class OnlineActivity extends AppCompatActivity {
 
         int minutes =  (int) timeLeftInMilliseconds / 60000;
         int seconds =  (int) timeLeftInMilliseconds % 60000 / 1000;
-
+        if(minutes == 0 && seconds == 0){
+            finTiempo = true;
+            AlertDialog.Builder builder = new AlertDialog.Builder(OnlineActivity.this);
+            builder.setMessage("Tiempo superado");
+            builder.setPositiveButton("Volver", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Intent x  = new Intent(getApplicationContext(),MainPage.class);
+                    x.putExtra("nickname",nickname);
+                    x.putExtra("avatar",avatar);
+                    startActivity(x);
+                }
+            });
+            builder.show();
+        }
         String timeLeftText = "" + minutes + ":";
         if(seconds < 10) timeLeftText += "0";
         timeLeftText += seconds;
@@ -444,7 +609,22 @@ public class OnlineActivity extends AppCompatActivity {
     public void updateTimerRival(){
         int minutesRival =  (int) timeLeftInMillisecondsRival / 60000;
         int secondsRival =  (int) timeLeftInMillisecondsRival % 60000 / 1000;
-
+        if(minutesRival == 0 && secondsRival == 0){
+            finTiempo = true;
+            AlertDialog.Builder builder = new AlertDialog.Builder(OnlineActivity.this);
+            builder.setMessage("Victoria!");
+            builder.setPositiveButton("Volver", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Intent x  = new Intent(getApplicationContext(),MainPage.class);
+                    guardarPartida();
+                    x.putExtra("nickname",nickname);
+                    x.putExtra("avatar",avatar);
+                    startActivity(x);
+                }
+            });
+            builder.show();
+        }
         String timeLeftText = "" + minutesRival + ":";
         if(secondsRival < 10) timeLeftText += "0";
         timeLeftText += secondsRival;

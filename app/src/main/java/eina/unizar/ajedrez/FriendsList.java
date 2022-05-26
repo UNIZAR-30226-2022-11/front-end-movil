@@ -234,11 +234,20 @@ public class FriendsList extends AppCompatActivity {
                     JSONObject obj = new JSONObject((response));
                     String res = obj.getString("resultado");
                     if(res.equals("El amigo no existe")){
-                        Toast.makeText(FriendsList.this,"Este usuario no existe", Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(FriendsList.this, "Este usuario no existe" , Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+                        //Toast.makeText(FriendsList.this,"Este usuario no existe", Toast.LENGTH_SHORT).show();
                     }else if(res.equals("El usuario existe pero ya es amigo tuyo")){
-                        Toast.makeText(FriendsList.this,"Este usuario ya es amigo tuyo", Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(FriendsList.this, "Este usuario ya es amigo tuyo" , Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+                        // Toast.makeText(FriendsList.this,"Este usuario ya es amigo tuyo", Toast.LENGTH_SHORT).show();
                     }else{
-                        Toast.makeText(FriendsList.this,obj.getString("resultado"), Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(FriendsList.this, obj.getString("resultado") , Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+                        //Toast.makeText(FriendsList.this,obj.getString("resultado"), Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
