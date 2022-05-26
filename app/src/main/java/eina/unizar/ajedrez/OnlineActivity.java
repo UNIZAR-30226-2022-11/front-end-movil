@@ -102,6 +102,7 @@ public class OnlineActivity extends AppCompatActivity {
         });
         dialog.show();
 
+
         pieces =  getIntent().getExtras().getString("pieces");
         nickname = getIntent().getExtras().getString("nickname");
         avatar = getIntent().getExtras().getString("avatar");
@@ -110,8 +111,22 @@ public class OnlineActivity extends AppCompatActivity {
 
         if(time != 0 )timeLeftInMilliseconds = (long) time*60*1000;
         timeLeftInMillisecondsRival = (long) time*60*1000;
+        if(getIntent().hasExtra("nomAmigo")){
+            idSocket = getIntent().getExtras().getString("nomAmigo");
+            if(Integer.toString(time).equals("0")){
+                mSocket.emit("buscarPartida",nickname,"A",avatar,idSocket);
+            }else{
+                mSocket.emit("buscarPartida",nickname,"A",avatar,idSocket);
+            }
+        }else{
+            if(Integer.toString(time).equals("0")){
+                mSocket.emit("buscarPartida",nickname,"NT",avatar,"0");
+            }else{
+                mSocket.emit("buscarPartida",nickname,Integer.toString(time),avatar,"0");
+            }
 
-        mSocket.emit("buscarPartida",nickname,Integer.toString(time),avatar,"0");
+        }
+
        //mSocket2.emit("buscarPartida","Juan",Integer.toString(time),avatar,"0");
 
        TextView nameUser = findViewById(R.id.nombreUser);
@@ -196,7 +211,7 @@ public class OnlineActivity extends AppCompatActivity {
 
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                Log.d("d: ", "Pre comprobacion "+ turno + " side: " + side);
+                Log.d("Online Activity fuera: ", "Pre comprobacion "+ turno + " side: " + side);
                 if(turno == 'w' && side.equals("0") || turno == 'b' && side.equals( "1")){
                 //Pulsa un boton, comprobar si es mi turno. Sino, sudar de la comprobación
                     if (!pulsado) {

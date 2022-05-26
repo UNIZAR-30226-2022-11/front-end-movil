@@ -28,6 +28,7 @@ import java.util.Objects;
 import eina.unizar.ajedrez.databinding.UserSignInBinding;
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class UserSignIn extends AppCompatActivity{
 
@@ -35,6 +36,10 @@ public class UserSignIn extends AppCompatActivity{
 
     private UserSignInBinding binding;
     private String username;
+    String avatar;
+    String nickname;
+    String board;
+    String pieces;
     private String password;
     private RequestQueue queue;
     public static Socket mSocket;
@@ -91,16 +96,19 @@ public class UserSignIn extends AppCompatActivity{
 
                // s.initSocket(this);
                 JSONObject obj = new JSONObject(response);
-                String nombre = obj.getString("nickname");
+                nickname = obj.getString("nickname");
                 String monedas = obj.getString("monedas");
-                String avatar = obj.getString("avatar");
-                if(nombre.equals(username)){
+                avatar = obj.getString("avatar");
+                board = obj.getString("tablero");
+                pieces = obj.getString("piezas");
+                if(nickname.equals(username)){
                     mSocket = IO.socket("http://10.0.2.2:3001");
                     mSocket.connect();// = IO.socket("http://10.0.2.2:3001");
-                    i.putExtra("nickname", nombre);
+                    esperarPartida();
+                    i.putExtra("nickname", nickname);
                     i.putExtra("monedas", monedas);
                     i.putExtra("avatar", avatar);
-                    mSocket.emit("conectarse", nombre);
+                    mSocket.emit("conectarse", nickname);
                     startActivity(i);
 
                 }
@@ -129,7 +137,33 @@ public class UserSignIn extends AppCompatActivity{
         stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
     }
+    private void esperarPartida(){
+        Log.d("SignIn: ", "Esperando invita");
+        mSocket.on("getGameInvite", new Emitter.Listener() {
 
+            @Override
+            public void call(Object... args) {
+                JSONObject data = (JSONObject) args[0];
+                //here the data is in JSON Format
+                try {
+                    String nomAmigo = data.getString("nickname");
+                    mSocket.emit("confirmGameFriend",nickname,nomAmigo);
+                    Intent i = new Intent(getApplicationContext(), OnlineActivity.class);
+                    i.putExtra("nickname", nickname);
+                    i.putExtra("avatar", avatar);
+                    i.putExtra("board", board);
+                    i.putExtra("pieces", pieces);
+                    i.putExtra("time", 0);
+                    i.putExtra("nomAmigo", nomAmigo);
+                    startActivity(i);
+                   // Toast.makeText(FriendsList.this,"Funciona", Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d("Socket: ", data.toString());
+            }
+        });
+    }
     private void tryLogin(String username, String password) throws JSONException {
         queue = Volley.newRequestQueue(this);
         if(validFields()) {

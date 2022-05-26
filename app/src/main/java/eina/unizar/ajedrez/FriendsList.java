@@ -1,5 +1,8 @@
 package eina.unizar.ajedrez;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -62,6 +65,7 @@ public class FriendsList extends AppCompatActivity {
     private FriendsListBinding binding;
     private Socket mSocket;
     String board, pieces,avatar;
+    ProgressDialog dialog;
     private List<String> pendientes = new ArrayList<>();;
     {
         try {
@@ -142,46 +146,77 @@ public class FriendsList extends AppCompatActivity {
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add(Menu.NONE, Menu.FIRST, Menu.NONE, "Invitar a partida 3 mins");
-        menu.add(Menu.NONE, Menu.FIRST+1, Menu.NONE, "Invitar a partida 10 mins");
+        menu.add(Menu.NONE, Menu.FIRST, Menu.NONE, "Invitar a partida");
+      /*  menu.add(Menu.NONE, Menu.FIRST+1, Menu.NONE, "Invitar a partida 10 mins");
         menu.add(Menu.NONE, Menu.FIRST+2, Menu.NONE, "Invitar a partida 30 mins");
-        menu.add(Menu.NONE, Menu.FIRST+3, Menu.NONE, "Invitar a partida sin tiempo");
+        menu.add(Menu.NONE, Menu.FIRST+3, Menu.NONE, "Invitar a partida sin tiempo");*/
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        Intent i = new Intent(getApplicationContext(), OnlineActivity.class);
-        i.putExtra("nickname", nickname);
-        i.putExtra("nickname", nickname);
-        i.putExtra("avatar", avatar);
-        i.putExtra("board", board);
-        i.putExtra("pieces", pieces);
+
+        eina.unizar.ajedrez.UserSignIn.mSocket.emit("inviteFriend");
+         dialog=new ProgressDialog(this);
+        dialog.setMessage("Esperando amigo");
+        dialog.setCancelable(false);
+        dialog.setInverseBackgroundForced(true);
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.d("d: ", "Finalizando actividad");
+                // stopTimer();
+                Intent i = new Intent(getApplicationContext(), MainPage.class);
+                i.putExtra("nickname", nickname);
+                i.putExtra("avatar",avatar);
+                startActivity(i);
+            }
+        });
+        dialog.show();
         switch(item.getItemId()) {
             case Menu.FIRST:
-                i.putExtra("time",3);
-                startActivity(i);
-                Toast.makeText(FriendsList.this,"Funciona", Toast.LENGTH_SHORT).show();
+                esperarResp(3);
                 return true;
-            case Menu.FIRST+1:
-                i.putExtra("time",10);
-                startActivity(i);
-                Toast.makeText(FriendsList.this,"Funciona", Toast.LENGTH_SHORT).show();
+           /* case Menu.FIRST+1:
+                esperarResp(10);
                 return true;
             case Menu.FIRST+2:
-                i.putExtra("time",30);
-                startActivity(i);
-                Toast.makeText(FriendsList.this,"Funciona", Toast.LENGTH_SHORT).show();
+                esperarResp(30);
                 return true;
             case Menu.FIRST+3:
-                i.putExtra("time",0);
-                startActivity(i);
-                Toast.makeText(FriendsList.this,"Funciona", Toast.LENGTH_SHORT).show();
-                return true;
+                esperarResp(0);
+                return true;*/
 
         }
         return super.onContextItemSelected(item);
     }
+    private void esperarResp(int time){
+        Log.d("Socket: ", "Esperando rival");
+        mSocket.on("getFriendopponent", new Emitter.Listener() {
 
+            @Override
+            public void call(Object... args) {
+                JSONObject data = (JSONObject) args[0];
+                //here the data is in JSON Format
+                try {
+                    String nomAmigo = data.getString("nickname");
+
+                    dialog.dismiss();
+                    Intent i = new Intent(getApplicationContext(), OnlineActivity.class);
+                    i.putExtra("nickname", nickname);
+                    i.putExtra("avatar", avatar);
+                    i.putExtra("board", board);
+                    i.putExtra("pieces", pieces);
+                    i.putExtra("time",3);
+                    i.putExtra("nomAmigo", nomAmigo);
+                    startActivity(i);
+                    Toast.makeText(FriendsList.this,"Funciona", Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d("Socket: ", data.toString());
+            }
+        });
+    }
     public Socket getSocket(){
         return mSocket;
     }
