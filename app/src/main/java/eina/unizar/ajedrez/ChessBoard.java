@@ -25,9 +25,9 @@ public class ChessBoard extends View {
     Paint p,q;
     Rect Rec;
     int NUM_FILCOL = 8;
-    int x0=65;
-    int y0 = 185;
-    int squareSize = 80;
+    int x0 = 170;
+    int y0 = 170;
+    int squareSize = 90;
     int x1= x0 +squareSize;
     String boardColor;
 
