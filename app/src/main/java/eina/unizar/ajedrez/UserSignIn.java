@@ -1,6 +1,7 @@
 package eina.unizar.ajedrez;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -144,23 +146,32 @@ public class UserSignIn extends AppCompatActivity{
             @Override
             public void call(Object... args) {
                 JSONObject data = (JSONObject) args[0];
+                AlertDialog.Builder builder = new AlertDialog.Builder(UserSignIn.this);
+                builder.setMessage("Aceptar invitacion");
+                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        try {
+                            Log.d("SignIn: ", "Llega invitacion");
+                            String nomAmigo = data.getString("nickname");
+                            mSocket.emit("confirmGameFriend",nickname,nomAmigo);
+                            Intent j = new Intent(getApplicationContext(), OnlineActivity.class);
+                            j.putExtra("nickname", nickname);
+                            j.putExtra("avatar", avatar);
+                            j.putExtra("board", board);
+                            j.putExtra("pieces", pieces);
+                            j.putExtra("time", 0);
+                            j.putExtra("nomAmigo", nomAmigo);
+                            startActivity(j);
+                            // Toast.makeText(FriendsList.this,"Funciona", Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d("Socket: ", data.toString());
+                    }
+                });
+                builder.show();
                 //here the data is in JSON Format
-                try {
-                    String nomAmigo = data.getString("nickname");
-                    mSocket.emit("confirmGameFriend",nickname,nomAmigo);
-                    Intent i = new Intent(getApplicationContext(), OnlineActivity.class);
-                    i.putExtra("nickname", nickname);
-                    i.putExtra("avatar", avatar);
-                    i.putExtra("board", board);
-                    i.putExtra("pieces", pieces);
-                    i.putExtra("time", 0);
-                    i.putExtra("nomAmigo", nomAmigo);
-                    startActivity(i);
-                   // Toast.makeText(FriendsList.this,"Funciona", Toast.LENGTH_SHORT).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("Socket: ", data.toString());
             }
         });
     }

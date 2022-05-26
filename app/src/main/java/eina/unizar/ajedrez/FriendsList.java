@@ -199,7 +199,7 @@ public class FriendsList extends AppCompatActivity {
                 //here the data is in JSON Format
                 try {
                     String nomAmigo = data.getString("nickname");
-
+                    Log.d("FriendsList ", "llega resupesta del rival");
                     dialog.dismiss();
                     Intent i = new Intent(getApplicationContext(), OnlineActivity.class);
                     i.putExtra("nickname", nickname);

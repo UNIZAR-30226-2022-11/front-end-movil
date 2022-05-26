@@ -155,7 +155,7 @@ public class AiActivity extends AppCompatActivity {
                                         myCanvas.makeAIMove();
                                         if(myCanvas.isMate()){
                                             stopTimer();
-                                            Toast.makeText(getApplicationContext(), "Fin de partida" + "", Toast.LENGTH_SHORT).show();
+                                           // Toast.makeText(getApplicationContext(), "Fin de partida" + "", Toast.LENGTH_SHORT).show();
                                             AlertDialog.Builder builder = new AlertDialog.Builder(AiActivity.this);
                                             builder.setMessage("Te ha ganado la maquina");
                                             builder.setPositiveButton("Volver", new DialogInterface.OnClickListener() {
