@@ -53,6 +53,7 @@ public class OnlineActivity extends AppCompatActivity {
     String nickname;
     String avatar;
     String board;
+    String pieces;
     boolean finPartida =  false;
     boolean finTiempo = false;
     ProgressDialog dialog;
@@ -62,9 +63,9 @@ public class OnlineActivity extends AppCompatActivity {
     private Socket mSocket, mSocket2;
     {
         try {
-           mSocket = IO.socket("http://10.0.2.2:3000");
-            mSocket2 = IO.socket("http://10.0.2.2:3000");
-          // mSocket = IO.socket("http://ec2-18-206-137-85.compute-1.amazonaws.com:3000");
+           //mSocket = IO.socket("http://10.0.2.2:3000");
+           // mSocket2 = IO.socket("http://10.0.2.2:3000");
+           mSocket = IO.socket("http://ec2-18-206-137-85.compute-1.amazonaws.com:3000");
         } catch (URISyntaxException e) {
             Log.d("Socket: ",   e.toString());
         }
@@ -76,10 +77,10 @@ public class OnlineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //myCanvas = new ChessBoard(this,"0");
         setContentView(R.layout.activity_online);
-        mSocket.disconnect();
-        mSocket2.disconnect();
+        //mSocket.disconnect();
+        //mSocket2.disconnect();
         mSocket.connect();
-        mSocket2.connect();
+        //mSocket2.connect();
 
 
 
@@ -90,6 +91,7 @@ public class OnlineActivity extends AppCompatActivity {
         dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                Log.d("d: ", "Finalizando actividad");
                 mSocket.disconnect();
                // stopTimer();
                 Intent i = new Intent(getApplicationContext(), MainPage.class);
@@ -99,15 +101,15 @@ public class OnlineActivity extends AppCompatActivity {
             }
         });
         dialog.show();
-
+        pieces =  getIntent().getExtras().getString("pieces");
         nickname = getIntent().getExtras().getString("nickname");
         avatar = getIntent().getExtras().getString("avatar");
         time = getIntent().getExtras().getInt("time");
         board = getIntent().getExtras().getString("board");
         if(time != 0 )timeLeftInMilliseconds = (long) time*60*1000;
         timeLeftInMillisecondsRival = (long) time*60*1000;
-        mSocket.emit("buscarPartida",nickname,time,avatar,"0");
-        mSocket2.emit("buscarPartida","Juan",Integer.toString(time),avatar,"0");
+        mSocket.emit("buscarPartida",nickname,Integer.toString(time),avatar,"0");
+       //mSocket2.emit("buscarPartida","Juan",Integer.toString(time),avatar,"0");
        TextView nameUser = findViewById(R.id.nombreUser);
         nameUser.setText(nickname);
         TextView timerUser = findViewById(R.id.timerUser);
@@ -233,12 +235,12 @@ public class OnlineActivity extends AppCompatActivity {
             public void run() {
                 if (side.equals("0")){
                     Log.d("Tablero : ", "Tablero blanco " + side);
-                    myCanvas = new ChessBoard(getApplicationContext(), "0",board);
+                    myCanvas = new ChessBoard(getApplicationContext(), "0",board,pieces);
                     LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
                     layout.addView(myCanvas);
                 }
                 else{
-                    myCanvas = new ChessBoard(getApplicationContext(), "1",board);
+                    myCanvas = new ChessBoard(getApplicationContext(), "1",board,pieces);
                     LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
                     layout.addView(myCanvas);
                     playGame();
@@ -325,7 +327,7 @@ public class OnlineActivity extends AppCompatActivity {
                    }
        });
 
-    Log.d("Socket2: ", "Socket conectado");
+    /*Log.d("Socket2: ", "Socket conectado");
        Log.d("Socket2: ", "Esperando rival");
        mSocket2.on("getOpponent", new Emitter.Listener() {
            @Override
@@ -344,6 +346,7 @@ public class OnlineActivity extends AppCompatActivity {
                    });
                    //mSocket2.emit("sendGameMove",0,0,2,2);
                    //playGame();
+                   guardarPartida();
                    cambiarTabler(side);
                    esperarRecuperacion();
                    dialog.dismiss();
@@ -353,7 +356,7 @@ public class OnlineActivity extends AppCompatActivity {
                Log.d("Socket2: ", data.toString());
                // Toast.makeText(FriendsList.this, data.toString(), Toast.LENGTH_SHORT).show();
            }
-       });
+       });*/
     }
     private void esperarAbandono(){
         mSocket.on("oponenteDesconectado", new Emitter.Listener() {
@@ -458,11 +461,11 @@ public class OnlineActivity extends AppCompatActivity {
     private void guardarPartida(){
         RequestQueue queue;
         queue = Volley.newRequestQueue(this);
-        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getFriendRequest";
+        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/saveMatchResult";
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("nickname", nickname);
-            jsonBody.put("rival", "c");
+            jsonBody.put("rival", "jbuil");
             jsonBody.put("result", nickname);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -473,12 +476,7 @@ public class OnlineActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 Log.d("Exito: ", response );
-                try {
-                    JSONObject obj = new JSONObject((response));
-                    board = obj.getString("board");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -509,7 +507,7 @@ public class OnlineActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        //mSocket2.disconnect();
+       // mSocket2.disconnect();
         Log.d("backPressed: " ,"Sale de la actividad");
         mSocket.disconnect();
       //  stopTimer();
@@ -589,7 +587,7 @@ public class OnlineActivity extends AppCompatActivity {
         if(minutes == 0 && seconds == 0){
             finTiempo = true;
             AlertDialog.Builder builder = new AlertDialog.Builder(OnlineActivity.this);
-            builder.setMessage("Tiempo superado");
+            builder.setMessage("Tiempo superado. Derrota");
             builder.setPositiveButton("Volver", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {

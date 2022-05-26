@@ -66,9 +66,11 @@ public class AiActivity extends AppCompatActivity {
         avatar = getIntent().getExtras().getString("avatar");
         time = getIntent().getExtras().getInt("time");
         board = getIntent().getExtras().getString("board");
+        pieces =  getIntent().getExtras().getString("pieces");
+        Log.d("d: ", "Side " + pieces);
         Log.d("d: ", "Board " + board);
-        if(side.equals("0")) myCanvas = new ChessBoard(this,"0", board);
-        else myCanvas = new ChessBoard(this,"0",board);
+        if(side.equals("0")) myCanvas = new ChessBoard(this,"0", board, pieces);
+        else myCanvas = new ChessBoard(this,"1",board, pieces);
         setContentView(R.layout.activity_ai);
 
         if(time == 3) time =1;
@@ -86,10 +88,10 @@ public class AiActivity extends AppCompatActivity {
         LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
         layout.addView(myCanvas);
 
-        /*if(side.equals("1")) {
+        if(side.equals("1")) {
             myCanvas.makeAIMove();
             turno = 'b';
-        }*/
+        }
         //playGame();
     }
 

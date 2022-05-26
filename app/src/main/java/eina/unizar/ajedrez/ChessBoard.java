@@ -25,11 +25,12 @@ public class ChessBoard extends View {
     Paint p,q;
     Rect Rec;
     int NUM_FILCOL = 8;
-    int x0=65;
-    int y0 = 185;
-    int squareSize = 80;
+    int x0=170;
+    int y0 = 170;
+    int squareSize = 90;
     int x1= x0 +squareSize;
     String boardColor;
+    String colorSet;
 
     HashMap<Integer,ChessPiece> pieceSet  = new HashMap<Integer,ChessPiece>();
     int numPieza;
@@ -99,12 +100,14 @@ public class ChessBoard extends View {
      * ___________________________      ___________________________
      **************************************************************/
 
-    public ChessBoard(Context context, String side, String board){
+    public ChessBoard(Context context, String side, String board, String set){
         super(context);
         p = new Paint();
         q = new Paint();
         Rec = new Rect();
         this.side = side;
+        this.colorSet = set;
+        Log.d("d: ", "Es set es "+colorSet);
         setPieceSet();
         setMatrix();
         //setPieceSetAhogado();
@@ -1276,18 +1279,50 @@ public class ChessBoard extends View {
 
     void setPieceSet(){
         int num = 0;
-        Bitmap bPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_pawn);
-        Bitmap wPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_pawn);
-        Bitmap bRook= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_rook);
-        Bitmap wRook = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_rook);
-        Bitmap bKnight= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_knight);
-        Bitmap wKnight = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_knight);
-        Bitmap bBishop= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_bishop);
-        Bitmap wBishop = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_bishop);
-        Bitmap bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_queen);
-        Bitmap wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_queen);
-        Bitmap bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_king);
-        Bitmap wKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_king);
+        Bitmap bPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.peon_negro);
+        Bitmap wPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.peon_blanco);
+        Bitmap bRook= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.torre_negra);
+        Bitmap wRook = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.torre_blanca);
+        Bitmap bKnight= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.caballo_negro);
+        Bitmap wKnight = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.caballo_blanco);
+        Bitmap bBishop= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.alfil_negro);
+        Bitmap wBishop = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.alfil_blanco);
+        Bitmap bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_negra);
+        Bitmap wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blanca);
+        Bitmap bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_negro);
+        Bitmap wKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_blanco);
+
+        if(colorSet.equals("blancoAzul_Piezas")){
+             bPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.peon_blue);
+             bRook= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.torre_blue);
+             bKnight= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.caballo_blue);
+             bBishop= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.alfil_blue);
+             bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blue);
+             bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_blue);
+        }else if (colorSet.equals("blancoRojo_Piezas")){
+             bPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.peon_rojo);
+             bRook= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.torre_roja);
+             bKnight= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.caballo_rojo);
+             bBishop= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.alfil_rojo);
+             bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_roja);
+             bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_rojo);
+        }else if(colorSet.equals("rojiAzul_Piezas")){
+             wPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.peon_rojo);
+             wRook = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.torre_roja);
+             wKnight = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.caballo_rojo);
+             wBishop = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.alfil_rojo);
+             wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_roja);
+             wKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_rojo);
+             bPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.peon_blue);
+             bRook= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.torre_blue);
+             bKnight= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.caballo_blue);
+             bBishop= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.alfil_blue);
+             bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blue);
+             bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_blue);
+
+        }
+
+
         if(side=="0"){ // Juega como blancas
             for(int i= 0; i < NUM_FILCOL;i++){
                 pieceSet.put(num,new ChessPiece(x0+(i*squareSize),y0+squareSize,"Pawn",squareSize,"b",bPawn,side)); num++;
@@ -1430,18 +1465,18 @@ public class ChessBoard extends View {
         this.turno = turno;
         int num = 0;
         boardColor = boardC;
-        Bitmap bPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_pawn);
-        Bitmap wPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_pawn);
-        Bitmap bRook= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_rook);
-        Bitmap wRook = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_rook);
-        Bitmap bKnight= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_knight);
-        Bitmap wKnight = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_knight);
-        Bitmap bBishop= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_bishop);
-        Bitmap wBishop = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_bishop);
-        Bitmap bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_queen);
-        Bitmap wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_queen);
-        Bitmap bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_king);
-        Bitmap wKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_king);
+        Bitmap bPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.peon_negro);
+        Bitmap wPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.peon_blanco);
+        Bitmap bRook= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.torre_negra);
+        Bitmap wRook = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.torre_blanca);
+        Bitmap bKnight= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.caballo_negro);
+        Bitmap wKnight = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.caballo_blanco);
+        Bitmap bBishop= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.alfil_negro);
+        Bitmap wBishop = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.alfil_blanco);
+        Bitmap bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_negra);
+        Bitmap wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blanca);
+        Bitmap bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_negro);
+        Bitmap wKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_blanco);
         pieceSet = new HashMap<Integer,ChessPiece>();
         for(int i = 0;i < NUM_FILCOL;i++){
             for(int j = 0; j < NUM_FILCOL;j++){

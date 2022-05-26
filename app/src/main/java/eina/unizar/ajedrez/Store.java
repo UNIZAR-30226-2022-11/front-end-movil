@@ -36,18 +36,26 @@ public class Store extends AppCompatActivity {
     private int monedas;
     private RequestQueue queue;
     private String actual = "BoardGris";
+    String setActual = "default_Piezas";
     private String avatarActual = "";
-    private  String compradoBlue, compradoBrown,compradoKnight,compradoStar,compradoFootball, compradoHeart;
+    private  String compradoBlue, compradoBrown,compradoKnight,compradoStar,compradoFootball, compradoHeart,
+    compradoDefault,compradoWhiteBlue,compradoWhiteRed, compradoRedBlue;
     Button comprarGris, equiparGris;
     Button comprarAzul, equiparAzul;
     Button comprarMarron, equiparMarron;
+    Button comprarDefault, equiparDefault;
+    Button comprarWhiteBlue, equiparWhiteBlue;
+    Button comprarWhiteRed, equiparWhiteReed;
+    Button comprarRedBlue, equiparRedBlue;
     Button comprarKnight, equiparKnight;
     Button comprarStar, equiparStar;
     Button comprarFootball, equiparFootball;
     Button comprarHeart, equiparHeart;
     Map<String, Integer> tableros = new HashMap<String, Integer>();
+    Map<String, Integer>  piezas = new HashMap<String, Integer>();
     Map<String, Integer>  avatares = new HashMap<String, Integer>();
     Set<String> tablerosComprados = new HashSet<String>();
+    Set<String> piezasComprados = new HashSet<String>();
     Set<String> avataresComprados = new HashSet<String>();
 
     @Override
@@ -59,6 +67,7 @@ public class Store extends AppCompatActivity {
         nickname = getIntent().getExtras().getString("nickname");
         avatarActual =  getIntent().getExtras().getString("avatar");
         actual =  getIntent().getExtras().getString("board");
+        setActual = getIntent().getExtras().getString("pieces");
         TextView usuarioTienda = findViewById(R.id.nomUser);
         usuarioTienda.setText(nickname+": ");
         usuarioTienda.setTextColor(this.getResources().getColor(R.color.white));
@@ -141,6 +150,71 @@ public class Store extends AppCompatActivity {
         equiparGris.setOnClickListener(view -> equiparItem("BoardGris", "board"));
         equiparAzul.setOnClickListener(view -> equiparItem("BoardAzul","board"));
         equiparMarron.setOnClickListener(view -> equiparItem("BoardMarron","board"));
+    }
+
+    void setPieces(){
+        comprarDefault = findViewById(R.id.buyDefault);
+        comprarDefault.setText("Comprado");
+        comprarDefault.setBackgroundColor(Color.GREEN);
+        comprarWhiteBlue = findViewById(R.id.buyBlueWhite);
+        comprarWhiteRed = findViewById(R.id.buyWhiteRed);
+        comprarRedBlue = findViewById(R.id.buyRedBlue);
+
+        equiparDefault = findViewById((R.id.equiparDefault));
+        equiparWhiteBlue = findViewById((R.id.equiparBlueWhite));
+        equiparWhiteReed = findViewById((R.id.equiparWhiteRed));
+        equiparRedBlue = findViewById((R.id.equiparRedBlue));
+        //avatarActual = "knight_avatar";
+        Log.d("tableros comprados: ",  "Pasa por aqui");
+        for (String s : piezasComprados) {
+            Log.d("tableros comprados: ", s);
+        }
+        if(setActual.equals("default_Piezas")){
+            equiparDefault.setText("Equipado");
+            equiparDefault.setBackgroundColor(Color.GREEN);
+        }else if(setActual.equals("blancoAzul_Piezas")){
+            equiparWhiteBlue.setText("Equipado");
+            equiparWhiteBlue.setBackgroundColor(Color.GREEN);
+        }else if(setActual.equals("blancoRojo_Piezas")){
+            equiparWhiteReed.setText("Equipado");
+            equiparWhiteReed.setBackgroundColor(Color.GREEN);
+        }else if(setActual.equals("rojiAzul_Piezas")){
+            equiparRedBlue.setText("Equipado");
+            equiparRedBlue.setBackgroundColor(Color.GREEN);
+        }
+        if(piezasComprados.contains("default_Piezas")){
+            compradoDefault = "1";
+            comprarDefault.setText("Comprado");
+            comprarDefault.setBackgroundColor(Color.GREEN);
+        }
+        if(piezasComprados.contains("blancoAzul_Piezas")){
+            compradoWhiteBlue = "1";
+            comprarWhiteBlue.setText("Comprado");
+            comprarWhiteBlue.setBackgroundColor(Color.GREEN);
+        }
+        if(avataresComprados.contains("blancoRojo_Piezas")){
+            compradoWhiteRed = "1";
+            comprarWhiteRed.setText("Comprado");
+            comprarWhiteRed.setBackgroundColor(Color.GREEN);
+        }
+        if(avataresComprados.contains("rojiAzul_Piezas")){
+            compradoRedBlue = "1";
+            comprarRedBlue.setText("Comprado");
+            comprarRedBlue.setBackgroundColor(Color.GREEN);
+        }
+
+
+
+        //comprarGris.setOnClickListener(view -> buyBoard(""));
+        comprarDefault.setOnClickListener(view -> buyBoard("default_Piezas","set"));
+        comprarWhiteBlue.setOnClickListener(view -> buyBoard("blancoAzul_Piezas","set"));
+        comprarWhiteRed.setOnClickListener(view -> buyBoard("blancoRojo_Piezas","set"));
+        comprarRedBlue.setOnClickListener(view -> buyBoard("rojiAzul_Piezas","set"));
+
+        equiparDefault.setOnClickListener(view -> equiparItem("default_Piezas","set"));
+        equiparWhiteBlue.setOnClickListener(view -> equiparItem("blancoAzul_Piezas","set"));
+        equiparWhiteReed.setOnClickListener(view -> equiparItem("blancoRojo_Piezas", "set"));
+        equiparRedBlue.setOnClickListener(view -> equiparItem("rojiAzul_Piezas", "set"));
     }
 
     void setAvatars(){
@@ -257,6 +331,7 @@ public class Store extends AppCompatActivity {
                     JSONObject tablero = obj.getJSONObject(0);
                     //obj = obj.getJSONObject("board");
                     actual = tablero.getString("tablero");
+                    setActual = tablero.getString("piezas");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -299,6 +374,8 @@ public class Store extends AppCompatActivity {
                             tableros.put(item.getString("nombre"),item.getInt("precio"));
                         }else if(item.getString("tipo").equals("avatar")){
                             avatares.put(item.getString("nombre"),item.getInt("precio"));
+                        }else if(item.getString("tipo").equals("pieces")){
+                            piezas.put(item.getString("nombre"),item.getInt("precio"));
                         }
                     }
                 } catch (JSONException e) {
@@ -346,9 +423,13 @@ public class Store extends AppCompatActivity {
                         }else if(item.getString("tipo").equals("avatar")){
                             Log.d("XQ: ", " Añade avatar" );
                             avataresComprados.add(item.getString("ARTICULO_nombre"));
+                        }else if(item.getString("tipo").equals("pieces")){
+                            Log.d("XQ: ", " Añade pieza" );
+                            piezasComprados.add(item.getString("ARTICULO_nombre"));
                         }
                     }
                     setBoards();
+                    setPieces();
                     setAvatars();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -385,6 +466,20 @@ public class Store extends AppCompatActivity {
         return true;
     }
 
+    private boolean checkSets(String color){
+
+        if(color.equals("default_Piezas") || compradoWhiteBlue == "1" && color.equals("blancoAzul_Piezas") ||
+                compradoWhiteRed == "1" && color.equals("blancoRojo_Piezas") || compradoRedBlue == "1" && color.equals("rojiAzul_Piezas") ){
+            Toast.makeText(Store.this,"El set ya esta adquirido", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(monedas < 10 && color.equals("blancoRojo_Piezas") || monedas < 5 && color.equals("blancoAzul_Piezas") ||
+                monedas < 15 && color.equals("rojiAzul_Piezas")){ // Luego que haya dinero suficiente
+            Toast.makeText(Store.this,"No hay sufcientes monedas", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
 
     private boolean checkAvatars(String color){
         if(color.equals("knight_avatar") || compradoFootball == "1" && color.equals("soccer_avatar") ||
@@ -402,7 +497,7 @@ public class Store extends AppCompatActivity {
 
     private void buyBoard(String color, String type){
         // Primero comprobar que no esta comprado
-        if(type.equals("board") && checkBoards(color) || type.equals("avatar") && checkAvatars(color)){
+        if(type.equals("board") && checkBoards(color) || type.equals("avatar") && checkAvatars(color) || type.equals("set") && checkSets(color)){
             String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/buyItem";
             Log.d("Enviando: ", URL);
             JSONObject jsonBody = new JSONObject();
@@ -429,12 +524,15 @@ public class Store extends AppCompatActivity {
                             } else if(type.equals("avatar")){
                                 avataresComprados.add(color);
                                 setAvatars();
+                            }else if(type.equals("piece")){
+                                piezasComprados.add(color);
+                                setPieces();
                             }
-                            if(color.equals("BoardAzul") || color.equals("star_avatar")){
+                            if(color.equals("BoardAzul") || color.equals("star_avatar") || color.equals("blancoAzul_Piezas")){
                                 monedas -= 5;
-                            }else if(color.equals("BoardMarron") || color.equals("football_avatar")){
+                            }else if(color.equals("BoardMarron") || color.equals("football_avatar") || color.equals("blancoRojo_Piezas")){
                                 monedas -= 10;
-                            }else if(color.equals("heart_avatar")){
+                            }else if(color.equals("heart_avatar") || color.equals("rojiAzul_Piezas")){
                                 monedas -= 15;
                             }
                             TextView numMonedas =  findViewById(R.id.monedas);
@@ -484,6 +582,18 @@ public class Store extends AppCompatActivity {
         return true;
     }
 
+    private boolean checkSelectedSet(String color){
+        if(setActual.equals(color)){
+            Toast.makeText(Store.this,"Las piezas ya estan elegidas", Toast.LENGTH_SHORT).show();
+            return false;
+        }else if(compradoWhiteBlue != "1" && color.equals("blancoAzul_Piezas") || compradoWhiteRed != "1" && color.equals("blancoRojo_Piezas") ||
+                compradoRedBlue != "1" && color.equals("rojiAzul_Piezas")){
+            Toast.makeText(Store.this,"Hay que comprar las piezas para escogerlo", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
     private boolean checkSelectedAvatar(String color){
         if(avatarActual.equals(color)){
             Toast.makeText(Store.this,"El avatar ya esta elegido", Toast.LENGTH_SHORT).show();
@@ -498,7 +608,7 @@ public class Store extends AppCompatActivity {
     }
 
     private void equiparItem(String color,String tipo){
-        if(tipo.equals("board") && checkSelectedBoard(color) || tipo.equals("avatar") && checkSelectedAvatar(color) ){
+        if(tipo.equals("board") && checkSelectedBoard(color) || tipo.equals("avatar") && checkSelectedAvatar(color) || tipo.equals("set") && checkSelectedSet(color) ){
             String URL = "";
             JSONObject jsonBody = new JSONObject();
 
@@ -515,6 +625,14 @@ public class Store extends AppCompatActivity {
                 try {
                     jsonBody.put("nickname", nickname);
                     jsonBody.put("avatar", color);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }else if (tipo.equals("set")){
+                URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/updatePieces";
+                try {
+                    jsonBody.put("nickname", nickname);
+                    jsonBody.put("pieces", color);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -560,6 +678,22 @@ public class Store extends AppCompatActivity {
                                 }
                                 avatarActual = color;
                                 setAvatars();
+                            }else if(tipo.equals(("set"))){
+                                if(setActual.equals("default_Piezas")){
+                                    equiparDefault.setText("SET DEFAULT");
+                                    equiparDefault.setBackgroundColor(DEFAULT_GREY);
+                                }else if(setActual.equals("blancoAzul_Piezas")){
+                                    equiparWhiteBlue.setText("SET DEFAULT");
+                                    equiparWhiteBlue.setBackgroundColor(DEFAULT_GREY);
+                                }else if(setActual.equals("blancoRojo_Piezas")){
+                                    equiparWhiteReed.setText("SET DEFAULT");
+                                    equiparWhiteReed.setBackgroundColor(DEFAULT_GREY);
+                                }else if(setActual.equals("rojiAzul_Piezas")){
+                                    equiparRedBlue.setText("SET DEFAULT");
+                                    equiparRedBlue.setBackgroundColor(DEFAULT_GREY);
+                                }
+                                setActual = color;
+                                setPieces();
                             }
 
                         }else  Toast.makeText(Store.this,"Ha habido un error durante la compra", Toast.LENGTH_SHORT).show();

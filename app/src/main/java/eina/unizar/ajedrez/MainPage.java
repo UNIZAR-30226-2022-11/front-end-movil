@@ -104,11 +104,13 @@ public class MainPage extends AppCompatActivity {
                     JSONArray obj = new JSONArray(response);
                     JSONObject tablero = obj.getJSONObject(0);
                     String board = tablero.getString("tablero");
+                    String pieces = tablero.getString("piezas");
                     Intent i = new Intent(getApplicationContext(), OnlineActivity.class);
                     i.putExtra("nickname", nickname);
                     i.putExtra("time", min);
                     i.putExtra("avatar", avatar);
                     i.putExtra("board", board);
+                    i.putExtra("pieces", pieces);
                     startActivity(i);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -150,11 +152,13 @@ public class MainPage extends AppCompatActivity {
                     JSONArray obj = new JSONArray(response);
                     JSONObject tablero = obj.getJSONObject(0);
                     String board = tablero.getString("tablero");
+                    String pieces = tablero.getString("piezas");
                     Intent i = new Intent(getApplicationContext(), AiActivity.class);
                     i.putExtra("nickname", nickname);
                     i.putExtra("time", min);
                     i.putExtra("avatar", avatar);
                     i.putExtra("board", board);
+                    i.putExtra("pieces", pieces);
                     startActivity(i);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -209,10 +213,12 @@ public class MainPage extends AppCompatActivity {
                     JSONArray obj = new JSONArray(response);
                     JSONObject tablero = obj.getJSONObject(0);
                     String board = tablero.getString("tablero");
+                    String pieces = tablero.getString("piezas");
                     Intent i = new Intent(getApplicationContext(), Store.class);
                     i.putExtra("nickname", nickname);
                     i.putExtra("avatar", avatar);
                     i.putExtra("board", board);
+                    i.putExtra("pieces", pieces);
                     startActivity(i);
                 } catch (JSONException e) {
                     e.printStackTrace();
