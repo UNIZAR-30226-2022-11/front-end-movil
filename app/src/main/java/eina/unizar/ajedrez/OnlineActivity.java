@@ -172,8 +172,8 @@ public class OnlineActivity extends AppCompatActivity {
                                  runOnUiThread(new Runnable() {
                                      @Override
                                      public void run() {
-                                         startTimer();
-                                         stopTimerRival();
+                                         if(time!= 0)  startTimer();
+                                         if(time!= 0) stopTimerRival();
                                      }
                                  });
 
@@ -182,7 +182,7 @@ public class OnlineActivity extends AppCompatActivity {
                                  runOnUiThread(new Runnable() {
                                      @Override
                                      public void run() {
-                                         stopTimer();
+                                         if(time!= 0)   stopTimer();
                                          Log.d("d: ", "Fin partida");
                                          Toast.makeText(getApplicationContext(), "Derrota" , Toast.LENGTH_SHORT).show();
                                          AlertDialog.Builder builder = new AlertDialog.Builder(OnlineActivity.this);
@@ -232,12 +232,12 @@ public class OnlineActivity extends AppCompatActivity {
                                     if (turno == 'w') turno = 'b';
                                     else turno = 'w';
                                     if (!myCanvas.isMate()) {
-                                        stopTimer();
-                                        startTimerRival();
+                                       if(time!= 0) stopTimer();
+                                        if(time!= 0)  startTimerRival();
                                         playGame();
                                     } else { // Enviar datos de la partida al server y liberar el socket
                                         mSocket.disconnect();
-                                        stopTimer();
+                                        if(time!= 0) stopTimer();
                                         AlertDialog.Builder builder = new AlertDialog.Builder(OnlineActivity.this);
                                         builder.setMessage("Victoria!");
                                         builder.setPositiveButton("Volver", new DialogInterface.OnClickListener() {
@@ -280,7 +280,7 @@ public class OnlineActivity extends AppCompatActivity {
                     layout.addView(myCanvas);
                     playGame();
                 }
-                startStop();
+                if(time!= 0)  startStop();
             }
         });
     }
@@ -305,12 +305,15 @@ public class OnlineActivity extends AppCompatActivity {
                 }
                 if (turnoActual.equals("b")&& side.equals("0")) playGame();
                 else if(turnoActual.equals("w") && side.equals("1")) playGame();
-                TextView timerUser = findViewById(R.id.timerUser);
-                timerUser.setText(tiempo);
-                TextView timerRival = findViewById(R.id.timerRival);
-                timerRival.setText(tiempoRival);
-                if(turno == 'w' && side.equals("0") || turno == 'b' && side.equals("1")) startTimer();
-                else startTimerRival();
+                if( time!= 0 ) {
+                    TextView timerUser = findViewById(R.id.timerUser);
+                    timerUser.setText(tiempo);
+                    TextView timerRival = findViewById(R.id.timerRival);
+                    timerRival.setText(tiempoRival);
+                    if (turno == 'w' && side.equals("0") || turno == 'b' && side.equals("1"))
+                        startTimer();
+                    else startTimerRival();
+                }
                 //startStop();
             }
         });
@@ -415,7 +418,7 @@ public class OnlineActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        stopTimer();
+                        if(time!= 0)  stopTimer();
                         Log.d("d: ", "Fin partida");
                         Toast.makeText(getApplicationContext(), "El rival ha abandonado la partida" , Toast.LENGTH_SHORT).show();
                         AlertDialog.Builder builder = new AlertDialog.Builder(OnlineActivity.this);
