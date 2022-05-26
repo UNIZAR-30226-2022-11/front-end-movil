@@ -129,4 +129,9 @@ public class UserSignIn extends AppCompatActivity{
         Intent i = new Intent(this, UserSignUp.class);
         startActivity(i);
     }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
 }
