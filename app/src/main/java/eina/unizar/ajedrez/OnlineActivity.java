@@ -196,40 +196,52 @@ public class OnlineActivity extends AppCompatActivity {
 
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                Log.d("d: ", "Pre comprobacion");
+                Log.d("d: ", "Pre comprobacion "+ turno + " side: " + side);
                 if(turno == 'w' && side.equals("0") || turno == 'b' && side.equals( "1")){
                 //Pulsa un boton, comprobar si es mi turno. Sino, sudar de la comprobación
-                    if (myCanvas.checkCorrectMov(turno)) { // Pasar parametro donde se guarde movimiento correcto
-                        int[] pos = myCanvas.getPos();
-                        Log.d("d: ", "Comprobando emit");
-                        mSocket.emit("sendGameMove",pos[1],pos[0],pos[3],pos[2]);
-                        if (turno == 'w')  turno = 'b';
-                        else turno = 'w';
-                        if (!myCanvas.isMate()) {
-                            stopTimer();
-                            startTimerRival();
-                            playGame();
-                        } else { // Enviar datos de la partida al server y liberar el socket
-                            mSocket.disconnect();
-                            stopTimer();
-                            AlertDialog.Builder builder = new AlertDialog.Builder(OnlineActivity.this);
-                            builder.setMessage("Victoria!");
-                            builder.setPositiveButton("Volver", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    guardarPartida();
+                    if (!pulsado) {
+                        pulsado = true;
+                    }else {
+                       // Handler handler = new Handler();
+                      //  handler.postDelayed(new Runnable() {
+                      //      public void run() {
+                                if (myCanvas.checkCorrectMov(turno)) { // Pasar parametro donde se guarde movimiento correcto
 
-                                    Intent x = new Intent(getApplicationContext(), MainPage.class);
-                                    x.putExtra("nickname",nickname);
-                                    x.putExtra("avatar",avatar);
-                                    startActivity(x);
+                                    int[] pos = myCanvas.getPos();
+                                    Log.d("d: ", "Comprobando emit");
+                                    mSocket.emit("sendGameMove", pos[1], pos[0], pos[3], pos[2]);
+                                    if (turno == 'w') turno = 'b';
+                                    else turno = 'w';
+                                    if (!myCanvas.isMate()) {
+                                        stopTimer();
+                                        startTimerRival();
+                                        playGame();
+                                    } else { // Enviar datos de la partida al server y liberar el socket
+                                        mSocket.disconnect();
+                                        stopTimer();
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(OnlineActivity.this);
+                                        builder.setMessage("Victoria!");
+                                        builder.setPositiveButton("Volver", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                guardarPartida();
+
+                                                Intent x = new Intent(getApplicationContext(), MainPage.class);
+                                                x.putExtra("nickname", nickname);
+                                                x.putExtra("avatar", avatar);
+                                                startActivity(x);
+                                            }
+                                        });
+                                        builder.show();
+                                    }
                                 }
-                            });
-                            builder.show();
-                        }
-                   }
-                    pulsado = false;
-                }
+                        //    }
+                       //     }, 100);   //5 seconds
+
+
+                        pulsado = false;
+                    }
+                }else pulsado = true;
         }
         return super.onTouchEvent(e);
     }
@@ -258,6 +270,8 @@ public class OnlineActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                turno =  turnoActual.charAt(0);
+                Log.d("Tablero : ", "Tablero blanco " + side + " turnoActual " + turnoActual);
                 if (side.equals("0")){
                     Log.d("Tablero : ", "Tablero blanco " + side);
                     myCanvas = new ChessBoard(getApplicationContext(), oldBoard,"0", turnoActual,board,pieces);
@@ -268,8 +282,10 @@ public class OnlineActivity extends AppCompatActivity {
                     myCanvas = new ChessBoard(getApplicationContext(),oldBoard, "1",turnoActual,board,pieces);
                     LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
                     layout.addView(myCanvas);
-                    playGame();
+                   // playGame();
                 }
+                if (turnoActual.equals("b")&& side.equals("0")) playGame();
+                else if(turnoActual.equals("w") && side.equals("1")) playGame();
                 TextView timerUser = findViewById(R.id.timerUser);
                 timerUser.setText(tiempo);
                 TextView timerRival = findViewById(R.id.timerRival);
@@ -291,8 +307,11 @@ public class OnlineActivity extends AppCompatActivity {
                        try {
                            idSocket = data.getString("opNick");
                            side = String.valueOf(data.getInt("side"));
+
                            String load = String.valueOf((data.getInt("load")));
                            if(load.equals("1")){
+                               if(side.equals("0")) side = "1";
+                               else side = "0";
                                Log.d("esperarival: ", "Partida antigua");
                                String turnoActual = String.valueOf(data.getString("turn"));
                                String tiempo = String.valueOf(data.getString("t1"));
@@ -309,7 +328,7 @@ public class OnlineActivity extends AppCompatActivity {
                                    int nuevaJ =  Math.abs(posJ-7);
 
                                    boardMtx[nuevaI][nuevaJ] =  casilla.getString("pieza");
-                                   Log.d("esperarival: ", boardMtx[posI][posJ]);
+                                   Log.d("esperarival: ", boardMtx[nuevaI][nuevaJ]);
                                }
                                //String auxBoard[][] = new String[8][8];
                                recuperarPartida(boardMtx,turnoActual,tiempo,tiempoRival);
@@ -521,7 +540,7 @@ public class OnlineActivity extends AppCompatActivity {
         if(timerRunning){
             stopTimer();
         }else{
-            if(side.equals("0")){
+            if(side.equals("0") && turno != 'b'){
                 startTimer();
             }else{
                 startTimerRival();

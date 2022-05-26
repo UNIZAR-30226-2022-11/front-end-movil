@@ -162,7 +162,7 @@ public class ChessBoard extends View {
         int guardaNumMov, guardanumClav = 0;
         int guardaNumJaques  = numJaques;
         guardaNumMov = numMovimientos; guardanumClav = numClavadas;
-        Log.d("d: ", "mC " + movimientoCorrecto + " t " +  turno + " p "+ this.turno.charAt(0));
+        Log.d("d: ", "mC " + movimientoCorrecto + " t " +  turno + " p "+ this.turno.charAt(0) +  " side: " +this.side);
         if (checkForMate()) Log.d("d:", "Fin de partida");
         jaque = guardaJaque;
         movimValidos= guardaMovimientoValido;
@@ -1184,7 +1184,7 @@ public class ChessBoard extends View {
                     }
                 }
             }
-
+        Log.d("checkPawn: ", "Pre comprobacion "+ turno + " side: " + side);
             if(turno == "w" && side == "0" || turno == "b" && side == "1"){ // Mi turno
 
                 if(boardMtx[changePos.getFila()-1][changePos.getCol()] == "--" && col == changePos.getCol()){// No hay nadie delante // Añadir side

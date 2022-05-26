@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:id="@+id/gamesRecord">
+    android:id="@+id/gamesRecord"
+    android:theme="@style/Theme.SignIn"
+    android:background="#202732">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="10dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
+            android:textStyle="bold"
             android:typeface="sans"
-            android:hint="PREVIOUS GAMES"
+            android:textAlignment="center"
+            android:text="PREVIOUS GAMES"
             android:layout_marginStart="22dp"
             android:textSize="40sp"
             android:id="@+id/titleGames"
@@ -27,25 +32,28 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="10dp">
+
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:typeface="sans"
-                android:hint="USER"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="22dp"
-                android:textSize="20sp"
                 android:id="@+id/myNickame"
-                android:minHeight="50dp" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="20dp"
+                android:minHeight="50dp"
+                android:text="USER"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:typeface="sans" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:typeface="sans"
-                android:hint="RIVAL"
+                android:textStyle="bold"
+                android:text="RIVAL"
                 android:layout_marginTop="20dp"
-                android:layout_marginStart="70dp"
+                android:layout_marginStart="80dp"
                 android:textSize="20sp"
                 android:id="@+id/rivalGames"
                 android:minHeight="50dp" />
@@ -54,7 +62,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:typeface="sans"
-                android:hint="WINNER"
+                android:text="WINNER"
+                android:textStyle="bold"
                 android:layout_marginTop="20dp"
                 android:layout_marginStart="85dp"
                 android:textSize="20sp"
@@ -63,12 +72,21 @@
 
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/listGames"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="10dp">
-    </LinearLayout>
+    <ScrollView
+        android:id="@+id/ScrollView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="33dp">
+        <LinearLayout
+            android:id="@+id/listGames"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp">
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

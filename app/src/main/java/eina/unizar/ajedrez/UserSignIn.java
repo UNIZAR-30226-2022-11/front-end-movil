@@ -1,5 +1,6 @@
 package eina.unizar.ajedrez;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,12 +19,15 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 import eina.unizar.ajedrez.databinding.UserSignInBinding;
+import io.socket.client.IO;
+import io.socket.client.Socket;
 
 public class UserSignIn extends AppCompatActivity{
 
@@ -33,6 +37,8 @@ public class UserSignIn extends AppCompatActivity{
     private String username;
     private String password;
     private RequestQueue queue;
+    public static Socket mSocket;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,17 +88,23 @@ public class UserSignIn extends AppCompatActivity{
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, response -> {
             Log.d("res", response);
             try {
+
+               // s.initSocket(this);
                 JSONObject obj = new JSONObject(response);
                 String nombre = obj.getString("nickname");
                 String monedas = obj.getString("monedas");
                 String avatar = obj.getString("avatar");
                 if(nombre.equals(username)){
+                    mSocket = IO.socket("http://10.0.2.2:3001");
+                    mSocket.connect();// = IO.socket("http://10.0.2.2:3001");
                     i.putExtra("nickname", nombre);
                     i.putExtra("monedas", monedas);
                     i.putExtra("avatar", avatar);
+                    mSocket.emit("conectarse", nombre);
                     startActivity(i);
+
                 }
-            } catch (JSONException e) {
+            } catch (JSONException | URISyntaxException e) {
                 e.printStackTrace();
             }
         }, error -> {
@@ -128,5 +140,10 @@ public class UserSignIn extends AppCompatActivity{
     private void registerUser() {
         Intent i = new Intent(this, UserSignUp.class);
         startActivity(i);
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 }

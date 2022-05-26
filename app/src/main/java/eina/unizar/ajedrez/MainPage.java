@@ -24,6 +24,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.socket.client.Socket;
+
 public class MainPage extends AppCompatActivity {
 
     String nickname;
@@ -45,6 +47,8 @@ public class MainPage extends AppCompatActivity {
     Button store;
     Button gameRecord;
     Button ranking;
+    Button logOut;
+    private Object UserSignIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +57,8 @@ public class MainPage extends AppCompatActivity {
 
         nickname = getIntent().getExtras().getString("nickname");
         avatar = getIntent().getExtras().getString("avatar");
-
+       //Socket socket =  eina.unizar.ajedrez.UserSignIn.mSocket;
+       // socket.emit("ingame",nickname);
         online3Button = findViewById(R.id.online3);
         online10Button = findViewById(R.id.online10);
         online30Button = findViewById(R.id.online30);
@@ -67,10 +72,12 @@ public class MainPage extends AppCompatActivity {
         myFriends = findViewById(R.id.buttonSeeFriends);
         requests = findViewById(R.id.buttonRequests);
 
-        gameRecord = findViewById((R.id.Record));
-        ranking = findViewById((R.id.ranking));
+        gameRecord = findViewById(R.id.Record);
+        ranking = findViewById(R.id.ranking);
 
-        store = findViewById((R.id.shop));
+        store = findViewById(R.id.shop);
+
+        logOut = findViewById(R.id.buttonLogOut);
 
         online3Button.setOnClickListener(view -> playAgainstOnlineRival(3));
         online10Button.setOnClickListener(view -> playAgainstOnlineRival(10));
@@ -88,6 +95,7 @@ public class MainPage extends AppCompatActivity {
         store.setOnClickListener((view -> seeStore()));
         gameRecord.setOnClickListener((view -> seeRecord()));
         ranking.setOnClickListener((view-> seeRanking()));
+        logOut.setOnClickListener((view -> logOut()));
     }
 
     private void playAgainstOnlineRival(int min) {
@@ -256,5 +264,17 @@ public class MainPage extends AppCompatActivity {
         i.putExtra("nickname", nickname);
         i.putExtra("avatar", avatar);
         startActivity(i);
+    }
+
+    private void logOut() {
+        Intent i = new Intent(this, UserSignIn.class);
+        eina.unizar.ajedrez.UserSignIn.mSocket.off();
+        eina.unizar.ajedrez.UserSignIn.mSocket.disconnect();
+        eina.unizar.ajedrez.UserSignIn.mSocket.close();
+        startActivity(i);
+    }
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 }

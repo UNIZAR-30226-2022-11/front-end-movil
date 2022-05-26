@@ -61,6 +61,7 @@ public class FriendsList extends AppCompatActivity {
     private String nickname;
     private FriendsListBinding binding;
     private Socket mSocket;
+    String board, pieces,avatar;
     private List<String> pendientes = new ArrayList<>();;
     {
         try {
@@ -77,20 +78,15 @@ public class FriendsList extends AppCompatActivity {
         binding = FriendsListBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-
+        obtenerInfo();
         nickname = getIntent().getExtras().getString("nickname");
+        avatar = getIntent().getExtras().getString("avatar");
         queue = Volley.newRequestQueue(this);
-
-
-        // Actions to do after 5 seconds
         try {
             fillData(nickname);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
-
         binding.searchfriend.setOnClickListener(vista -> {
             String username = binding.username.getText().toString();
             try {
@@ -104,7 +100,44 @@ public class FriendsList extends AppCompatActivity {
         });
 
     }
+    private void obtenerInfo(){
+        RequestQueue queue;
+        queue = Volley.newRequestQueue(this);
+        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getBoard?nickname="+nickname;
+        Log.d("Exito: ", URL );
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("Exito: ", response );
+                try {
 
+                    JSONArray obj = new JSONArray(response);
+                    JSONObject tablero = obj.getJSONObject(0);
+                    String board = tablero.getString("tablero");
+                    String pieces = tablero.getString("piezas");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("onErrorResponse: ", error.getLocalizedMessage() == null ? "" : error.getLocalizedMessage());
+            }
+        }){
+            @Override
+            public Map<String,String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String,String>();
+                params.put("content-type","application/json");
+                params.put("Access-Control-Allow-Origin","*");
+                return params;
+            }
+        };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(stringRequest);
+
+    }
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
@@ -119,6 +152,10 @@ public class FriendsList extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         Intent i = new Intent(getApplicationContext(), OnlineActivity.class);
         i.putExtra("nickname", nickname);
+        i.putExtra("nickname", nickname);
+        i.putExtra("avatar", avatar);
+        i.putExtra("board", board);
+        i.putExtra("pieces", pieces);
         switch(item.getItemId()) {
             case Menu.FIRST:
                 i.putExtra("time",3);
