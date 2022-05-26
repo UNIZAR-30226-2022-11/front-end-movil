@@ -106,11 +106,11 @@ public class UserSignIn extends AppCompatActivity{
                 if(nickname.equals(username)){
                     mSocket = IO.socket("http://10.0.2.2:3001");
                     mSocket.connect();// = IO.socket("http://10.0.2.2:3001");
-                    esperarPartida();
                     i.putExtra("nickname", nickname);
                     i.putExtra("monedas", monedas);
                     i.putExtra("avatar", avatar);
                     mSocket.emit("conectarse", nickname);
+                    esperarPartida();
                     startActivity(i);
 
                 }

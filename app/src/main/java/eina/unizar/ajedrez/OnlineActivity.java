@@ -136,9 +136,13 @@ public class OnlineActivity extends AppCompatActivity {
         TextView timerRival = findViewById(R.id.timerRival);
         timerRival.setText(time+":00");
        // TextView timerUser = findViewById(R.id.timerUser);
-        if(time != 0) timerUser.setText(time+":00");
+        if(time != 0){
+            timerUser.setText(time+":00");
+            timerRival.setText(time+":00");
+        }
         else{
             timerUser.setText("--:--");
+            timerRival.setText("--:--");
         }
         countdownText = findViewById(R.id.timerUser);
         countdownTextRival = findViewById(R.id.timerRival);
@@ -305,7 +309,9 @@ public class OnlineActivity extends AppCompatActivity {
                 timerUser.setText(tiempo);
                 TextView timerRival = findViewById(R.id.timerRival);
                 timerRival.setText(tiempoRival);
-                startStop();
+                if(turno == 'w' && side.equals("0") || turno == 'b' && side.equals("1")) startTimer();
+                else startTimerRival();
+                //startStop();
             }
         });
 
@@ -348,17 +354,16 @@ public class OnlineActivity extends AppCompatActivity {
                                //String auxBoard[][] = new String[8][8];
                                recuperarPartida(boardMtx,turnoActual,tiempo,tiempoRival);
                            }else{
-                               runOnUiThread(new Runnable() {
-                                   @Override
-                                   public void run() {
-                                       TextView rival = findViewById(R.id.nombreRival);
-                                       rival.setText(idSocket);
-                                   }
-                               });
-
                                //   mSocket.emit("sendGameMove",0,0,2,2);
                                cambiarTabler(side);
                            }
+                           runOnUiThread(new Runnable() {
+                               @Override
+                               public void run() {
+                                   TextView rival = findViewById(R.id.nombreRival);
+                                   rival.setText(idSocket);
+                               }
+                           });
 
                            dialog.dismiss();
                            esperarAbandono();
@@ -527,7 +532,7 @@ public class OnlineActivity extends AppCompatActivity {
         mSocket.off();
         mSocket.disconnect();
         mSocket.close();
-      //  stopTimer();
+        stopTimer();
         Intent i = new Intent(getApplicationContext(), MainPage.class);//OnlineActivity
         i.putExtra("nickname", nickname);
         i.putExtra("avatar", avatar);
@@ -579,6 +584,7 @@ public class OnlineActivity extends AppCompatActivity {
 
     public void stopTimer(){
         countDownTimer.cancel();
+        countDownTimerRival.cancel();
         timerRunning = true;
     }
 
