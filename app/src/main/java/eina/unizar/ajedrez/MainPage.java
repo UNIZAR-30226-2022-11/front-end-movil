@@ -45,6 +45,7 @@ public class MainPage extends AppCompatActivity {
     Button store;
     Button gameRecord;
     Button ranking;
+    Button logOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +68,12 @@ public class MainPage extends AppCompatActivity {
         myFriends = findViewById(R.id.buttonSeeFriends);
         requests = findViewById(R.id.buttonRequests);
 
-        gameRecord = findViewById((R.id.Record));
-        ranking = findViewById((R.id.ranking));
+        gameRecord = findViewById(R.id.Record);
+        ranking = findViewById(R.id.ranking);
 
-        store = findViewById((R.id.shop));
+        store = findViewById(R.id.shop);
+
+        logOut = findViewById(R.id.buttonLogOut);
 
         online3Button.setOnClickListener(view -> playAgainstOnlineRival(3));
         online10Button.setOnClickListener(view -> playAgainstOnlineRival(10));
@@ -88,6 +91,7 @@ public class MainPage extends AppCompatActivity {
         store.setOnClickListener((view -> seeStore()));
         gameRecord.setOnClickListener((view -> seeRecord()));
         ranking.setOnClickListener((view-> seeRanking()));
+        logOut.setOnClickListener((view -> logOut()));
     }
 
     private void playAgainstOnlineRival(int min) {
@@ -255,6 +259,11 @@ public class MainPage extends AppCompatActivity {
         Intent i = new Intent(this, Ranking.class);
         i.putExtra("nickname", nickname);
         i.putExtra("avatar", avatar);
+        startActivity(i);
+    }
+
+    private void logOut() {
+        Intent i = new Intent(this, UserSignIn.class);
         startActivity(i);
     }
 }

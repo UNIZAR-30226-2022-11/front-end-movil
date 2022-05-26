@@ -455,7 +455,7 @@ public class Store extends AppCompatActivity {
 
     }
     private boolean checkBoards(String color){
-        if(compradoBlue == "1" && color.equals("BoardAzul") || compradoBrown == "1" && color.equals("BoardMarron") || color.equals("Gris")){
+        if(compradoBlue == "1" && color.equals("BoardAzul") || compradoBrown == "1" && color.equals("BoardMarron") || color.equals("BoardGris")){
             Toast.makeText(Store.this,"El tablero ya esta adquirido", Toast.LENGTH_SHORT).show();
             return false;
         }

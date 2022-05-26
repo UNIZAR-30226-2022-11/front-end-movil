@@ -278,8 +278,41 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
             </LinearLayout>
-
-
+            <TextView
+                android:id="@+id/logout"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:ems="10"
+                android:gravity="center"
+                android:minHeight="35dp"
+                android:text="Log Out"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+            <LinearLayout
+                android:id="@+id/linearLayoutLogOut"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/buttonLogOut"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="52dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/button_rounded_border2"
+                    android:minWidth="300dp"
+                    android:text="LOG OUT"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </ScrollView>
