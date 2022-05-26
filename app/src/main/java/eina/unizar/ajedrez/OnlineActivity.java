@@ -75,16 +75,13 @@ public class OnlineActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        //myCanvas = new ChessBoard(this,"0");
         setContentView(R.layout.activity_online);
         //mSocket.disconnect();
         //mSocket2.disconnect();
         mSocket.connect();
         //mSocket2.connect();
 
-
-
-         dialog=new ProgressDialog(this);
+        dialog=new ProgressDialog(this);
         dialog.setMessage("Esperando rival");
         dialog.setCancelable(false);
         dialog.setInverseBackgroundForced(true);
@@ -92,7 +89,10 @@ public class OnlineActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Log.d("d: ", "Finalizando actividad");
+                mSocket.off();
                 mSocket.disconnect();
+                mSocket.close();
+
                // stopTimer();
                 Intent i = new Intent(getApplicationContext(), MainPage.class);
                 i.putExtra("nickname", nickname);
@@ -101,15 +101,19 @@ public class OnlineActivity extends AppCompatActivity {
             }
         });
         dialog.show();
+
         pieces =  getIntent().getExtras().getString("pieces");
         nickname = getIntent().getExtras().getString("nickname");
         avatar = getIntent().getExtras().getString("avatar");
         time = getIntent().getExtras().getInt("time");
         board = getIntent().getExtras().getString("board");
+
         if(time != 0 )timeLeftInMilliseconds = (long) time*60*1000;
         timeLeftInMillisecondsRival = (long) time*60*1000;
+
         mSocket.emit("buscarPartida",nickname,Integer.toString(time),avatar,"0");
        //mSocket2.emit("buscarPartida","Juan",Integer.toString(time),avatar,"0");
+
        TextView nameUser = findViewById(R.id.nombreUser);
         nameUser.setText(nickname);
         TextView timerUser = findViewById(R.id.timerUser);
@@ -289,6 +293,7 @@ public class OnlineActivity extends AppCompatActivity {
                            side = String.valueOf(data.getInt("side"));
                            String load = String.valueOf((data.getInt("load")));
                            if(load.equals("1")){
+                               Log.d("esperarival: ", "Partida antigua");
                                String turnoActual = String.valueOf(data.getString("turn"));
                                String tiempo = String.valueOf(data.getString("t1"));
                                String tiempoRival = String.valueOf(data.getString("t1"));
@@ -392,39 +397,10 @@ public class OnlineActivity extends AppCompatActivity {
         JSONArray infoTablero = new JSONArray();
         String tablero[][] = new String[8][8];   ;//= myCanvas.devolverTablero();
 
-        for(int i = 0;i < 8;i++){
-            for(int j = 0; j < 8;j++) {
-                tablero[i][j] = "--";
-                JSONObject jsonBody = new JSONObject();
-                try {
-                    jsonBody.put("i", i);
-                    jsonBody.put("j", j);
-                    jsonBody.put("pieza", tablero[i][j]);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                infoTablero.put(jsonBody);
-            }    }
-
-
-                final String requestBody2 = infoTablero.toString();
-                Log.d("d: " ,"Info tablero "+requestBody2);
-        JSONObject casilla;
-        String boardMtx[][] = new String[8][8];
-        for(int i = 0;i < infoTablero.length();i++){
-            casilla =  infoTablero.getJSONObject(i);
-            int posI =  casilla.getInt("i");
-            int posJ =  casilla.getInt("j");
-            boardMtx[posI][posJ] =  casilla.getString("pieza");
-        }
-        for(int i = 0;i < 8;i++) {
-            for (int j = 0; j < 8; j++) {
-                Log.d("d: ", boardMtx[i][j]);
-            }
-        }
         mSocket.on("enviarTablero", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+                Log.d("esperarRecuperacion: ", "Peticion de enviar tablero" );
                 int minutes =  (int) timeLeftInMilliseconds / 60000;
                 int seconds =  (int) timeLeftInMilliseconds % 60000 / 1000;
                 String myTime = Integer.toString(minutes);//
@@ -465,8 +441,8 @@ public class OnlineActivity extends AppCompatActivity {
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("nickname", nickname);
-            jsonBody.put("rival", "jbuil");
-            jsonBody.put("result", nickname);
+            jsonBody.put("rival", idSocket);
+            jsonBody.put("result", 0);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -509,7 +485,9 @@ public class OnlineActivity extends AppCompatActivity {
     public void onBackPressed() {
        // mSocket2.disconnect();
         Log.d("backPressed: " ,"Sale de la actividad");
+        mSocket.off();
         mSocket.disconnect();
+        mSocket.close();
       //  stopTimer();
         Intent i = new Intent(getApplicationContext(), MainPage.class);//OnlineActivity
         i.putExtra("nickname", nickname);
@@ -517,18 +495,21 @@ public class OnlineActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-   /* @Override
+   @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
         if ((keyCode == KeyEvent.KEYCODE_BACK))
         {
            // mSocket2.disconnect();
+            Log.d("onKeyDown: " ,"Sale de la actividad");
+            mSocket.off();
             mSocket.disconnect();
+            mSocket.close();
             stopTimer();
             finish();
         }
         return super.onKeyDown(keyCode, event);
-    }*/
+    }
 
 
     public void startStop(){

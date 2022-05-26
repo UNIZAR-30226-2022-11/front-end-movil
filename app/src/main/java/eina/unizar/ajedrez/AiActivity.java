@@ -72,7 +72,7 @@ public class AiActivity extends AppCompatActivity {
         if(side.equals("0")) myCanvas = new ChessBoard(this,"0", board, pieces);
         else myCanvas = new ChessBoard(this,"1",board, pieces);
         setContentView(R.layout.activity_ai);
-
+        guardarPartida();
         if(time == 3) time =1;
         if(time != 0 )timeLeftInMilliseconds = (long) time*60*1000;
         TextView timerUser = findViewById(R.id.timerUser);
@@ -288,29 +288,23 @@ public class AiActivity extends AppCompatActivity {
     private void guardarPartida(){
         RequestQueue queue;
         queue = Volley.newRequestQueue(this);
-        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getFriendRequest";
+        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/saveMatchResult";
         JSONObject jsonBody = new JSONObject();
-
         try {
             jsonBody.put("nickname", nickname);
             jsonBody.put("rival", "c");
-            jsonBody.put("result", nickname);
+            jsonBody.put("result", "win");
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        final String requestBody = jsonBody.toString();
-        Log.d("Exito: ", requestBody);
+        final String requestBody = jsonBody.toString();;
+        Log.d("guardarPartida: ", requestBody );
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d("Exito: ", response );
-                try {
-                    JSONObject obj = new JSONObject((response));
-                    board = obj.getString("board");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -338,4 +332,5 @@ public class AiActivity extends AppCompatActivity {
         stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
     }
+
 }

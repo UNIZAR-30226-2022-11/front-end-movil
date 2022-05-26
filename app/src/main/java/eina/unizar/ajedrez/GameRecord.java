@@ -44,7 +44,7 @@ public class GameRecord  extends AppCompatActivity {
     }
 
     void previousGames() {
-        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/matchHistory?nickname=" + nickname;
+        String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getMatchHistory?nickname=" + nickname;
         Log.d("Enviando: ", URL);
 
         LinearLayout layoutInterno = (LinearLayout) findViewById(R.id.listGames);
@@ -56,8 +56,9 @@ public class GameRecord  extends AppCompatActivity {
             public void onResponse(String response) {
                 Log.d("Exito: ", response);
                 try {
-                    JSONArray gamesRequests = new JSONArray((response));
-                    JSONObject partida;
+                    JSONObject o = new JSONObject((response));
+                    JSONArray gamesRequests = o.getJSONArray("matchHistory");// new JSONArray((response));
+                    JSONObject partida = new JSONObject();
 
                     for (int i = 0; i < gamesRequests.length(); i++) {
                         GradientDrawable border = new GradientDrawable();
@@ -87,7 +88,7 @@ public class GameRecord  extends AppCompatActivity {
                         TextView resultado = new TextView(getApplicationContext());
                         resultado.setLayoutParams(params);
                         resultado.setPadding(270, 20, 10, 20);
-                        if(partida.getString("empate") == "true") resultado.setText("Empate");
+                        if(partida.getBoolean("empate")) resultado.setText("Empate");
                         else{
                             if(partida.getBoolean("ganador"))resultado.setText(nickname);
                             else resultado.setText(partida.getString("rival"));
