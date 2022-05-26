@@ -127,6 +127,16 @@ public class ChessBoard extends View {
         //posReyBlanco = new Pos(1,2);
         controlador = new AiControl();
     }
+    public ChessBoard(Context context, String[][] board, String side, String turno, String boardC,String set) {
+        super(context);
+        p  = new Paint();
+        q = new Paint();
+        Rec = new Rect();
+        setNewSetPiece(board, side, turno, boardC);
+        this.colorSet = set;
+        boardMtx = board;
+
+    }
 
     public ChessBoard(Context context, String[][] board, String side, String turno, String boardC){
         super(context);
@@ -134,7 +144,8 @@ public class ChessBoard extends View {
         q = new Paint();
         Rec = new Rect();
         this.side = side;
-        setPieceSetAhogado();
+        boardMtx = board;
+       // setPieceSetAhogado();
         //setPieceSetAhogado();
         // setMatrixAhogado();
         this.turno = turno;
@@ -1478,54 +1489,66 @@ public class ChessBoard extends View {
         Bitmap bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_negro);
         Bitmap wKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_blanco);
         pieceSet = new HashMap<Integer,ChessPiece>();
-        for(int i = 0;i < NUM_FILCOL;i++){
-            for(int j = 0; j < NUM_FILCOL;j++){
+        for(int i = 0;i < NUM_FILCOL;i++) {
+            for (int j = 0; j < NUM_FILCOL; j++) {
                 boardMtx[i][j] = board[i][j];
-                if(!board[i][j].equals("--")){ // Añadir una pieza al piece set
-                    if(board[i][j].charAt(1) == 'p'){
-                        if(board[i][j].charAt(0) == 'w'){
-                            pieceSet.put(num,new ChessPiece(x0+(i*squareSize),y0+(i*squareSize),"Pawn",squareSize,"w",wPawn,side)); num++;
-                        }else{
-                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Pawn",squareSize,"b",bPawn,side)); num++;
+                if (!board[i][j].equals("--")) { // Añadir una pieza al piece set
+                    if (board[i][j].charAt(1) == 'p') {
+                        if (board[i][j].charAt(0) == 'w') {
+                            pieceSet.put(num, new ChessPiece(x0 + (j * squareSize), y0 + (i * squareSize), "Pawn", squareSize, "w", wPawn, side));
+                            num++;
+                        } else {
+                            pieceSet.put(num, new ChessPiece(x0 + (j * squareSize), y0 + (i * squareSize), "Pawn", squareSize, "b", bPawn, side));
+                            num++;
+                        }
+                    } else if (board[i][j].charAt(1) == 'R') {
+                        if (board[i][j].charAt(0) == 'w') {
+                            pieceSet.put(num, new ChessPiece(x0 + (j * squareSize), y0 + (i * squareSize), "Rook", squareSize, "w", wRook, side));
+                            num++;
+
+                        } else {
+                            pieceSet.put(num, new ChessPiece(x0 + (j * squareSize), y0 + (i * squareSize), "Rook", squareSize, "b", bRook, side));
+                            num++;
+                        }
+                    } else if (board[i][j].charAt(1) == 'N') {
+                        if (board[i][j].charAt(0) == 'w') {
+                            pieceSet.put(num, new ChessPiece(x0 + (j * squareSize), y0 + (i * squareSize), "Knight", squareSize, "w", wKnight, side));
+                            num++;
+
+                        } else {
+                            pieceSet.put(num, new ChessPiece(x0 + (j * squareSize), y0 + (i * squareSize), "Knight", squareSize, "b", bKnight, side));
+                            num++;
+                        }
+                    } else if (board[i][j].charAt(1) == 'B') {
+                        if (board[i][j].charAt(0) == 'w') {
+                            pieceSet.put(num, new ChessPiece(x0 + (j * squareSize), y0 + (i * squareSize), "Bishop", squareSize, "w", wBishop, side));
+                            num++;
+
+                        } else {
+                            pieceSet.put(num, new ChessPiece(x0 + (j * squareSize), y0 + (i * squareSize), "Bishop", squareSize, "b", bBishop, side));
+                            num++;
+                        }
+                    } else if (board[i][j].charAt(1) == 'Q') {
+                        if (board[i][j].charAt(0) == 'w') {
+                            pieceSet.put(num, new ChessPiece(x0 + (j * squareSize), y0 + (i * squareSize), "Queen", squareSize, "w", wQueen, side));
+                            num++;
+
+                        } else {
+                            pieceSet.put(num, new ChessPiece(x0 + (j * squareSize), y0 + (i * squareSize), "Queen", squareSize, "b", bQueen, side));
+                            num++;
+                        }
+                    } else if (board[i][j].charAt(1) == 'K') {
+                        if (board[i][j].charAt(0) == 'w') {
+                            pieceSet.put(num, new ChessPiece(x0 + (j * squareSize), y0 + (i * squareSize), "Queen", squareSize, "w", wKing, side));
+                            num++;
+                            posReyBlanco = new Pos(i,j);
+                        } else {
+                            pieceSet.put(num, new ChessPiece(x0 + (j * squareSize), y0 + (i * squareSize), "Queen", squareSize, "b", bKing, side));
+                            num++;
+                            posReyNegro = new Pos(i,j);
                         }
                     }
-                    }else if(board[i][j].charAt(1) == 'R'){
-                        if(board[i][j].charAt(0) == 'w'){
-                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Rook",squareSize,"w",wRook,side)); num++;
-
-                        }else{
-                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Rook",squareSize,"b",bRook,side)); num++;
-                        }
-                    }else if(board[i][j].charAt(1) == 'N'){
-                        if(board[i][j].charAt(0) == 'w'){
-                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Knight",squareSize,"w",wKnight,side)); num++;
-
-                        }else{
-                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Knight",squareSize,"b",bKnight,side)); num++;
-                        }
-                    }else if(board[i][j].charAt(1) == 'B'){
-                        if(board[i][j].charAt(0) == 'w'){
-                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Bishop",squareSize,"w",wBishop,side)); num++;
-
-                        }else{
-                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Bishop",squareSize,"b",bBishop,side)); num++;
-                        }
-                    }else if(board[i][j].charAt(1) == 'Q'){
-                        if(board[i][j].charAt(0) == 'w'){
-                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Queen",squareSize,"w",wQueen,side)); num++;
-
-                        }else{
-                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Queen",squareSize,"b",bQueen,side)); num++;
-                        }
-                    }else if(board[i][j].charAt(1) == 'K'){
-                        if(board[i][j].charAt(0) == 'w'){
-                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Queen",squareSize,"w",wKing,side)); num++;
-                            posReyBlanco.X=i; posReyBlanco.Y=j;
-                        }else{
-                            pieceSet.put(num,new ChessPiece(x0+(j*squareSize),y0+(i*squareSize),"Queen",squareSize,"b",bKing,side)); num++;
-                            posReyNegro.X=i; posReyNegro.Y=j;
-                        }
-                    }
+                }
             }
         }
     }

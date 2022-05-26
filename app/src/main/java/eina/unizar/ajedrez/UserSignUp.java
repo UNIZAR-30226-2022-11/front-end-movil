@@ -284,6 +284,53 @@ public class UserSignUp extends AppCompatActivity {
         stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
 
+        jsonBody = new JSONObject();
+        try {
+            jsonBody.put("nickname", username);
+            jsonBody.put("nombre", "default_Piezas");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        final String requestBody3 = jsonBody.toString();
+        stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("Exito: ", response );
+                try {
+
+                    JSONObject obj = new JSONObject(response);
+                    if(obj.getBoolean("exito")){
+                    }else  Toast.makeText(UserSignUp.this,"Ha habido un error durante la creacion", Toast.LENGTH_SHORT).show();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("onErrorResponse: ", error.getLocalizedMessage() == null ? "" : error.getLocalizedMessage());
+            }
+        }){
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return requestBody3 == null ? null : requestBody3.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    Log.d("d: " ,"Falla aqui");
+                    return null;
+                }
+            }
+            @Override
+            public Map<String,String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String,String>();
+                params.put("content-type","application/json");
+                //  params.put("Access-Control-Allow-Origin","*");
+                return params;
+            }
+        };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(stringRequest);
     }
     private void seleccionarElems(){
         JSONObject jsonBody = new JSONObject();
@@ -372,6 +419,57 @@ public class UserSignUp extends AppCompatActivity {
             public byte[] getBody() throws AuthFailureError {
                 try {
                     return requestBody2 == null ? null : requestBody2.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    Log.d("d: " ,"Falla aqui");
+                    return null;
+                }
+            }
+            @Override
+            public Map<String,String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String,String>();
+                params.put("content-type","application/json");
+                //  params.put("Access-Control-Allow-Origin","*");
+                return params;
+            }
+        };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy( 50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(stringRequest);
+
+        jsonBody = new JSONObject();
+        URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/updatePieces";
+        try {
+            jsonBody.put("nickname", username);
+            jsonBody.put("pieces", "default_Piezas");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        final String requestBody3 = jsonBody.toString();
+        Log.d("Enviando: ", requestBody);
+
+        stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("Exito: ", response );
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    if(obj.getBoolean("exito")){
+
+                    }else  Toast.makeText(UserSignUp.this,"Ha habido un error durante la creacion", Toast.LENGTH_SHORT).show();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("onErrorResponse: ", error.getLocalizedMessage() == null ? "" : error.getLocalizedMessage());
+            }
+        }){
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return requestBody3 == null ? null : requestBody3.getBytes("utf-8");
                 } catch (UnsupportedEncodingException uee) {
                     Log.d("d: " ,"Falla aqui");
                     return null;

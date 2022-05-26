@@ -260,12 +260,12 @@ public class OnlineActivity extends AppCompatActivity {
             public void run() {
                 if (side.equals("0")){
                     Log.d("Tablero : ", "Tablero blanco " + side);
-                    myCanvas = new ChessBoard(getApplicationContext(), oldBoard,"0", turnoActual,board);
+                    myCanvas = new ChessBoard(getApplicationContext(), oldBoard,"0", turnoActual,board,pieces);
                     LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
                     layout.addView(myCanvas);
                 }
                 else{
-                    myCanvas = new ChessBoard(getApplicationContext(),oldBoard, "1",turnoActual,board);
+                    myCanvas = new ChessBoard(getApplicationContext(),oldBoard, "1",turnoActual,board,pieces);
                     LinearLayout layout = (LinearLayout) findViewById(R.id.tablero);
                     layout.addView(myCanvas);
                     playGame();
@@ -305,8 +305,13 @@ public class OnlineActivity extends AppCompatActivity {
                                    casilla =  myBoard.getJSONObject(i);
                                    int posI =  casilla.getInt("i");
                                    int posJ =  casilla.getInt("j");
-                                   boardMtx[posI][posJ] =  casilla.getString("pieza");
+                                   int nuevaI =  Math.abs(posI-7);
+                                   int nuevaJ =  Math.abs(posJ-7);
+
+                                   boardMtx[nuevaI][nuevaJ] =  casilla.getString("pieza");
+                                   Log.d("esperarival: ", boardMtx[posI][posJ]);
                                }
+                               //String auxBoard[][] = new String[8][8];
                                recuperarPartida(boardMtx,turnoActual,tiempo,tiempoRival);
                            }else{
                                runOnUiThread(new Runnable() {
@@ -442,7 +447,7 @@ public class OnlineActivity extends AppCompatActivity {
         try {
             jsonBody.put("nickname", nickname);
             jsonBody.put("rival", idSocket);
-            jsonBody.put("result", 0);
+            jsonBody.put("result", "win");
         } catch (JSONException e) {
             e.printStackTrace();
         }

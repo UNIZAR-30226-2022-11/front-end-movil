@@ -524,7 +524,7 @@ public class Store extends AppCompatActivity {
                             } else if(type.equals("avatar")){
                                 avataresComprados.add(color);
                                 setAvatars();
-                            }else if(type.equals("piece")){
+                            }else if(type.equals("set")){
                                 piezasComprados.add(color);
                                 setPieces();
                             }
