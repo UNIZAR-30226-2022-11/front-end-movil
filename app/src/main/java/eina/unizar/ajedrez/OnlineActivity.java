@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -151,6 +152,9 @@ public class OnlineActivity extends AppCompatActivity {
         countdownTextRival = findViewById(R.id.timerRival);
 
         // Chat
+        TextView chat = findViewById(R.id.pantallaChat);
+        chat.setMovementMethod(new ScrollingMovementMethod());
+
         Button sendMessage = findViewById(R.id.chatButton);
         sendMessage.setOnClickListener(view -> sendMessage());
 
@@ -162,7 +166,12 @@ public class OnlineActivity extends AppCompatActivity {
         String message = editText.getText().toString();
         editText.setText("");
         TextView textView = findViewById(R.id.pantallaChat);
-        textView.append(nickname + ": " + message);
+        if(textView.getText().toString().equals("")) {
+            textView.append(nickname + ": " + message);
+        }
+        else {
+            textView.append('\n' + nickname + ": " + message);
+        }
         mSocket.emit("sendMessage", message);
         Log.d("Emited sendMessage", message);
     }
@@ -519,7 +528,12 @@ public class OnlineActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         TextView textView = findViewById(R.id.pantallaChat);
-                        textView.append(idSocket + ": " + message);
+                        if(textView.getText().toString().equals("")) {
+                            textView.append(idSocket + ": " + message);
+                        }
+                        else {
+                            textView.append('\n' + idSocket + ": " + message);
+                        }
                     }
                 });
                 esperarMensaje();
