@@ -104,7 +104,7 @@ public class UserSignIn extends AppCompatActivity{
                 board = obj.getString("tablero");
                 pieces = obj.getString("piezas");
                 if(nickname.equals(username)){
-                    mSocket = IO.socket("http://10.0.2.2:3001");
+                    mSocket = IO.socket("http://ec2-18-206-137-85.compute-1.amazonaws.com:3001");
                     mSocket.connect();// = IO.socket("http://10.0.2.2:3001");
                     i.putExtra("nickname", nickname);
                     i.putExtra("monedas", monedas);
