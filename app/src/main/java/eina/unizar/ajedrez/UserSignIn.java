@@ -151,14 +151,15 @@ public class UserSignIn extends AppCompatActivity{
             @Override
             public void call(Object... args) {
                 Log.d("SignIn: ", "Llega invita");
-                runOnUiThread(new Runnable() {
+                /*runOnUiThread(new Runnable() {
                     public void run() {
-                        JSONObject data = (JSONObject) args[0];
+
                         AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
                         builder.setMessage("Aceptar invitacion");
                         builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
+                            public void onClick(DialogInterface dialogInterface, int i) {*/
+                                 JSONObject data = (JSONObject) args[0];
                                 try {
                                     Log.d("SignIn: ", "Llega invitacion");
                                     String nomAmigo = data.getString("nick");
@@ -176,11 +177,11 @@ public class UserSignIn extends AppCompatActivity{
                                     e.printStackTrace();
                                 }
                                 Log.d("Socket: ", data.toString());
-                            }
+                           /* }
                         });
                         builder.show();
                     }
-                });
+                });*/
 
                 //here the data is in JSON Format
             }
