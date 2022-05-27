@@ -376,7 +376,7 @@ public class ChessBoard extends View {
             ChessPiece p = entry.getValue();
             if (p.checkPos(columnaIni, filaIni)) { // Se encuentra la pieza que ha movido el rival
 
-
+                Log.d("movRivalInicio", "Pieza " +  p.getType() + " x: " +p.getFila()+ " xol: " + p.getCol() );
                 turnoIA = false;
                 int val = entry.getKey();
                 if(coronar){
@@ -418,11 +418,25 @@ public class ChessBoard extends View {
                       }
 
                    }
-                    if(columnaFin == 0 && columnaIni==4) p.newCoord(columnaFin+2, filaFin);
-                    else if(columnaFin== 7 && columnaIni == 4) p.newCoord(columnaFin-1, filaFin);
-                    else if(columnaFin== 0 && columnaIni == 3) p.newCoord(columnaFin+1, filaFin);
-                    else if(columnaFin== 7 && columnaIni == 3) p.newCoord(columnaFin-2, filaFin);
+                    p.newCoord(columnaFin, filaFin);
+                  /*  if(columnaFin == 0 && columnaIni==4) {
+                        p.newCoord(columnaFin+2, filaFin);
+                        Log.d("movRival3", "Rey " +  p.getType() + " x: " +p.getFila()+ " xol: " + p.getCol() );
+                    }
+                    else if(columnaFin== 7 && columnaIni == 4){
+                       p.newCoord(columnaFin-1, filaFin);
+                        Log.d("movRival2", "Rey " +  p.getType() + " x: " +p.getFila()+ " xol: " + p.getCol() );
+                    }
+                    else if(columnaFin== 0 && columnaIni == 3){int aux =  columnaFin + 1;
+                        p.newCoord(aux, filaFin);
+                        Log.d("movRival3", "Rey " +  p.getType() + " x: " +p.getFila()+ " xol: " + p.getCol() );
+                    }
+                    else if(columnaFin== 7 && columnaIni == 3){
+                        p.newCoord(columnaFin-2, filaFin);
+                        Log.d("movRival4", "Rey " +  p.getType() + " x: " +p.getFila()+ " xol: " + p.getCol() );
+                    }*/
                     Log.d("movRival", "Rey " +  p.getType() + " x: " +p.getFila()+ " xol: " + p.getCol() );
+                    p.alreadyMoved();
                     pieceSet.put(val, p);
 
                 } else{
@@ -435,7 +449,7 @@ public class ChessBoard extends View {
 
             }
         }
-        if (piezaDown != -1) pieceSet.remove(piezaDown); // Comer pieza rival
+      //  if (piezaDown != -1) pieceSet.remove(piezaDown); // Comer pieza rival
 
         turnoIA = true;
         if (checkForMate()) Log.d("d", "Fin de partida");

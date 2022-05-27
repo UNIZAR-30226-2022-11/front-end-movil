@@ -116,15 +116,15 @@ public class ChessPiece {
             }else if(col == 7 && side.equals("1") && color.equals("w") || col == 7 && side.equals("1") && color.equals("b")){
                 this.col = x0+(4*squareSize);
             }else if(col == 0 && side.equals("0") && color.equals("w")  || col == 0 && side.equals("0") && color.equals("b")){
-                this.col = x0+(1*squareSize);
-            }else if(col == 7 && side.equals("0") && color.equals("w") || col == 0 && side.equals("0") && color.equals("b")){
-                this.col = x0+(5*squareSize);
+                this.col = x0+(2*squareSize);
+            }else if(col == 7 && side.equals("0") && color.equals("w") || col == 7 && side.equals("0") && color.equals("b")){
+                this.col = x0+(6*squareSize);
             }
             Log.d("checkKing", " Devuelve correcto");
             return true;
         }
         if (alreadyMoved) Log.d("checkKing", " ya movido");
-        else Log.d("checkKing", " No se ha movido");
+        else Log.d("checkKing", " No se ha movido "+ col + " fila: "+  fila);
         //Log.d("d", "King fallo " +(this.fila-y0)/squareSize + " " + (this.col-x0)/squareSize+ "hasta" + +fila+ "  "+col);
         return false;
     }
