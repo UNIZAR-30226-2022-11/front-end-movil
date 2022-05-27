@@ -150,32 +150,37 @@ public class UserSignIn extends AppCompatActivity{
 
             @Override
             public void call(Object... args) {
-                JSONObject data = (JSONObject) args[0];
-                AlertDialog.Builder builder = new AlertDialog.Builder(UserSignIn.this);
-                builder.setMessage("Aceptar invitacion");
-                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        try {
-                            Log.d("SignIn: ", "Llega invitacion");
-                            String nomAmigo = data.getString("nickname");
-                            mSocket.emit("confirmGameFriend",nickname,nomAmigo);
-                            Intent j = new Intent(getApplicationContext(), OnlineActivity.class);
-                            j.putExtra("nickname", nickname);
-                            j.putExtra("avatar", avatar);
-                            j.putExtra("board", board);
-                            j.putExtra("pieces", pieces);
-                            j.putExtra("time", 0);
-                            j.putExtra("nomAmigo", nomAmigo);
-                            startActivity(j);
-                            // Toast.makeText(FriendsList.this,"Funciona", Toast.LENGTH_SHORT).show();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        Log.d("Socket: ", data.toString());
+                getParent().runOnUiThread(new Runnable() {
+                    public void run() {
+                        JSONObject data = (JSONObject) args[0];
+                        AlertDialog.Builder builder = new AlertDialog.Builder(UserSignIn.this);
+                        builder.setMessage("Aceptar invitacion");
+                        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                try {
+                                    Log.d("SignIn: ", "Llega invitacion");
+                                    String nomAmigo = data.getString("nickname");
+                                    mSocket.emit("confirmGameFriend",nickname,nomAmigo);
+                                    Intent j = new Intent(getApplicationContext(), OnlineActivity.class);
+                                    j.putExtra("nickname", nickname);
+                                    j.putExtra("avatar", avatar);
+                                    j.putExtra("board", board);
+                                    j.putExtra("pieces", pieces);
+                                    j.putExtra("time", 0);
+                                    j.putExtra("nomAmigo", nomAmigo);
+                                    startActivity(j);
+                                    // Toast.makeText(FriendsList.this,"Funciona", Toast.LENGTH_SHORT).show();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                Log.d("Socket: ", data.toString());
+                            }
+                        });
+                        builder.show();
                     }
                 });
-                builder.show();
+
                 //here the data is in JSON Format
             }
         });
