@@ -522,9 +522,9 @@ public class OnlineActivity extends AppCompatActivity {
                         textView.append(idSocket + ": " + message);
                     }
                 });
+                esperarMensaje();
             }
         });
-        esperarMensaje();
     }
 
     private void guardarPartida(){
