@@ -40,8 +40,13 @@ public class ChessPiece {
     public void newCoord(int col, int fila) {
         String TAG = "d";
         if(checkMove(col,fila)){
-            this.col = x0 + (col*squareSize);
-            this.fila = y0 + (fila*squareSize);
+            if(this.type.equals("King") && fila == (this.fila-y0)/squareSize && (col == 0 || col == 7)){
+                Log.d(TAG, "El rey enroca:");
+            }else{
+                this.col = x0 + (col*squareSize);
+                this.fila = y0 + (fila*squareSize);
+            }
+
             Log.d(TAG, "Nueva pos:" + (this.col -x0) / squareSize + " y " + (this.fila-y0)/squareSize+ " de "+this.type);
         }
         if(this.type == "Pawn" && !alreadyMoved){ // Si peon ha hecho algun movimiento ya
@@ -106,14 +111,20 @@ public class ChessPiece {
             return true;
         }
         else if(!alreadyMoved &&(fila == (this.fila-y0)/squareSize) && (col == 0 || col == 7)){
-            if(col == 0){
+            if(col == 0 && side.equals("1") && color.equals("w") || col == 0 && side.equals("1") && color.equals("b")){
                 this.col = x0 + (1*squareSize);
-            }else{
+            }else if(col == 7 && side.equals("1") && color.equals("w") || col == 7 && side.equals("1") && color.equals("b")){
+                this.col = x0+(4*squareSize);
+            }else if(col == 0 && side.equals("0") && color.equals("w")  || col == 0 && side.equals("0") && color.equals("b")){
+                this.col = x0+(1*squareSize);
+            }else if(col == 7 && side.equals("0") && color.equals("w") || col == 0 && side.equals("0") && color.equals("b")){
                 this.col = x0+(5*squareSize);
             }
+            Log.d("checkKing", " Devuelve correcto");
             return true;
         }
-
+        if (alreadyMoved) Log.d("checkKing", " ya movido");
+        else Log.d("checkKing", " No se ha movido");
         //Log.d("d", "King fallo " +(this.fila-y0)/squareSize + " " + (this.col-x0)/squareSize+ "hasta" + +fila+ "  "+col);
         return false;
     }
