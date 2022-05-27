@@ -65,67 +65,52 @@ public class FriendsList extends AppCompatActivity {
     private RequestQueue queue;
     private String nickname;
     private FriendsListBinding binding;
-    private Socket mSocket;
+    private Socket mSocket2;
     String board, pieces,avatar;
     ProgressDialog dialog;
+    int veces = 0;
     private List<String> pendientes = new ArrayList<>();;
     Map<String, Integer> totUsers = new HashMap<String, Integer>();
     Map<String, Integer> amigos = new HashMap<String, Integer>();
-    {
+    /*{
         try {
             mSocket = IO.socket("http://ec2-18-206-137-85.compute-1.amazonaws.com:3000");
         } catch (URISyntaxException e) {
             Log.d("Socket: ",   e.toString());
         }
-    }
+    }*/
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        mSocket.connect();
+       // mSocket.connect();
         binding = FriendsListBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
         nickname = getIntent().getExtras().getString("nickname");
         avatar = getIntent().getExtras().getString("avatar");
+        Log.d("FriendsList ", "Estoy en onCreate");
         obtenerInfo();
         queue = Volley.newRequestQueue(this);
-        try {
-            fillData(nickname);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
         obtenerUsers();
 
-
-    }
-
-    private void obtenerUsers(){
-        eina.unizar.ajedrez.UserSignIn.mSocket.on("usuariosConectados", new Emitter.Listener() {
-
-            @Override
-            public void call(Object... args) {
-
-                JSONObject data = (JSONObject) args[0];
-                Log.d("FriendsList ", "llega info users conectados" + data);
-                JSONArray users = null;
-                JSONObject user;
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
                 try {
-                    users = data.getJSONArray("usuarios");
+                    fillData(nickname);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-                for(int i = 0;i < users.length();i++){
-                    try {
-                        user =  users.getJSONObject(i);
-                        totUsers.put(user.getString("nickname"),user.getInt("partida"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
             }
-        });
+        }, 3000);   //5 seconds
+       /* try {
+            fillData(nickname);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }*/
+
+
 
         binding.searchfriend.setOnClickListener(vista -> {
             String username = binding.username.getText().toString();
@@ -138,6 +123,40 @@ public class FriendsList extends AppCompatActivity {
             // Verify user account
             // If exists { go to menu } else { displayError }
         });
+    }
+
+    private void obtenerUsers(){
+        Log.d("FriendsList ", "Numero de veces" + veces);
+        if(veces == 0) {
+            eina.unizar.ajedrez.UserSignIn.mSocket.on("usuariosConectados", new Emitter.Listener() {
+
+                @Override
+                public void call(Object... args) {
+                    //if(veces == 0) {
+                        JSONObject data = (JSONObject) args[0];
+                        Log.d("FriendsList ", "llega info users conectados" + data + " numVeces: " + veces);
+                        JSONArray users = null;
+                        JSONObject user;
+                        try {
+                            users = data.getJSONArray("usuarios");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        for (int i = 0; i < users.length(); i++) {
+                            try {
+                                user = users.getJSONObject(i);
+                                Log.d("FriendsList ", "Siguiente usuario conectado" + user.get("nickname"));
+                                totUsers.put(user.getString("nickname"), user.getInt("partida"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+               // }
+            });
+           veces = 1;//
+        }
     }
 
     private void obtenerInfo(){
@@ -254,9 +273,7 @@ public class FriendsList extends AppCompatActivity {
             }
         });
     }
-    public Socket getSocket(){
-        return mSocket;
-    }
+
 
     private void fillData(String nickname) throws JSONException {
 
