@@ -373,7 +373,7 @@ public class OnlineActivity extends AppCompatActivity {
                 try {
                     idSocket = data.getString("opNick");
                     side = String.valueOf(data.getInt("side"));
-                    avatarRival = String.valueOf(data.getInt("avatar"));
+                    avatarRival = String.valueOf(data.getString("avatar"));
                     String load = String.valueOf((data.getInt("load")));
                     if(load.equals("1")){
                         if(side.equals("0")) side = "1";
