@@ -45,6 +45,7 @@ public class UserSignIn extends AppCompatActivity{
     private String password;
     private RequestQueue queue;
     public static Socket mSocket;
+    //public static Socket mSocket2;
 
 
     @Override
@@ -105,11 +106,15 @@ public class UserSignIn extends AppCompatActivity{
                 pieces = obj.getString("piezas");
                 if(nickname.equals(username)){
                     mSocket = IO.socket("http://ec2-18-206-137-85.compute-1.amazonaws.com:3001");
+                    //mSocket = IO.socket("http://10.0.2.2:3001");
+                    //mSocket2 = IO.socket("http://10.0.2.2:3001");
                     mSocket.connect();// = IO.socket("http://10.0.2.2:3001");
+                   // mSocket2.connect();
                     i.putExtra("nickname", nickname);
                     i.putExtra("monedas", monedas);
                     i.putExtra("avatar", avatar);
                     mSocket.emit("conectarse", nickname);
+                    //mSocket.emit("conectarse", "Juan");
                     esperarPartida();
                     startActivity(i);
 
@@ -141,7 +146,7 @@ public class UserSignIn extends AppCompatActivity{
     }
     private void esperarPartida(){
         Log.d("SignIn: ", "Esperando invita");
-        mSocket.on("getGameInvite", new Emitter.Listener() {
+        mSocket.on("getGameInvites", new Emitter.Listener() {
 
             @Override
             public void call(Object... args) {

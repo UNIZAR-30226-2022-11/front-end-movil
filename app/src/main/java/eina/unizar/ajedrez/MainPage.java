@@ -58,7 +58,7 @@ public class MainPage extends AppCompatActivity {
         nickname = getIntent().getExtras().getString("nickname");
         avatar = getIntent().getExtras().getString("avatar");
        //Socket socket =  eina.unizar.ajedrez.UserSignIn.mSocket;
-       // socket.emit("ingame",nickname);
+      // eina.unizar.ajedrez.UserSignIn.mSocket2.emit("inviteFriend",nickname,"Juan");
         online3Button = findViewById(R.id.online3);
         online10Button = findViewById(R.id.online10);
         online30Button = findViewById(R.id.online30);
