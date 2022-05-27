@@ -341,9 +341,13 @@ public class ChessBoard extends View {
             if(columnaFin == 0 && columnaIni == 3){ // Enroque corto blancas
                 boardMtx[filaFin][columnaFin+1] = boardMtx[filaIni][columnaIni];
                 boardMtx[filaFin][columnaIni-1] = boardMtx[filaFin][columnaFin];
+                //columnaFin +=1;
+                //columnaIni -= 1;
             }else if(columnaFin == 7 && columnaIni == 3){ // Enroque largo negras
                 boardMtx[filaFin][columnaFin-2] = boardMtx[filaIni][columnaIni];
                 boardMtx[filaFin][columnaIni+1] = boardMtx[filaFin][columnaFin];
+                //columnaFin +=1;
+                //columnaIni -= 1;
             }else if(columnaFin == 0 && columnaIni == 4){ // Enroque largo blancas
                 boardMtx[filaFin][columnaFin+2] = boardMtx[filaIni][columnaIni];
                 boardMtx[filaFin][columnaIni-1] = boardMtx[filaFin][columnaFin];
@@ -351,8 +355,8 @@ public class ChessBoard extends View {
                 boardMtx[filaFin][columnaFin-1] = boardMtx[filaIni][columnaIni];
                 boardMtx[filaFin][columnaIni+1] = boardMtx[filaFin][columnaFin];
             }
-            Log.d("d", "Reconoce el enroque ");
-            boardMtx[filaIni][columnaIni] = "--";
+            Log.d("d", "Cambiando piezad enroque "+ boardMtx[filaFin][columnaFin]);
+            boardMtx[filaFin][columnaIni] = "--";
             boardMtx[filaFin][columnaFin] = "--";
         }else if(boardMtx[filaIni][columnaIni].charAt(1) == 'p' && filaFin == 7){ // Coronar
             if(side.equals("1")) {
@@ -389,10 +393,11 @@ public class ChessBoard extends View {
                         pieceSet.put(val, new ChessPiece(x0 + (squareSize*columnaFin), y0 +(squareSize * filaFin), "Queen", squareSize, "b", bQueen, side));
                     }
                 }else if(esEnroque){
-                    Log.d("d", "Cambiando piezad enroque");
+
                     esEnroque = false;
                     for(Map.Entry<Integer,ChessPiece> entry2 : pieceSet.entrySet()) {
                         ChessPiece Torre = entry2.getValue();
+                         Log.d("d", Torre.getType() + " Cambiando piezad enroque fila:"+ Torre.getFila() + " col:" + Torre.getCol());
                         if (Torre.checkPos(columnaFin, filaFin)) { // Buscar torre para cambiar de lugar
                             int clave = entry2.getKey();
                            if(columnaFin == 0 && columnaIni == 3) Torre.newCoord(columnaIni-1, filaFin);
@@ -400,15 +405,17 @@ public class ChessBoard extends View {
                            else if(columnaFin == 0 && columnaIni == 4)Torre.newCoord(columnaIni-1, filaFin);
                            else if(columnaFin == 7 && columnaIni == 4) Torre.newCoord(columnaIni+1, filaFin);
                             Torre.setAlreadyMoved();
+                            Log.d("movRival", "Torre enroque " +  Torre.getType() + " x: " +Torre.getFila()+ " xol: " + Torre.getCol() );
                             pieceSet.put(clave, Torre);
                             //break;
-                        }
+                      }
 
-                    }
+                   }
                     if(columnaFin == 0 && columnaIni==4) p.newCoord(columnaFin+2, filaFin);
                     else if(columnaFin== 7 && columnaIni == 4) p.newCoord(columnaFin-1, filaFin);
                     else if(columnaFin== 0 && columnaIni == 3) p.newCoord(columnaFin+1, filaFin);
                     else if(columnaFin== 7 && columnaIni == 3) p.newCoord(columnaFin-2, filaFin);
+                    Log.d("movRival", "Torre enroque " +  p.getType() + " x: " +p.getFila()+ " xol: " + p.getCol() );
                     pieceSet.put(val, p);
 
                 } else{

@@ -150,7 +150,8 @@ public class UserSignIn extends AppCompatActivity{
 
             @Override
             public void call(Object... args) {
-                getParent().runOnUiThread(new Runnable() {
+                Log.d("SignIn: ", "Llega invita");
+                runOnUiThread(new Runnable() {
                     public void run() {
                         JSONObject data = (JSONObject) args[0];
                         AlertDialog.Builder builder = new AlertDialog.Builder(UserSignIn.this);
@@ -160,7 +161,7 @@ public class UserSignIn extends AppCompatActivity{
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 try {
                                     Log.d("SignIn: ", "Llega invitacion");
-                                    String nomAmigo = data.getString("nickname");
+                                    String nomAmigo = data.getString("nick");
                                     mSocket.emit("confirmGameFriend",nickname,nomAmigo);
                                     Intent j = new Intent(getApplicationContext(), OnlineActivity.class);
                                     j.putExtra("nickname", nickname);

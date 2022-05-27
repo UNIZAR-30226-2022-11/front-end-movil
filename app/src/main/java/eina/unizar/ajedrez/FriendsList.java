@@ -82,15 +82,43 @@ public class FriendsList extends AppCompatActivity {
         binding = FriendsListBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-        obtenerInfo();
         nickname = getIntent().getExtras().getString("nickname");
         avatar = getIntent().getExtras().getString("avatar");
+        obtenerInfo();
         queue = Volley.newRequestQueue(this);
         try {
             fillData(nickname);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        eina.unizar.ajedrez.UserSignIn.mSocket.on("usuariosConectados", new Emitter.Listener() {
+
+            @Override
+        public void call(Object... args) {
+
+            JSONObject data = (JSONObject) args[0];
+                Log.d("FriendsList ", "llega info users conectados" + data);
+            //here the data is in JSON Format
+          /*  try {
+                String nomAmigo = data.getString("nick");
+                dialog.dismiss();
+                Intent i = new Intent(getApplicationContext(), OnlineActivity.class);
+                i.putExtra("nickname", nickname);
+                i.putExtra("avatar", avatar);
+                i.putExtra("board", board);
+                i.putExtra("pieces", pieces);
+                i.putExtra("time",0);
+                i.putExtra("nomAmigo", nomAmigo);
+                startActivity(i);
+                //Toast.makeText(FriendsList.this,"Funciona", Toast.LENGTH_SHORT).show();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }*///
+            //Log.d("Socket: ", data.toString());
+        }
+    });
+
         binding.searchfriend.setOnClickListener(vista -> {
             String username = binding.username.getText().toString();
             try {
@@ -117,8 +145,8 @@ public class FriendsList extends AppCompatActivity {
 
                     JSONArray obj = new JSONArray(response);
                     JSONObject tablero = obj.getJSONObject(0);
-                    String board = tablero.getString("tablero");
-                    String pieces = tablero.getString("piezas");
+                     board = tablero.getString("tablero");
+                     pieces = tablero.getString("piezas");
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -154,8 +182,9 @@ public class FriendsList extends AppCompatActivity {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-
-        eina.unizar.ajedrez.UserSignIn.mSocket.emit("inviteFriend");
+       // TextView tv = ((TextView)info.targetView.findViewById(R.id.YOUR_TEXTVIEW_ID)).getText().toString();
+        //Log.d("d: ", "Finalizando actividad" + tv.toString());
+        eina.unizar.ajedrez.UserSignIn.mSocket.emit("inviteFriend",nickname,"jbuil");
          dialog=new ProgressDialog(this);
         dialog.setMessage("Esperando amigo");
         dialog.setCancelable(false);
@@ -191,25 +220,25 @@ public class FriendsList extends AppCompatActivity {
     }
     private void esperarResp(int time){
         Log.d("Socket: ", "Esperando rival");
-        mSocket.on("getFriendopponent", new Emitter.Listener() {
+       eina.unizar.ajedrez.UserSignIn.mSocket.on("getFriendOpponent", new Emitter.Listener() {
 
             @Override
             public void call(Object... args) {
+                Log.d("FriendsList ", "llega resupesta del rival");
                 JSONObject data = (JSONObject) args[0];
                 //here the data is in JSON Format
                 try {
-                    String nomAmigo = data.getString("nickname");
-                    Log.d("FriendsList ", "llega resupesta del rival");
+                    String nomAmigo = data.getString("nick");
                     dialog.dismiss();
                     Intent i = new Intent(getApplicationContext(), OnlineActivity.class);
                     i.putExtra("nickname", nickname);
                     i.putExtra("avatar", avatar);
                     i.putExtra("board", board);
                     i.putExtra("pieces", pieces);
-                    i.putExtra("time",3);
+                    i.putExtra("time",0);
                     i.putExtra("nomAmigo", nomAmigo);
                     startActivity(i);
-                    Toast.makeText(FriendsList.this,"Funciona", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(FriendsList.this,"Funciona", Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -263,6 +292,7 @@ public class FriendsList extends AppCompatActivity {
                         textView.setText(requester.getString("valor"));
                         textView.setTextColor(Color.parseColor("#FFFFFFFF"));
                         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
+                     //   textView.setId
                         relativeLayout.addView(textView);
                         registerForContextMenu(textView);
 

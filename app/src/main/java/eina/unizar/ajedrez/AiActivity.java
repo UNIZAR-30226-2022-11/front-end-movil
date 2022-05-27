@@ -75,7 +75,6 @@ public class AiActivity extends AppCompatActivity {
         else myCanvas = new ChessBoard(this,"1",board, pieces);
         setContentView(R.layout.activity_ai);
         //guardarPartida();
-        if(time == 3) time =1;
         if(time != 0 )timeLeftInMilliseconds = (long) time*60*1000;
         TextView timerUser = findViewById(R.id.timerUser);
         if(time != 0) timerUser.setText(time+":00");
@@ -165,8 +164,8 @@ public class AiActivity extends AppCompatActivity {
                                     if (!myCanvas.isMate()) {
                                         myCanvas.makeAIMove();
                                         if(myCanvas.isMate()){
-                                            stopTimer();
-                                           // Toast.makeText(getApplicationContext(), "Fin de partida" + "", Toast.LENGTH_SHORT).show();
+                                           if(!noTime) stopTimer();
+                                            // Toast.makeText(getApplicationContext(), "Fin de partida" + "", Toast.LENGTH_SHORT).show();
                                             AlertDialog.Builder builder = new AlertDialog.Builder(AiActivity.this);
                                             builder.setMessage("Te ha ganado la maquina");
                                             builder.setPositiveButton("Volver", new DialogInterface.OnClickListener() {
@@ -179,12 +178,12 @@ public class AiActivity extends AppCompatActivity {
                                                     j.putExtra("avatar", avatar);
                                                     startActivity(j);
                                                 }
-                                             });
+                                            });
                                             builder.show();
                                         }
-                                        else startTimer();
+                                        else  if (!noTime)startTimer();
                                     } else {
-                                        stopTimer();
+                                        if(!noTime) stopTimer();
                                         Log.d("d: ", "Fin partida");
                                         Toast.makeText(getApplicationContext(), "Fin de partida" + "", Toast.LENGTH_SHORT).show();
                                         //Intent i  = new Intent(getApplicationContext(),PopActivity.class);
@@ -226,7 +225,7 @@ public class AiActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         // super.onBackPressed();
-        stopTimer();
+        if (!noTime)stopTimer();
         Intent i = new Intent(getApplicationContext(), MainPage.class);//OnlineActivity
         i.putExtra("nickname", nickname);
         i.putExtra("avatar", avatar);
