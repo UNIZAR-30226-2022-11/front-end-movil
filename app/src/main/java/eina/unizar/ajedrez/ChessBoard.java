@@ -110,8 +110,6 @@ public class ChessBoard extends View {
         Log.d("d: ", "Es set es "+colorSet);
         setPieceSet();
         setMatrix();
-        //setPieceSetAhogado();
-       // setMatrixAhogado();
         turno = "w";
         boardColor = board;
         if(side.equals("0")){
@@ -123,8 +121,6 @@ public class ChessBoard extends View {
             posReyNegro = new Pos(7,3);
             posReyBlanco = new Pos(0,3);
         }
-        //posReyNegro = new Pos(0,0);
-        //posReyBlanco = new Pos(1,2);
         controlador = new AiControl();
     }
     public ChessBoard(Context context, String[][] board, String side, String turno, String boardC,String set) {
@@ -145,13 +141,8 @@ public class ChessBoard extends View {
         Rec = new Rect();
         this.side = side;
         boardMtx = board;
-       // setPieceSetAhogado();
-        //setPieceSetAhogado();
-        // setMatrixAhogado();
         this.turno = turno;
         boardColor = boardC;
-        //posReyNegro = new Pos(0,0);
-        //posReyBlanco = new Pos(1,2);
         controlador = new AiControl();
     }
     public boolean checkCorrectMov(char turno){ // Añadir parametro para devolver las posiciones
@@ -299,14 +290,6 @@ public class ChessBoard extends View {
                                     pieceSet.put(numPieza, changePos);
                                 }
 
-
-
-                               /* if (
-
-                             ()) Log.d(TAG, "Fin de partida");
-                                if (turno == "w" && !mate) turno = "b"; // Cambio de turno
-                                else if (!mate) turno = "w";
-                                else turno = "x";*/
                                 pulsado = false;
                                 turnoIA = true;
                                 invalidate();
@@ -336,6 +319,12 @@ public class ChessBoard extends View {
     }
 
     public void hacerMovimientoRival(int fI,int cI, int fF, int cF){
+        for(Map.Entry<Integer,ChessPiece> entry2 : pieceSet.entrySet()) {
+            ChessPiece Torre = entry2.getValue();
+            if(Torre.getType().equals("Rook")){
+                Log.d("movRival", "Torre enroque " +  Torre.getType() + " x: " +Torre.getFila()+ " xol: " + Torre.getCol() );
+            }
+        }
         int filaFin =  Math.abs(fF -7);
         int columnaFin =  Math.abs(cF -7);
         int filaIni =  Math.abs(fI -7);
@@ -387,10 +376,11 @@ public class ChessBoard extends View {
             ChessPiece p = entry.getValue();
             if (p.checkPos(columnaIni, filaIni)) { // Se encuentra la pieza que ha movido el rival
 
-                if (piezaDown != -1) pieceSet.remove(piezaDown);
+
                 turnoIA = false;
                 int val = entry.getKey();
                 if(coronar){
+                    if (piezaDown != -1) pieceSet.remove(piezaDown);
                     coronar = false;
                     Bitmap wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blanca);
                     Bitmap bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_negra);
@@ -432,10 +422,11 @@ public class ChessBoard extends View {
                     else if(columnaFin== 7 && columnaIni == 4) p.newCoord(columnaFin-1, filaFin);
                     else if(columnaFin== 0 && columnaIni == 3) p.newCoord(columnaFin+1, filaFin);
                     else if(columnaFin== 7 && columnaIni == 3) p.newCoord(columnaFin-2, filaFin);
-                    Log.d("movRival", "Torre enroque " +  p.getType() + " x: " +p.getFila()+ " xol: " + p.getCol() );
+                    Log.d("movRival", "Rey " +  p.getType() + " x: " +p.getFila()+ " xol: " + p.getCol() );
                     pieceSet.put(val, p);
 
                 } else{
+                    if (piezaDown != -1) pieceSet.remove(piezaDown);
                     p.newCoord(columnaFin, filaFin);
                     pieceSet.put(val, p);
                 }
@@ -604,14 +595,6 @@ public class ChessBoard extends View {
                     }
                     break;
                 }
-               /* if (checkCertainPiece(p, m.fin.Y, m.fin.X)) {
-                    Log.d("d: ", "Movimiento en orden " + p.getType() + " color " + p.getColor() + " EN " + p.getFila() + " y  " + p.getCol());
-                    int val = entry.getKey();
-                    p.newCoord(m.fin.Y, m.fin.X); // Cambiar posición a la pieza
-                    pieceSet.put(val, p);
-                    Log.d("d: ", "Movimiento en orden");
-                    break;
-                }*/
             }
         }
         if (piezaDown != -1) pieceSet.remove(piezaDown); // Comer pieza rival
