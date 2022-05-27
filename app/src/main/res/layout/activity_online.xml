@@ -3,6 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@color/fondo_negro"
     android:id="@+id/layout">
@@ -18,20 +19,31 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="22dp"
+            android:layout_marginStart="5dp"
             android:textColor="@color/fondo_negro"
             android:background="@color/white"
             android:typeface="sans"
-            android:textSize="40sp"
+            android:textSize="30sp"
             android:layout_gravity="left"
             android:id="@+id/timerUser"/>
+        <ImageView
+            android:id="@+id/avatarUser"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:typeface="sans"
             android:text="@string/tu"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:layout_gravity="center"
             android:id="@+id/nombreUser"/>
         <TextView
@@ -41,16 +53,27 @@
             android:textColor="@color/fondo_negro"
             android:background="@color/white"
             android:typeface="sans"
-            android:textSize="40sp"
+            android:textSize="30sp"
             android:layout_gravity="left"
             android:id="@+id/timerRival"/>
+        <ImageView
+            android:id="@+id/avatarRival"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:typeface="sans"
             android:text="Rival"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:layout_gravity="center"
             android:id="@+id/nombreRival"/>
     </LinearLayout>

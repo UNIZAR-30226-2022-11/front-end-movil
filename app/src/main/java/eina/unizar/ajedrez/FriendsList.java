@@ -25,6 +25,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import io.socket.client.IO;
 import io.socket.client.Socket;
+
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -67,6 +69,8 @@ public class FriendsList extends AppCompatActivity {
     String board, pieces,avatar;
     ProgressDialog dialog;
     private List<String> pendientes = new ArrayList<>();;
+    Map<String, Integer> totUsers = new HashMap<String, Integer>();
+    Map<String, Integer> amigos = new HashMap<String, Integer>();
     {
         try {
             mSocket = IO.socket("http://ec2-18-206-137-85.compute-1.amazonaws.com:3000");
@@ -91,33 +95,37 @@ public class FriendsList extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        obtenerUsers();
 
+
+    }
+
+    private void obtenerUsers(){
         eina.unizar.ajedrez.UserSignIn.mSocket.on("usuariosConectados", new Emitter.Listener() {
 
             @Override
-        public void call(Object... args) {
+            public void call(Object... args) {
 
-            JSONObject data = (JSONObject) args[0];
+                JSONObject data = (JSONObject) args[0];
                 Log.d("FriendsList ", "llega info users conectados" + data);
-            //here the data is in JSON Format
-          /*  try {
-                String nomAmigo = data.getString("nick");
-                dialog.dismiss();
-                Intent i = new Intent(getApplicationContext(), OnlineActivity.class);
-                i.putExtra("nickname", nickname);
-                i.putExtra("avatar", avatar);
-                i.putExtra("board", board);
-                i.putExtra("pieces", pieces);
-                i.putExtra("time",0);
-                i.putExtra("nomAmigo", nomAmigo);
-                startActivity(i);
-                //Toast.makeText(FriendsList.this,"Funciona", Toast.LENGTH_SHORT).show();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }*///
-            //Log.d("Socket: ", data.toString());
-        }
-    });
+                JSONArray users = null;
+                JSONObject user;
+                try {
+                    users = data.getJSONArray("usuarios");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                for(int i = 0;i < users.length();i++){
+                    try {
+                        user =  users.getJSONObject(i);
+                        totUsers.put(user.getString("nickname"),user.getInt("partida"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
 
         binding.searchfriend.setOnClickListener(vista -> {
             String username = binding.username.getText().toString();
@@ -130,8 +138,8 @@ public class FriendsList extends AppCompatActivity {
             // Verify user account
             // If exists { go to menu } else { displayError }
         });
-
     }
+
     private void obtenerInfo(){
         RequestQueue queue;
         queue = Volley.newRequestQueue(this);
@@ -251,21 +259,6 @@ public class FriendsList extends AppCompatActivity {
     }
 
     private void fillData(String nickname) throws JSONException {
-        Log.d("Socket: ", "Comprobando conexion " + mSocket.connected());
-
-       /* if(mSocket.connected()){
-            Log.d("Socket: ", "Socket conectado");
-        }
-     //   mSocket.emit("connection");
-        mSocket.on("getOpponent", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                JSONObject data = (JSONObject)args[0];
-//here the data is in JSON Format
-                Log.d("Socket: ", data.toString());
-               // Toast.makeText(FriendsList.this, data.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });*/
 
         String URL = "http://ec2-18-206-137-85.compute-1.amazonaws.com:3000/getFriendList?nickname="+nickname;
         Log.d("Exito: ", "Se va a buscar a  "+ URL);
@@ -273,6 +266,9 @@ public class FriendsList extends AppCompatActivity {
         LinearLayout relativeLayout = (LinearLayout) findViewById(R.id.Listfriends);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(35, 15, 5, 0);
+     /*   ImageView conexion = new ImageView(this);
+        conexion.getLayoutParams().height = 50;
+        conexion.getLayoutParams().width = 50;*/
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -285,16 +281,50 @@ public class FriendsList extends AppCompatActivity {
 
                     for(int i = 0;i < friendRequests.length();i++){
                         requester = friendRequests.getJSONObject(i);
+                        LinearLayout layout2 = new LinearLayout(getApplicationContext());
+                        layout2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                        layout2.setOrientation(LinearLayout.HORIZONTAL);
+
                         Log.d("Amigo: ", requester.getString("valor"));
+                        String nombre =  requester.getString("valor");
                         TextView textView = new TextView(getApplicationContext());
                         textView.setLayoutParams(params);
                         textView.setPadding(20,10,10,10);
                         textView.setText(requester.getString("valor"));
                         textView.setTextColor(Color.parseColor("#FFFFFFFF"));
                         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
+
+                        amigos.put(nombre,i);
+
+                        //conexion.setLayoutParams(params);
+
+                     //   conexion.setPadding(20,10,10,10);
+                        if(totUsers.containsKey(nombre)){
+                            int partida = totUsers.get(requester.getString("valor"));
+                            if(partida == 0){
+                               // conexion.setImageResource(R.drawable.green_dot);
+                                textView.setText(nombre+"   Conectado");
+                               textView.setTextColor(Color.GREEN);
+                                registerForContextMenu(textView);
+                            }else{
+                               // conexion.setImageResource(R.drawable.orange_dot);
+                                textView.setText(nombre+"   En partida");
+                                textView.setTextColor(Color.YELLOW);
+                            }
+
+                        }else{
+                            textView.setText(nombre+"   Desconectado");
+                            textView.setTextColor(Color.RED);
+                            //conexion.setImageResource(R.drawable.red_dot);
+                        }
+                       /* conexion.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT));*/
+                        //layout2.addView(textView);
+                        //relativeLayout.addView(conexion);
                      //   textView.setId
+                       // relativeLayout.addView(conexion);
                         relativeLayout.addView(textView);
-                        registerForContextMenu(textView);
+
 
                     }
                 } catch (JSONException e) {

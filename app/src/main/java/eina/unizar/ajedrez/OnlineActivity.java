@@ -3,6 +3,7 @@ package eina.unizar.ajedrez;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -12,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,7 +57,7 @@ public class OnlineActivity extends AppCompatActivity {
     String side, side2;
     String idSocket,idSocket2;
     String nickname;
-    String avatar;
+    String avatar, avatarRival;
     String board;
     String pieces;
     boolean finPartida =  false;
@@ -110,6 +112,16 @@ public class OnlineActivity extends AppCompatActivity {
         pieces =  getIntent().getExtras().getString("pieces");
         nickname = getIntent().getExtras().getString("nickname");
         avatar = getIntent().getExtras().getString("avatar");
+        ImageView av = (ImageView) findViewById(R.id.avatarUser);
+        if (avatar.equals("knight_avatar")) {
+            av.setImageResource(R.drawable.knight_avatar);
+        }else if(avatar.equals("soccer_avatar")){
+            av.setImageResource(R.drawable.soccer_avatar);
+        }else if(avatar.equals(("star_avatar"))){
+            av.setImageResource(R.drawable.star_avatar);
+        }else if(avatar.equals(("heart_avatar"))){
+            av.setImageResource(R.drawable.heart_avatar);
+        }
         time = getIntent().getExtras().getInt("time");
         board = getIntent().getExtras().getString("board");
 
@@ -361,7 +373,7 @@ public class OnlineActivity extends AppCompatActivity {
                 try {
                     idSocket = data.getString("opNick");
                     side = String.valueOf(data.getInt("side"));
-
+                    avatarRival = String.valueOf(data.getInt("avatar"));
                     String load = String.valueOf((data.getInt("load")));
                     if(load.equals("1")){
                         if(side.equals("0")) side = "1";
@@ -369,7 +381,7 @@ public class OnlineActivity extends AppCompatActivity {
                         Log.d("esperarival: ", "Partida antigua");
                         String turnoActual = String.valueOf(data.getString("turn"));
                         String tiempo = String.valueOf(data.getString("t1"));
-                        String tiempoRival = String.valueOf(data.getString("t1"));
+                        String tiempoRival = String.valueOf(data.getString("t2"));
 
                         JSONArray myBoard = data.getJSONArray("board");
                         JSONObject casilla;
@@ -395,6 +407,16 @@ public class OnlineActivity extends AppCompatActivity {
                         public void run() {
                             TextView rival = findViewById(R.id.nombreRival);
                             rival.setText(idSocket);
+                            ImageView av = (ImageView) findViewById(R.id.avatarRival);
+                            if (avatarRival.equals("knight_avatar")) {
+                                av.setImageResource(R.drawable.knight_avatar);
+                            }else if(avatarRival.equals("soccer_avatar")){
+                                av.setImageResource(R.drawable.soccer_avatar);
+                            }else if(avatarRival.equals(("star_avatar"))){
+                                av.setImageResource(R.drawable.star_avatar);
+                            }else if(avatarRival.equals(("heart_avatar"))){
+                                av.setImageResource(R.drawable.heart_avatar);
+                            }
                         }
                     });
 
@@ -409,37 +431,6 @@ public class OnlineActivity extends AppCompatActivity {
                 Log.d("Socket: ", data.toString());
             }
         });
-
-    /*Log.d("Socket2: ", "Socket conectado");
-       Log.d("Socket2: ", "Esperando rival");
-       mSocket2.on("getOpponent", new Emitter.Listener() {
-           @Override
-           public void call(Object... args) {
-               JSONObject data = (JSONObject) args[0];
-//here the data is in JSON Format
-               try {
-                   idSocket2 = data.getString("opNick");
-                   side2 = data.getString("side");
-                   runOnUiThread(new Runnable() {
-                       @Override
-                       public void run() {
-                           TextView rival = findViewById(R.id.nombreRival);
-                           rival.setText(idSocket2);
-                       }
-                   });
-                   //mSocket2.emit("sendGameMove",0,0,2,2);
-                   //playGame();
-                   guardarPartida();
-                   cambiarTabler(side);
-                   esperarRecuperacion();
-                   dialog.dismiss();
-               } catch (JSONException e) {
-                   e.printStackTrace();
-               }
-               Log.d("Socket2: ", data.toString());
-               // Toast.makeText(FriendsList.this, data.toString(), Toast.LENGTH_SHORT).show();
-           }
-       });*/
     }
     private void esperarAbandono(){
         mSocket.on("oponenteDesconectado", new Emitter.Listener() {
@@ -717,6 +708,4 @@ public class OnlineActivity extends AppCompatActivity {
         timeLeftText += secondsRival;
         countdownTextRival.setText(timeLeftText);
     }
-
-
 }

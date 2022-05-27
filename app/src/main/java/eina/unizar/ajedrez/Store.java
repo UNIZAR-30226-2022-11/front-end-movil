@@ -192,12 +192,12 @@ public class Store extends AppCompatActivity {
             comprarWhiteBlue.setText("Comprado");
             comprarWhiteBlue.setBackgroundColor(Color.GREEN);
         }
-        if(avataresComprados.contains("blancoRojo_Piezas")){
+        if(piezasComprados.contains("blancoRojo_Piezas")){
             compradoWhiteRed = "1";
             comprarWhiteRed.setText("Comprado");
             comprarWhiteRed.setBackgroundColor(Color.GREEN);
         }
-        if(avataresComprados.contains("rojiAzul_Piezas")){
+        if(piezasComprados.contains("rojiAzul_Piezas")){
             compradoRedBlue = "1";
             comprarRedBlue.setText("Comprado");
             comprarRedBlue.setBackgroundColor(Color.GREEN);

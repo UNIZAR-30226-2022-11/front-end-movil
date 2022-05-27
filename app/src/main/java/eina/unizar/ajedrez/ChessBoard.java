@@ -246,12 +246,20 @@ public class ChessBoard extends View {
                                 }
                                 Log.d(TAG, "Pos pieza"+ posFinY+ " "+posFinX);
                                 if(changePos.getType().equals("Pawn") && (posFinY == 0 || posFinY == 7)) { // Coronacion de peon
-                                    if (side.equals("0")) {
-                                        Bitmap wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_queen);
-                                        pieceSet.put(numPieza, new ChessPiece(x0 + (squareSize*posFinX), y0 +(squareSize * posFinY), "Queen", squareSize, "w", wQueen, side));
+                                    Bitmap wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blanca);
+                                    Bitmap bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_negra);
+                                    if(colorSet.equals("blancoAzul_Piezas")){
+                                        bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blue);
+                                    }else if (colorSet.equals("blancoRojo_Piezas")){
+                                        bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_roja);
 
+                                    }else if(colorSet.equals("rojiAzul_Piezas")){
+                                        wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_roja);
+                                        bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blue);
+                                    }
+                                    if (side.equals("0")) {
+                                        pieceSet.put(numPieza, new ChessPiece(x0 + (squareSize*posFinX), y0 +(squareSize * posFinY), "Queen", squareSize, "w", wQueen, side));
                                     }else{
-                                        Bitmap bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_queen);
                                         pieceSet.put(numPieza, new ChessPiece(x0 + (squareSize*posFinX), y0 +(squareSize * posFinY), "Queen", squareSize, "b", bQueen, side));
                                     }
                                 }else {
@@ -384,12 +392,21 @@ public class ChessBoard extends View {
                 int val = entry.getKey();
                 if(coronar){
                     coronar = false;
+                    Bitmap wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blanca);
+                    Bitmap bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_negra);
+                    if(colorSet.equals("blancoAzul_Piezas")){
+                        bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blue);
+                    }else if (colorSet.equals("blancoRojo_Piezas")){
+                        bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_roja);
+
+                    }else if(colorSet.equals("rojiAzul_Piezas")){
+                        wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_roja);
+                        bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blue);
+                    }
                     if (side.equals("1")) {
-                        Bitmap wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.white_queen);
                         pieceSet.put(val, new ChessPiece(x0 + (squareSize*columnaFin), y0 +(squareSize * filaFin), "Queen", squareSize, "w", wQueen, side));
 
                     }else{
-                        Bitmap bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.black_queen);
                         pieceSet.put(val, new ChessPiece(x0 + (squareSize*columnaFin), y0 +(squareSize * filaFin), "Queen", squareSize, "b", bQueen, side));
                     }
                 }else if(esEnroque){
@@ -1460,7 +1477,7 @@ public class ChessBoard extends View {
         int VERY_LIGHT_YELLOW = Color.rgb(255,255,153);
         p.setStyle(Paint.Style.FILL);
         if(boardColor.equals("BoardGris"))  p.setColor(Color.LTGRAY);
-        else if(boardColor.equals("BoardAzul")) p.setColor(VERY_LIGHT_BLUE);
+        else if(boardColor.equals("BoardAzul")) p.setColor(Color.WHITE);
         else if(boardColor.equals("BOardMarron")) p.setColor(VERY_LIGHT_YELLOW);
 
 
@@ -1505,6 +1522,36 @@ public class ChessBoard extends View {
         Bitmap wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blanca);
         Bitmap bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_negro);
         Bitmap wKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_blanco);
+
+        if(colorSet.equals("blancoAzul_Piezas")){
+            bPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.peon_blue);
+            bRook= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.torre_blue);
+            bKnight= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.caballo_blue);
+            bBishop= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.alfil_blue);
+            bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blue);
+            bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_blue);
+        }else if (colorSet.equals("blancoRojo_Piezas")){
+            bPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.peon_rojo);
+            bRook= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.torre_roja);
+            bKnight= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.caballo_rojo);
+            bBishop= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.alfil_rojo);
+            bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_roja);
+            bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_rojo);
+        }else if(colorSet.equals("rojiAzul_Piezas")){
+            wPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.peon_rojo);
+            wRook = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.torre_roja);
+            wKnight = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.caballo_rojo);
+            wBishop = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.alfil_rojo);
+            wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_roja);
+            wKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_rojo);
+            bPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.peon_blue);
+            bRook= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.torre_blue);
+            bKnight= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.caballo_blue);
+            bBishop= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.alfil_blue);
+            bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blue);
+            bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_blue);
+        }
+
         pieceSet = new HashMap<Integer,ChessPiece>();
         for(int i = 0;i < NUM_FILCOL;i++) {
             for (int j = 0; j < NUM_FILCOL; j++) {

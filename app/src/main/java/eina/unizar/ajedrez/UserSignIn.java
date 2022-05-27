@@ -154,7 +154,7 @@ public class UserSignIn extends AppCompatActivity{
                 runOnUiThread(new Runnable() {
                     public void run() {
                         JSONObject data = (JSONObject) args[0];
-                        AlertDialog.Builder builder = new AlertDialog.Builder(UserSignIn.this);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
                         builder.setMessage("Aceptar invitacion");
                         builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                             @Override
