@@ -28,4 +28,5 @@
     <string name="requests">Requests</string>
     <string name="my_records">My records</string>
     <string name="my_ranking">My ranking</string>
+    <string name="time_left">Time Left</string>
 </resources>

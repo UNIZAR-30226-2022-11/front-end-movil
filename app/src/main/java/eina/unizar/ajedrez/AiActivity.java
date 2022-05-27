@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,7 +74,7 @@ public class AiActivity extends AppCompatActivity {
         if(side.equals("0")) myCanvas = new ChessBoard(this,"0", board, pieces);
         else myCanvas = new ChessBoard(this,"1",board, pieces);
         setContentView(R.layout.activity_ai);
-        guardarPartida();
+        //guardarPartida();
         if(time == 3) time =1;
         if(time != 0 )timeLeftInMilliseconds = (long) time*60*1000;
         TextView timerUser = findViewById(R.id.timerUser);
@@ -92,6 +94,15 @@ public class AiActivity extends AppCompatActivity {
             myCanvas.makeAIMove();
             turno = 'b';
         }
+
+        /*TextView chat = findViewById(R.id.pantallaChat);
+        chat.setMovementMethod(new ScrollingMovementMethod());
+        chat.append("Hola\n");
+        chat.append("Hola\n");
+        chat.append("Hola\n");
+        chat.append("Hola\n");
+        chat.append("Hola\n");
+        chat.append("Hola\n");*/
         //playGame();
     }
 
