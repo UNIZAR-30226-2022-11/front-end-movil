@@ -9,6 +9,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +30,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
@@ -146,7 +149,22 @@ public class OnlineActivity extends AppCompatActivity {
         }
         countdownText = findViewById(R.id.timerUser);
         countdownTextRival = findViewById(R.id.timerRival);
+
+        // Chat
+        Button sendMessage = findViewById(R.id.chatButton);
+        sendMessage.setOnClickListener(view -> sendMessage());
+
         esperaRival();
+    }
+
+    public void sendMessage() {
+        EditText editText = findViewById(R.id.chatText);
+        String message = editText.getText().toString();
+        editText.setText("");
+        TextView textView = findViewById(R.id.pantallaChat);
+        textView.append(nickname + ": " + message);
+        mSocket.emit("sendMessage", message);
+        Log.d("Emited sendMessage", message);
     }
 
     public void playGame(){
@@ -372,6 +390,7 @@ public class OnlineActivity extends AppCompatActivity {
                            });
 
                            dialog.dismiss();
+                           esperarMensaje();
                            esperarAbandono();
                            esperarRecuperacion();
 
@@ -484,6 +503,30 @@ public class OnlineActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void esperarMensaje(){
+        mSocket.on("getMessage", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSONObject data = (JSONObject) args[0];
+                        String message="";
+                        try {
+                            message = data.getString("msg");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        TextView textView = findViewById(R.id.pantallaChat);
+                        textView.append(idSocket + ": " + message);
+                    }
+                });
+            }
+        });
+        esperarMensaje();
+    }
+
     private void guardarPartida(){
         RequestQueue queue;
         queue = Volley.newRequestQueue(this);
