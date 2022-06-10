@@ -25,9 +25,9 @@ public class ChessBoard extends View {
     Paint p,q;
     Rect Rec;
     int NUM_FILCOL = 8;
-    int x0=170;
+    int x0=135;
     int y0 = 170;
-    int squareSize = 90;
+    int squareSize = 100;
     int x1= x0 +squareSize;
     String boardColor;
     String colorSet;
@@ -43,9 +43,9 @@ public class ChessBoard extends View {
 
     String boardMtx[][] = new String[NUM_FILCOL][NUM_FILCOL];
     class PosibleClavada{
-      int fila;
-      int col;
-      Pair dir;
+        int fila;
+        int col;
+        Pair dir;
     };
     class Pos
     {
@@ -65,7 +65,7 @@ public class ChessBoard extends View {
         public Movimiento(Pos inicial, Pos fin) {
             this.inicial = inicial;
             this.fin = fin;
-           // this.tipo = tipo;
+            // this.tipo = tipo;
         }
     }
     public class Pair {
@@ -114,8 +114,8 @@ public class ChessBoard extends View {
         boardColor = board;
         if(side.equals("0")){
             Log.d("d: ", "Es side 0");
-             posReyNegro = new Pos(0,4);
-             posReyBlanco = new Pos(7,4);
+            posReyNegro = new Pos(0,4);
+            posReyBlanco = new Pos(7,4);
         }else{
             turnoIA = true;
             posReyNegro = new Pos(7,3);
@@ -182,126 +182,126 @@ public class ChessBoard extends View {
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 //if(turno == 'w' && side == "0" || turno == 'b' && side == "1"){ // Comprobar si es mi turno o no, sino, sudar
-                    if (!pulsado) {
-                        movimientoCorrecto = false;
-                        posX = Math.round(e.getX()); // Coordenadas x e y donde se toca
-                        posY = Math.round(e.getY());
-                        if (posX > x0 && posX < x0 + (squareSize * 8) // Comprobar que se ha pulsado en el tablero
-                                && posY > y0 && posY < y0 + (squareSize * 8)) {
-                            posX = (posX - x0) / squareSize; // Fila y columna donde se toca en función de los px
-                            posY = (posY - y0) / squareSize;
-                            pulsado = checkClick(posX, posY); // Ver si es casilla con pieza del color que toca
-                            Log.d(TAG, "Tocado en pos:" + posX + " y " + posY + " movimiento valido "+ pulsado);
-                        }
-                    } else {
-
-                        posFinX = Math.round(e.getX());
-                        posFinX = (posFinX - x0) / squareSize;
-                        posFinY = Math.round(e.getY());
-                        posFinY = (posFinY - y0) / squareSize;
-                        boolean cuidadoEnroque = false;
-                        Log.d(TAG, "Soltado en pos:" + posFinX + " y " + posFinY);
-                        if (isAClick(posX, posFinX, posY, posFinY)) { // Fila o Col distinta al de la casilla inicial
-                            ChessPiece changePos = pieceSet.get(numPieza);
-                            // Comprobar si el movimiento es valido (choque con otras piezas)
-                            Log.d(TAG, "Entra aqui y la pos es: " + boardMtx[6][4]);
-                            if (checkValidMove(changePos, posFinX, posFinY)) {
-                                movimientoCorrecto = true;
-                                int piezaDown = eatsPiece(posFinX, posFinY);
-                                if (piezaDown != -1 && !enroque) pieceSet.remove(piezaDown); // Comer pieza rival
-                                else if(piezaDown != -1 && enroque){
-                                    Log.d(TAG, "Enrocada"+posFinX);
-                                    ChessPiece Torre = pieceSet.get(piezaDown);
-                                    if(posFinX == 0 && side.equals("1")){ // Enroque a la izda jugando con negras
-                                        Log.d(TAG, "Enrocada"+posFinX);
-                                        int posFinal = posY-1;
-                                        Torre.newCoord(posX-1, posY);
-                                        Log.d(TAG, "Rey en: " + posY + " y " + (posX-1) + " boardMtx: " + boardMtx[posY][posX-1]);
-
-                                    }else if(posFinX == 7 && side.equals("1")){
-                                        Log.d(TAG, "Rey en: " + posY + " y " + (posX+1) + " boardMtx: " + boardMtx[posY][posX+1]);
-                                        Torre.newCoord(posX+1, posY);
-                                    }else if(posFinX == 0 && side.equals("0")){
-                                        Torre.newCoord(posX-1, posY);
-                                        Log.d(TAG, "Rey en: " + posY + " y " + (posX-1) + " boardMtx: " + boardMtx[posY][posX-1]);
-                                    }else if(posFinX == 7 && side.equals("0")) {
-                                        Torre.newCoord(posX+1, posY);
-                                        Log.d(TAG, "Rey en: " + posY + " y " + (posX-1) + " boardMtx: " + boardMtx[posY][posX-1]);
-                                    }
-                                    changePos.setAlreadyMoved();
-                                    Torre.setAlreadyMoved();
-                                    pieceSet.put(piezaDown, Torre);
-                                    Log.d(TAG, "Enroque torre rey blanco"+ posY+ " "+posX);
-                                    enroque = false;
-                                    cuidadoEnroque = true;
-                                }
-                                Log.d(TAG, "Pos pieza"+ posFinY+ " "+posFinX);
-                                if(changePos.getType().equals("Pawn") && (posFinY == 0 || posFinY == 7)) { // Coronacion de peon
-                                    Bitmap wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blanca);
-                                    Bitmap bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_negra);
-                                    if(colorSet.equals("blancoAzul_Piezas")){
-                                        bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blue);
-                                    }else if (colorSet.equals("blancoRojo_Piezas")){
-                                        bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_roja);
-
-                                    }else if(colorSet.equals("rojiAzul_Piezas")){
-                                        wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_roja);
-                                        bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blue);
-                                    }
-                                    if (side.equals("0")) {
-                                        pieceSet.put(numPieza, new ChessPiece(x0 + (squareSize*posFinX), y0 +(squareSize * posFinY), "Queen", squareSize, "w", wQueen, side));
-                                    }else{
-                                        pieceSet.put(numPieza, new ChessPiece(x0 + (squareSize*posFinX), y0 +(squareSize * posFinY), "Queen", squareSize, "b", bQueen, side));
-                                    }
-                                }else {
-                                    int guardaX;
-                                    guardaX = posFinX;
-                                    if(side.equals("0") && changePos.getType().equals("King")){
-                                        Log.d(TAG, "Enroque rey blanco"+ posFinY+ " "+posFinX);
-                                        if(cuidadoEnroque && posFinX == 0) {
-                                            posReyBlanco.X = posVieja.X; posReyBlanco.Y = 2;
-                                            guardaX = posFinX;
-                                            posFinX = 2;
-                                            ;
-                                        }else if(cuidadoEnroque && posFinX == 7){
-                                            posReyBlanco.X = posVieja.X; posReyBlanco.Y = 5;
-                                            guardaX = posFinX;
-                                            posFinX = 6;
-                                        }else{
-                                            posReyBlanco.X =  posVieja.X; posReyBlanco.Y = posVieja.Y;
-                                        }
-                                    }else if(changePos.getType().equals("King")){
-                                        if(cuidadoEnroque && posFinX == 0) {
-                                            posReyNegro.X = posVieja.X; posReyNegro.Y = 1;
-                                            guardaX = posFinX;
-                                            posFinX= 1;
-                                            ;
-                                        }else if(cuidadoEnroque && posFinX == 7){
-                                            posReyNegro.X = posVieja.X; posReyNegro.Y = 5;
-                                            guardaX = posFinX;posFinX = 5;
-                                        }else {
-                                            posReyNegro.X = posVieja.X;posReyNegro.Y = posVieja.Y;
-                                        }
-                                    }
-                                        cuidadoEnroque = false;
-                                    Log.d(TAG, "Rey en: " + posFinY + " y " + posFinX + " boardMtx: " + boardMtx[posFinY][posFinX] + " siendo boardMtx inicial: " + boardMtx[7][3]);
-                                    changePos.newCoord(posFinX, posFinY); // Cambiar posición a la pieza
-                                    posFinX = guardaX;
-                                    pieceSet.put(numPieza, changePos);
-                                }
-
-                                pulsado = false;
-                                turnoIA = true;
-                                invalidate();
-                            } else {
-                                Log.d("onTouchEvent", "Movimiento invalido");
-                                pulsado = false;
-                                pieceSet.put(numPieza, changePos);// Devolver pieza sin cambios, movimiento invalido
-                            }
-                        }
-                        Log.d(TAG, "FInal comprobacion");
-                        pulsado = false;
+                if (!pulsado) {
+                    movimientoCorrecto = false;
+                    posX = Math.round(e.getX()); // Coordenadas x e y donde se toca
+                    posY = Math.round(e.getY());
+                    if (posX > x0 && posX < x0 + (squareSize * 8) // Comprobar que se ha pulsado en el tablero
+                            && posY > y0 && posY < y0 + (squareSize * 8)) {
+                        posX = (posX - x0) / squareSize; // Fila y columna donde se toca en función de los px
+                        posY = (posY - y0) / squareSize;
+                        pulsado = checkClick(posX, posY); // Ver si es casilla con pieza del color que toca
+                        Log.d(TAG, "Tocado en pos:" + posX + " y " + posY + " movimiento valido "+ pulsado);
                     }
+                } else {
+
+                    posFinX = Math.round(e.getX());
+                    posFinX = (posFinX - x0) / squareSize;
+                    posFinY = Math.round(e.getY());
+                    posFinY = (posFinY - y0) / squareSize;
+                    boolean cuidadoEnroque = false;
+                    Log.d(TAG, "Soltado en pos:" + posFinX + " y " + posFinY);
+                    if (isAClick(posX, posFinX, posY, posFinY)) { // Fila o Col distinta al de la casilla inicial
+                        ChessPiece changePos = pieceSet.get(numPieza);
+                        // Comprobar si el movimiento es valido (choque con otras piezas)
+                        Log.d(TAG, "Entra aqui y la pos es: " + boardMtx[6][4]);
+                        if (checkValidMove(changePos, posFinX, posFinY)) {
+                            movimientoCorrecto = true;
+                            int piezaDown = eatsPiece(posFinX, posFinY);
+                            if (piezaDown != -1 && !enroque) pieceSet.remove(piezaDown); // Comer pieza rival
+                            else if(piezaDown != -1 && enroque){
+                                Log.d(TAG, "Enrocada"+posFinX);
+                                ChessPiece Torre = pieceSet.get(piezaDown);
+                                if(posFinX == 0 && side.equals("1")){ // Enroque a la izda jugando con negras
+                                    Log.d(TAG, "Enrocada"+posFinX);
+                                    int posFinal = posY-1;
+                                    Torre.newCoord(posX-1, posY);
+                                    Log.d(TAG, "Rey en: " + posY + " y " + (posX-1) + " boardMtx: " + boardMtx[posY][posX-1]);
+
+                                }else if(posFinX == 7 && side.equals("1")){
+                                    Log.d(TAG, "Rey en: " + posY + " y " + (posX+1) + " boardMtx: " + boardMtx[posY][posX+1]);
+                                    Torre.newCoord(posX+1, posY);
+                                }else if(posFinX == 0 && side.equals("0")){
+                                    Torre.newCoord(posX-1, posY);
+                                    Log.d(TAG, "Rey en: " + posY + " y " + (posX-1) + " boardMtx: " + boardMtx[posY][posX-1]);
+                                }else if(posFinX == 7 && side.equals("0")) {
+                                    Torre.newCoord(posX+1, posY);
+                                    Log.d(TAG, "Rey en: " + posY + " y " + (posX-1) + " boardMtx: " + boardMtx[posY][posX-1]);
+                                }
+                                changePos.setAlreadyMoved();
+                                Torre.setAlreadyMoved();
+                                pieceSet.put(piezaDown, Torre);
+                                Log.d(TAG, "Enroque torre rey blanco"+ posY+ " "+posX);
+                                enroque = false;
+                                cuidadoEnroque = true;
+                            }
+                            Log.d(TAG, "Pos pieza"+ posFinY+ " "+posFinX);
+                            if(changePos.getType().equals("Pawn") && (posFinY == 0 || posFinY == 7)) { // Coronacion de peon
+                                Bitmap wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blanca);
+                                Bitmap bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_negra);
+                                if(colorSet.equals("blancoAzul_Piezas")){
+                                    bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blue);
+                                }else if (colorSet.equals("blancoRojo_Piezas")){
+                                    bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_roja);
+
+                                }else if(colorSet.equals("rojiAzul_Piezas")){
+                                    wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_roja);
+                                    bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blue);
+                                }
+                                if (side.equals("0")) {
+                                    pieceSet.put(numPieza, new ChessPiece(x0 + (squareSize*posFinX), y0 +(squareSize * posFinY), "Queen", squareSize, "w", wQueen, side));
+                                }else{
+                                    pieceSet.put(numPieza, new ChessPiece(x0 + (squareSize*posFinX), y0 +(squareSize * posFinY), "Queen", squareSize, "b", bQueen, side));
+                                }
+                            }else {
+                                int guardaX;
+                                guardaX = posFinX;
+                                if(side.equals("0") && changePos.getType().equals("King")){
+                                    Log.d(TAG, "Enroque rey blanco"+ posFinY+ " "+posFinX);
+                                    if(cuidadoEnroque && posFinX == 0) {
+                                        posReyBlanco.X = posVieja.X; posReyBlanco.Y = 2;
+                                        guardaX = posFinX;
+                                        posFinX = 2;
+                                        ;
+                                    }else if(cuidadoEnroque && posFinX == 7){
+                                        posReyBlanco.X = posVieja.X; posReyBlanco.Y = 5;
+                                        guardaX = posFinX;
+                                        posFinX = 6;
+                                    }else{
+                                        posReyBlanco.X =  posVieja.X; posReyBlanco.Y = posVieja.Y;
+                                    }
+                                }else if(changePos.getType().equals("King")){
+                                    if(cuidadoEnroque && posFinX == 0) {
+                                        posReyNegro.X = posVieja.X; posReyNegro.Y = 1;
+                                        guardaX = posFinX;
+                                        posFinX= 1;
+                                        ;
+                                    }else if(cuidadoEnroque && posFinX == 7){
+                                        posReyNegro.X = posVieja.X; posReyNegro.Y = 5;
+                                        guardaX = posFinX;posFinX = 5;
+                                    }else {
+                                        posReyNegro.X = posVieja.X;posReyNegro.Y = posVieja.Y;
+                                    }
+                                }
+                                cuidadoEnroque = false;
+                                Log.d(TAG, "Rey en: " + posFinY + " y " + posFinX + " boardMtx: " + boardMtx[posFinY][posFinX] + " siendo boardMtx inicial: " + boardMtx[7][3]);
+                                changePos.newCoord(posFinX, posFinY); // Cambiar posición a la pieza
+                                posFinX = guardaX;
+                                pieceSet.put(numPieza, changePos);
+                            }
+
+                            pulsado = false;
+                            turnoIA = true;
+                            invalidate();
+                        } else {
+                            Log.d("onTouchEvent", "Movimiento invalido");
+                            pulsado = false;
+                            pieceSet.put(numPieza, changePos);// Devolver pieza sin cambios, movimiento invalido
+                        }
+                    }
+                    Log.d(TAG, "FInal comprobacion");
+                    pulsado = false;
+                }
                 //}
         }
         return super.onTouchEvent(e);
@@ -404,20 +404,20 @@ public class ChessBoard extends View {
                     esEnroque = false;
                     for(Map.Entry<Integer,ChessPiece> entry2 : pieceSet.entrySet()) {
                         ChessPiece Torre = entry2.getValue();
-                         Log.d("d", Torre.getType() + " Cambiando piezad enroque fila:"+ Torre.getFila() + " col:" + Torre.getCol());
+                        Log.d("d", Torre.getType() + " Cambiando piezad enroque fila:"+ Torre.getFila() + " col:" + Torre.getCol());
                         if (Torre.checkPos(columnaFin, filaFin)) { // Buscar torre para cambiar de lugar
                             int clave = entry2.getKey();
-                           if(columnaFin == 0 && columnaIni == 3) Torre.newCoord(columnaIni-1, filaFin);
-                           else if(columnaFin == 7 && columnaIni == 3)Torre.newCoord(columnaIni+1, filaFin);
-                           else if(columnaFin == 0 && columnaIni == 4)Torre.newCoord(columnaIni-1, filaFin);
-                           else if(columnaFin == 7 && columnaIni == 4) Torre.newCoord(columnaIni+1, filaFin);
+                            if(columnaFin == 0 && columnaIni == 3) Torre.newCoord(columnaIni-1, filaFin);
+                            else if(columnaFin == 7 && columnaIni == 3)Torre.newCoord(columnaIni+1, filaFin);
+                            else if(columnaFin == 0 && columnaIni == 4)Torre.newCoord(columnaIni-1, filaFin);
+                            else if(columnaFin == 7 && columnaIni == 4) Torre.newCoord(columnaIni+1, filaFin);
                             Torre.setAlreadyMoved();
                             Log.d("movRival", "Torre enroque " +  Torre.getType() + " x: " +Torre.getFila()+ " xol: " + Torre.getCol() );
                             pieceSet.put(clave, Torre);
                             //break;
-                      }
+                        }
 
-                   }
+                    }
                     p.newCoord(columnaFin, filaFin);
                   /*  if(columnaFin == 0 && columnaIni==4) {
                         p.newCoord(columnaFin+2, filaFin);
@@ -449,7 +449,7 @@ public class ChessBoard extends View {
 
             }
         }
-      //  if (piezaDown != -1) pieceSet.remove(piezaDown); // Comer pieza rival
+        //  if (piezaDown != -1) pieceSet.remove(piezaDown); // Comer pieza rival
 
         turnoIA = true;
         if (checkForMate()) Log.d("d", "Fin de partida");
@@ -463,7 +463,7 @@ public class ChessBoard extends View {
             turno = "w";
         }
         else turno = "x";
-       pulsado = false;
+        pulsado = false;
 
         invalidate();
 
@@ -489,14 +489,14 @@ public class ChessBoard extends View {
             filaIni = posReyNegro.X ; colIni = posReyNegro.Y ;
         }
         Log.d("checkInfoChecks: ", "turno " + turno + " filaIni: " + filaIni + " colIni: " + colIni);
-       // Log.d("d: ", "pos ini " + filaIni + " " + colIni);
+        // Log.d("d: ", "pos ini " + filaIni + " " + colIni);
         for(int i =0; i < NUM_FILCOL;i++){
             Pair dirActual = dirs[i];
             PosibleClavada posibleClavada = null;
             for(int j= 1; j < NUM_FILCOL;j++){
                 colFin =  colIni + (dirActual.y*j);
                 filaFin =  filaIni + (dirActual.x*j);
-               // Log.d("d: ", "pos fin: " + filaFin + " " + colFin);
+                // Log.d("d: ", "pos fin: " + filaFin + " " + colFin);
                 if (0 <= filaFin && filaFin<=7 && 0 <= colFin && colFin<=7){
                     Log.d("checkInfoChecks: ", "pieza " +boardMtx[filaFin][colFin] + " en "+ filaFin + " " + colFin);
                     String pieza = boardMtx[filaFin][colFin];
@@ -689,7 +689,7 @@ public class ChessBoard extends View {
                 int colFin =  colIni + (dirActual.y*j);
                 int filaFin =  filaIni + (dirActual.x*j);
                 if (0 <= filaFin && filaFin<=7 && 0 <= colFin && colFin<=7 && p.getType().equals("Knight")){
-                   if(p.getType().equals("King")) Log.d("movPieza:", "check King: ");
+                    if(p.getType().equals("King")) Log.d("movPieza:", "check King: ");
                     if(checkCertainPiece(p,colFin,filaFin)){
                         Log.d("movPieza: ", "Mov valido para " + p.getType()+ " Color: "+ p.getColor()+" Fil: "+ p.getFila() + " Col " + p.getCol());
                         Movimiento nuevoMov = new Movimiento(new Pos(p.getFila(),p.getCol()),new Pos(filaFin,colFin));
@@ -768,7 +768,7 @@ public class ChessBoard extends View {
     }
     private boolean checkCertainPiece(ChessPiece changePos,int col, int fila){
         if(changePos.getType().equals("Pawn") && changePos.checkMove(col,fila)){
-           return checkPawn(col,fila,changePos);
+            return checkPawn(col,fila,changePos);
         }else if (changePos.getType().equals("Rook") && changePos.checkMove(col,fila)){
             return checkRook(col, fila, changePos);
         }
@@ -787,7 +787,7 @@ public class ChessBoard extends View {
         return false;
     }
     boolean checkValidMove(ChessPiece changePos,int col, int fila){
-         // Si es un movimiento correcto para esa pieza, comprobar posibles bloqueos y jaques
+        // Si es un movimiento correcto para esa pieza, comprobar posibles bloqueos y jaques
         clavadas = null; jaques = null; jaque = false; movimValidos = null;
         numClavadas = 0; numJaques = 0; numMovimientos = 0;
         checkInfoChecks(); // Obtenemos si hay jaque, las clavadas y las casillas que hacen jaque
@@ -833,7 +833,7 @@ public class ChessBoard extends View {
                         for(Map.Entry<Integer,ChessPiece> entry : pieceSet.entrySet()){
                             ChessPiece p = entry.getValue();
                             if(p.checkPos(col,fila)) { // Encontrada pieza que se busca, comprobar movimientos validos
-                              //  Log.d("genTodMovsVal: ", "Comprobando " + p.getType() + " fila: "+ p.getFila() + " col: " +p.getCol() + " jaque: "+jaque);
+                                //  Log.d("genTodMovsVal: ", "Comprobando " + p.getType() + " fila: "+ p.getFila() + " col: " +p.getCol() + " jaque: "+jaque);
                                 movimientosParaPieza(p,movsValidos);
                                 jaque = guardaJaque;
                                 movimValidos= guardaMovimientoValido;
@@ -892,7 +892,7 @@ public class ChessBoard extends View {
             }
         }else if(!guardaJaque || guardaNumMov >= 1 || guardanumClav != 0){
             Log.d("Check for mate:", "No es mate esJaque: " + guardaJaque
-                                                                    + " guardaNMov: " +  guardaNumMov + " guardaNClav: " + guardanumClav);
+                    + " guardaNMov: " +  guardaNumMov + " guardaNClav: " + guardanumClav);
             checkingMate =  false;
             return false;}
         Log.d("checkForMate:", "Se confirma el mate");
@@ -905,15 +905,15 @@ public class ChessBoard extends View {
         return true;
     }
     // Comprobar si hace un movimiento de Torre o de Alfil(válidos para reina)
-     private boolean checkQueen(int col, int fila, ChessPiece changePos){
-         if(checkRook(col,fila,changePos) || checkBishop(col,fila,changePos)){
-             if (turno.equals("w") && !turnoIA) boardMtx[fila][col] = "wQ";
-             else if(!turnoIA) boardMtx[fila][col] = "bQ";
-             if (!turnoIA)boardMtx[changePos.getFila()][changePos.getCol()] = "--";
-             return true;
-         }
+    private boolean checkQueen(int col, int fila, ChessPiece changePos){
+        if(checkRook(col,fila,changePos) || checkBishop(col,fila,changePos)){
+            if (turno.equals("w") && !turnoIA) boardMtx[fila][col] = "wQ";
+            else if(!turnoIA) boardMtx[fila][col] = "bQ";
+            if (!turnoIA)boardMtx[changePos.getFila()][changePos.getCol()] = "--";
+            return true;
+        }
         return false;
-     }
+    }
     private boolean checkKing(int col, int fila, ChessPiece changePos){
 
         boolean torreEncontrada = false;
@@ -939,16 +939,16 @@ public class ChessBoard extends View {
                     posVieja =  new Pos(posReyNegro.X, posReyNegro.Y);
                     posReyNegro.X =  fila; posReyNegro.Y = col;
                 }
-                    boolean guardaJaque = jaque;
-                    Pos[] guardaMovimientoValido = movimValidos;
-                    boolean guardaDobleJaque = dobleJaque;
-                    int guardaNumMov, guardanumClav = 0;
-                    int guardaNumJaques  = numJaques;
-                    guardaNumMov = numMovimientos; guardanumClav = numClavadas;
-                    Log.d("checkKing:", "El jaque es: " +
-                            jaque);
-                    jaque =  false;
-                    checkInfoChecks();
+                boolean guardaJaque = jaque;
+                Pos[] guardaMovimientoValido = movimValidos;
+                boolean guardaDobleJaque = dobleJaque;
+                int guardaNumMov, guardanumClav = 0;
+                int guardaNumJaques  = numJaques;
+                guardaNumMov = numMovimientos; guardanumClav = numClavadas;
+                Log.d("checkKing:", "El jaque es: " +
+                        jaque);
+                jaque =  false;
+                checkInfoChecks();
 
                 if(!jaque) { // Dibujar nueva pos en función del color
                     Log.d("checkKing:", "Nuevo mov correcto "+ posReyNegro.X + " " + posReyNegro.Y);
@@ -1001,7 +1001,7 @@ public class ChessBoard extends View {
                 numMovimientos = guardaNumMov;
                 numClavadas = guardanumClav;
                 numJaques = guardaNumJaques;
-                }
+            }
         }
         if(checkRook(col,fila,changePos) || checkBishop(col, fila, changePos)){ // Si hace un movimiento tipo torre o alfil
             Log.d("checkKing:", "Todo en orden para sin enrqoue ");
@@ -1012,16 +1012,16 @@ public class ChessBoard extends View {
                 posVieja =  new Pos(posReyNegro.X, posReyNegro.Y);
                 posReyNegro.X =  fila; posReyNegro.Y = col;
             }
-                boolean guardaJaque = jaque;
+            boolean guardaJaque = jaque;
 
-                Pos[] guardaMovimientoValido = movimValidos;
-                boolean guardaDobleJaque = dobleJaque;
-                int guardaNumMov, guardanumClav = 0;
-                int guardaNumJaques  = numJaques;
-                guardaNumMov = numMovimientos; guardanumClav = numClavadas;
-                Log.d("checkKing:", "el jaque es: " + jaque);
-                jaque =  false;
-                checkInfoChecks();
+            Pos[] guardaMovimientoValido = movimValidos;
+            boolean guardaDobleJaque = dobleJaque;
+            int guardaNumMov, guardanumClav = 0;
+            int guardaNumJaques  = numJaques;
+            guardaNumMov = numMovimientos; guardanumClav = numClavadas;
+            Log.d("checkKing:", "el jaque es: " + jaque);
+            jaque =  false;
+            checkInfoChecks();
 
 
             if(!jaque) { // Dibujar nueva pos en función del color
@@ -1063,7 +1063,7 @@ public class ChessBoard extends View {
     private boolean checkBishop(int col, int fila, ChessPiece changePos){
         int numDesplazados =  Math.abs(col -changePos.getCol());
         int numDesplazados2 = Math.abs(fila -changePos.getFila());
-       // Log.d("d", "Valid move  bishop" + fila + " " + col );
+        // Log.d("d", "Valid move  bishop" + fila + " " + col );
         if(numDesplazados == 0 || numDesplazados2 == 0) return false; // Para el rey/reina si hacen movimiento de torre.
 
         boolean clavado = false;
@@ -1073,7 +1073,7 @@ public class ChessBoard extends View {
                 if (clavadas[i].fila == changePos.getFila() && clavadas[i].col == changePos.getCol()) { // Pieza clavada es la que se esta intentando mover
                     clavado = true;
                     dirClavada = new Pair(clavadas[i].dir.x, clavadas[i].dir.y);
-                   // Log.d("d:", "Fila Torre !!!!!!!!!!!!!!!!!!!!!!! "+ jaque);
+                    // Log.d("d:", "Fila Torre !!!!!!!!!!!!!!!!!!!!!!! "+ jaque);
                 }
             }
         }
@@ -1108,7 +1108,7 @@ public class ChessBoard extends View {
 
         if (turno.equals("w") && changePos.getType().equals("Bishop") && !turnoIA) boardMtx[fila][col] = "wB"; // Alfil y turno de blancas, dibujar alfil
         else if(changePos.getType().equals("Bishop") && !turnoIA)  boardMtx[fila][col] = "bB";// Alfil negro, turno de negras, dibujar alfil
-       if (changePos.getType().equals("Bishop") && !turnoIA)boardMtx[changePos.getFila()][changePos.getCol()] = "--"; // Posicion antigua del alfil
+        if (changePos.getType().equals("Bishop") && !turnoIA)boardMtx[changePos.getFila()][changePos.getCol()] = "--"; // Posicion antigua del alfil
 
         return true;
     }
@@ -1147,7 +1147,7 @@ public class ChessBoard extends View {
                 if (clavadas[i].fila == changePos.getFila() && clavadas[i].col == changePos.getCol()) { // Pieza clavada es la que se esta intentando mover
                     clavado = true;
                     dirClavada = new Pair(clavadas[i].dir.x, clavadas[i].dir.y);
-                   // Log.d("d:", "Fila Torre !!!!!!!!!!!!!!!!!!!!!!! "+ jaque);
+                    // Log.d("d:", "Fila Torre !!!!!!!!!!!!!!!!!!!!!!! "+ jaque);
                 }
             }
         }
@@ -1173,7 +1173,7 @@ public class ChessBoard extends View {
                 }else return false;
             }
         }else if(changePos.getCol() == col && changePos.getFila() != fila ){ // Se está moviendo la fila
-             numDesplazados =  Math.abs(fila -changePos.getFila()); // Numero de celdas desplazadas
+            numDesplazados =  Math.abs(fila -changePos.getFila()); // Numero de celdas desplazadas
             for(int i = 1;i <= numDesplazados;i++){
                 if(((!clavado && !jaque) || ((dirClavada.x == -1 || dirClavada.x == 1) && dirClavada.y == 0))
                         || (jaque && !clavado && (findValidMove(fila, col) || changePos.getType().equals("King")))) {
@@ -1204,117 +1204,117 @@ public class ChessBoard extends View {
         Pair dirClavada = new Pair(0,0);
         int orientacion = 1* Integer.parseInt(side);
 
-      //  if(turno == "w" && side == "0" && turno == "b" && side == "1"){
-            if(numClavadas != 0) {
-                for (int i = 0; i < numClavadas; i++) {
-                    if (clavadas[i].fila == changePos.getFila() && clavadas[i].col == changePos.getCol()) { // Pieza clavada es la que se esta intentando mover
-                        clavado = true;
-                        dirClavada = new Pair(clavadas[i].dir.x, clavadas[i].dir.y);
-                    }
+        //  if(turno == "w" && side == "0" && turno == "b" && side == "1"){
+        if(numClavadas != 0) {
+            for (int i = 0; i < numClavadas; i++) {
+                if (clavadas[i].fila == changePos.getFila() && clavadas[i].col == changePos.getCol()) { // Pieza clavada es la que se esta intentando mover
+                    clavado = true;
+                    dirClavada = new Pair(clavadas[i].dir.x, clavadas[i].dir.y);
                 }
             }
+        }
         Log.d("checkPawn: ", "Pre comprobacion "+ turno + " side: " + side);
-            if((turno.equals("w") && side.equals("0")) || (turno.equals("b") && side.equals("1"))){ // Mi turno
-                Log.d("checkPawn: ", "Primer if");
-                if(boardMtx[changePos.getFila()-1][changePos.getCol()].equals("--") && col == changePos.getCol()){// No hay nadie delante // Añadir side
-                    Log.d("checkPawn: ", "Segundo if");
-                    if(fila == changePos.getFila()-1){ // Se quiere mover una hacia adelante // añadir side
-                        Log.d("checkPawn: ", "Tercer if");
-                        if(((!clavado && !jaque) || (dirClavada.x == -1 && dirClavada.y == 0)) || jaque && !clavado && findValidMove(fila, col)) { // No clavada o clavada en la dirección a la que se mueve
-                            Log.d("checkPawn: ", "Tercer if if");// Añadir side dirClavada.x == +1
-                            if(fila == 0 && side.equals("0")) boardMtx[changePos.getFila() - 1][changePos.getCol()] = "wQ";
-                            else if(fila == 0 && side.equals("1")) boardMtx[changePos.getFila() - 1][changePos.getCol()] = "bQ";
-                            else if(!turnoIA && side.equals("0")) boardMtx[changePos.getFila() - 1][changePos.getCol()] = "wp"; // Añadir side
-                            else if(!turnoIA && side.equals("1")) boardMtx[changePos.getFila() - 1][changePos.getCol()] = "bp";
-                            if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
-                            Log.d("d: ", "Puede avanzar uno");
-                            return true;
-                        }
-                    }
-                    if(changePos.getFila() == 6 && fila == 4 && boardMtx[fila][col].equals("--")){ // Se quiere mover 2 adelante // Añadir side
-                        if(((!clavado && ! jaque) || (dirClavada.x == -1 && dirClavada.y == 0)) || (jaque && !clavado && findValidMove(fila, col))) {
-                            if(!turnoIA && side.equals("0")) boardMtx[changePos.getFila() - 2][changePos.getCol()] = "wp";
-                            else if(!turnoIA && side.equals("1")) boardMtx[changePos.getFila() - 2][changePos.getCol()] = "bp";
-                            if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
-                            Log.d("d: ", "Puede avanzar dos");
-                            return true;
-                        }
-                    }
-                } else if((boardMtx[fila][col].charAt(0) == 'b' && side.equals("0") || boardMtx[fila][col].charAt(0) == 'w' && side.equals("1")) && col != changePos.getCol()){ // Hay pieza rival en diagonal y se mueve alli
-                    if(((!clavado && !jaque) || (dirClavada.x == -1 && dirClavada.y == -1 && col == changePos.getCol()-1))|| jaque && !clavado && findValidMove(fila, col)) { // No clavada o clavada en esa dirección. Come hacia la izquierda
-                        if(!turnoIA &&fila == 0 && side.equals("0")) boardMtx[fila][col] = "wQ";
-                        else if(!turnoIA && fila == 0 && side.equals("1")) boardMtx[fila][col] = "bQ";
-                        else if(!turnoIA && side.equals("0")) boardMtx[fila][col] = "wp";
-                        else if(!turnoIA && side.equals("1")) boardMtx[fila][col] = "bp";
+        if((turno.equals("w") && side.equals("0")) || (turno.equals("b") && side.equals("1"))){ // Mi turno
+            Log.d("checkPawn: ", "Primer if");
+            if(boardMtx[changePos.getFila()-1][changePos.getCol()].equals("--") && col == changePos.getCol()){// No hay nadie delante // Añadir side
+                Log.d("checkPawn: ", "Segundo if");
+                if(fila == changePos.getFila()-1){ // Se quiere mover una hacia adelante // añadir side
+                    Log.d("checkPawn: ", "Tercer if");
+                    if(((!clavado && !jaque) || (dirClavada.x == -1 && dirClavada.y == 0)) || jaque && !clavado && findValidMove(fila, col)) { // No clavada o clavada en la dirección a la que se mueve
+                        Log.d("checkPawn: ", "Tercer if if");// Añadir side dirClavada.x == +1
+                        if(fila == 0 && side.equals("0")) boardMtx[changePos.getFila() - 1][changePos.getCol()] = "wQ";
+                        else if(fila == 0 && side.equals("1")) boardMtx[changePos.getFila() - 1][changePos.getCol()] = "bQ";
+                        else if(!turnoIA && side.equals("0")) boardMtx[changePos.getFila() - 1][changePos.getCol()] = "wp"; // Añadir side
+                        else if(!turnoIA && side.equals("1")) boardMtx[changePos.getFila() - 1][changePos.getCol()] = "bp";
                         if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
-                        Log.d("d:", "Puede comer izda");
-                        return true;
-                    }
-                    if(((!clavado && !jaque) || (dirClavada.x == -1 && dirClavada.y == 1 && col == changePos.getCol()+1)) || jaque && !clavado && findValidMove(fila, col)) { // No clavada o clavada en esa dirección. Come hacia la derecha
-                        if(!turnoIA &&fila == 0 && side.equals("0")) boardMtx[fila][col] = "wQ";
-                        else if(!turnoIA && fila == 0 && side.equals("1")) boardMtx[fila][col] = "bQ";
-                        else if(!turnoIA && side.equals("0")) boardMtx[fila][col] = "wp";
-                        else if(!turnoIA && side.equals("1")) boardMtx[fila][col] = "bp";
-                        if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
-                        Log.d("d: ", "Puede comer dcha");
+                        Log.d("d: ", "Puede avanzar uno");
                         return true;
                     }
                 }
-            }
-            else{ // Turno del rival
-                Log.d("d: ", "Ia debe entrar aqui " + boardMtx[changePos.getFila()+1][changePos.getCol()]);
-                Log.d("checkPawn: ", "El jaque es: "+  jaque);
-                if(boardMtx[changePos.getFila()+1][changePos.getCol()].equals("--") && col == changePos.getCol()){// No hay nadie delante
-                    Log.d("d: ", "Camino libre a fila: "+fila + " col: "+col);
-                    if(fila == changePos.getFila()+1){ // Se quiere mover una hacia adelante
-                       Log.d("d: ", "Libre de avanzar 1 la negra clavado" +clavado + " y jaque "+ jaque);
-                        if(((!clavado && !jaque) || (dirClavada.x == 1 && dirClavada.y == 0)) || jaque && !clavado && findValidMove(fila, col)) {
-                            Log.d("d: ", "Puede avanzar uno");
-                            if(!turnoIA &&  fila == 7 && side.equals("0")) boardMtx[fila][col] = "bQ";
-                            else if(!turnoIA && fila == 7 && side.equals("1")) boardMtx[fila][col] = "wQ";
-                            else if(!turnoIA && side.equals("0")) boardMtx[changePos.getFila() + 1][changePos.getCol()] = "bp";
-                            else if(!turnoIA && side.equals("1")) boardMtx[changePos.getFila() + 1][changePos.getCol()] = "wp";
-                            if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
-                            return true;
-                        }
-                    }
-                    if(changePos.getFila() == 1 && fila == 3 && boardMtx[fila][col].equals("--")){ // Se quiere mover 2 adelante
-                        if(((!clavado && ! jaque) || (dirClavada.x == 1 && dirClavada.y == 0)) || jaque && !clavado && findValidMove(fila, col)) {
-                            Log.d("d:", "Puede avanzar dos");
-
-                           if(!turnoIA && side.equals("0")) boardMtx[changePos.getFila() + 2][changePos.getCol()] = "bp";
-                            else if(!turnoIA && side.equals("1")) boardMtx[changePos.getFila() + 2][changePos.getCol()] = "wp";
-                            if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
-                            return true;
-                        }
-                    }
-                } else if((boardMtx[fila][col].charAt(0) == 'w' && side.equals("0") || boardMtx[fila][col].charAt(0) == 'b' && side.equals("1")) && col != changePos.getCol()){ // Hay pieza rival en diagonal y se mueve alli
-
-                    if(((!clavado && !jaque)|| (dirClavada.x == 1 && dirClavada.y == -1 && col == changePos.getCol()-1)) || (jaque && !clavado && findValidMove(fila, col))) { // No clavada o clavada en esa dirección. Come hacia la izquierda
-                        if(!turnoIA &&  fila == 7 && side.equals("0")) boardMtx[fila][col] = "bQ";
-                        else if(!turnoIA && fila == 7 && side.equals("1")) boardMtx[fila][col] = "wQ";
-                        else if(!turnoIA && side.equals("0")) boardMtx[fila][col] = "bp";
-                        else if(!turnoIA && side.equals("1")) boardMtx[fila][col] = "wp";
+                if(changePos.getFila() == 6 && fila == 4 && boardMtx[fila][col].equals("--")){ // Se quiere mover 2 adelante // Añadir side
+                    if(((!clavado && ! jaque) || (dirClavada.x == -1 && dirClavada.y == 0)) || (jaque && !clavado && findValidMove(fila, col))) {
+                        if(!turnoIA && side.equals("0")) boardMtx[changePos.getFila() - 2][changePos.getCol()] = "wp";
+                        else if(!turnoIA && side.equals("1")) boardMtx[changePos.getFila() - 2][changePos.getCol()] = "bp";
                         if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
-                        Log.d("d:", "Puede comer");
-                        Log.d("checkPawn:", "jaque: " + jaque + " clavado: " + clavado+ " dirClavada: " + dirClavada.x + " " + dirClavada.y+ " col: " +col + " fila: " +fila);
-                        for(int i = 0; i < numMovimientos;i++){
-                            Log.d("checkPawn:", "Contenido:  " + movimValidos[i].X + " " + movimValidos[i].Y);
-
-                        }
-                        return true;
-                    }
-                    if(((!clavado && !jaque) || (dirClavada.x == 1 && dirClavada.y == 1 && col == changePos.getCol()+1))|| (jaque && !clavado && findValidMove(fila, col))) {
-                        if(!turnoIA &&  fila == 7 && side.equals("0")) boardMtx[fila][col] = "bQ";
-                        else if(!turnoIA && fila == 7 && side.equals("1")) boardMtx[fila][col] = "wQ";
-                        else if(!turnoIA && side.equals("0")) boardMtx[fila][col] = "bp";
-                        else if(!turnoIA && side.equals("1")) boardMtx[fila][col] = "wp";
-                        if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
-
+                        Log.d("d: ", "Puede avanzar dos");
                         return true;
                     }
                 }
+            } else if((boardMtx[fila][col].charAt(0) == 'b' && side.equals("0") || boardMtx[fila][col].charAt(0) == 'w' && side.equals("1")) && col != changePos.getCol()){ // Hay pieza rival en diagonal y se mueve alli
+                if(((!clavado && !jaque) || (dirClavada.x == -1 && dirClavada.y == -1 && col == changePos.getCol()-1))|| jaque && !clavado && findValidMove(fila, col)) { // No clavada o clavada en esa dirección. Come hacia la izquierda
+                    if(!turnoIA &&fila == 0 && side.equals("0")) boardMtx[fila][col] = "wQ";
+                    else if(!turnoIA && fila == 0 && side.equals("1")) boardMtx[fila][col] = "bQ";
+                    else if(!turnoIA && side.equals("0")) boardMtx[fila][col] = "wp";
+                    else if(!turnoIA && side.equals("1")) boardMtx[fila][col] = "bp";
+                    if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
+                    Log.d("d:", "Puede comer izda");
+                    return true;
+                }
+                if(((!clavado && !jaque) || (dirClavada.x == -1 && dirClavada.y == 1 && col == changePos.getCol()+1)) || jaque && !clavado && findValidMove(fila, col)) { // No clavada o clavada en esa dirección. Come hacia la derecha
+                    if(!turnoIA &&fila == 0 && side.equals("0")) boardMtx[fila][col] = "wQ";
+                    else if(!turnoIA && fila == 0 && side.equals("1")) boardMtx[fila][col] = "bQ";
+                    else if(!turnoIA && side.equals("0")) boardMtx[fila][col] = "wp";
+                    else if(!turnoIA && side.equals("1")) boardMtx[fila][col] = "bp";
+                    if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
+                    Log.d("d: ", "Puede comer dcha");
+                    return true;
+                }
             }
+        }
+        else{ // Turno del rival
+            Log.d("d: ", "Ia debe entrar aqui " + boardMtx[changePos.getFila()+1][changePos.getCol()]);
+            Log.d("checkPawn: ", "El jaque es: "+  jaque);
+            if(boardMtx[changePos.getFila()+1][changePos.getCol()].equals("--") && col == changePos.getCol()){// No hay nadie delante
+                Log.d("d: ", "Camino libre a fila: "+fila + " col: "+col);
+                if(fila == changePos.getFila()+1){ // Se quiere mover una hacia adelante
+                    Log.d("d: ", "Libre de avanzar 1 la negra clavado" +clavado + " y jaque "+ jaque);
+                    if(((!clavado && !jaque) || (dirClavada.x == 1 && dirClavada.y == 0)) || jaque && !clavado && findValidMove(fila, col)) {
+                        Log.d("d: ", "Puede avanzar uno");
+                        if(!turnoIA &&  fila == 7 && side.equals("0")) boardMtx[fila][col] = "bQ";
+                        else if(!turnoIA && fila == 7 && side.equals("1")) boardMtx[fila][col] = "wQ";
+                        else if(!turnoIA && side.equals("0")) boardMtx[changePos.getFila() + 1][changePos.getCol()] = "bp";
+                        else if(!turnoIA && side.equals("1")) boardMtx[changePos.getFila() + 1][changePos.getCol()] = "wp";
+                        if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
+                        return true;
+                    }
+                }
+                if(changePos.getFila() == 1 && fila == 3 && boardMtx[fila][col].equals("--")){ // Se quiere mover 2 adelante
+                    if(((!clavado && ! jaque) || (dirClavada.x == 1 && dirClavada.y == 0)) || jaque && !clavado && findValidMove(fila, col)) {
+                        Log.d("d:", "Puede avanzar dos");
+
+                        if(!turnoIA && side.equals("0")) boardMtx[changePos.getFila() + 2][changePos.getCol()] = "bp";
+                        else if(!turnoIA && side.equals("1")) boardMtx[changePos.getFila() + 2][changePos.getCol()] = "wp";
+                        if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
+                        return true;
+                    }
+                }
+            } else if((boardMtx[fila][col].charAt(0) == 'w' && side.equals("0") || boardMtx[fila][col].charAt(0) == 'b' && side.equals("1")) && col != changePos.getCol()){ // Hay pieza rival en diagonal y se mueve alli
+
+                if(((!clavado && !jaque)|| (dirClavada.x == 1 && dirClavada.y == -1 && col == changePos.getCol()-1)) || (jaque && !clavado && findValidMove(fila, col))) { // No clavada o clavada en esa dirección. Come hacia la izquierda
+                    if(!turnoIA &&  fila == 7 && side.equals("0")) boardMtx[fila][col] = "bQ";
+                    else if(!turnoIA && fila == 7 && side.equals("1")) boardMtx[fila][col] = "wQ";
+                    else if(!turnoIA && side.equals("0")) boardMtx[fila][col] = "bp";
+                    else if(!turnoIA && side.equals("1")) boardMtx[fila][col] = "wp";
+                    if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
+                    Log.d("d:", "Puede comer");
+                    Log.d("checkPawn:", "jaque: " + jaque + " clavado: " + clavado+ " dirClavada: " + dirClavada.x + " " + dirClavada.y+ " col: " +col + " fila: " +fila);
+                    for(int i = 0; i < numMovimientos;i++){
+                        Log.d("checkPawn:", "Contenido:  " + movimValidos[i].X + " " + movimValidos[i].Y);
+
+                    }
+                    return true;
+                }
+                if(((!clavado && !jaque) || (dirClavada.x == 1 && dirClavada.y == 1 && col == changePos.getCol()+1))|| (jaque && !clavado && findValidMove(fila, col))) {
+                    if(!turnoIA &&  fila == 7 && side.equals("0")) boardMtx[fila][col] = "bQ";
+                    else if(!turnoIA && fila == 7 && side.equals("1")) boardMtx[fila][col] = "wQ";
+                    else if(!turnoIA && side.equals("0")) boardMtx[fila][col] = "bp";
+                    else if(!turnoIA && side.equals("1")) boardMtx[fila][col] = "wp";
+                    if(!turnoIA) boardMtx[changePos.getFila()][changePos.getCol()] = "--";
+
+                    return true;
+                }
+            }
+        }
         //}
         return false;
     }
@@ -1335,32 +1335,32 @@ public class ChessBoard extends View {
         Bitmap wKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_blanco);
 
         if(colorSet.equals("blancoAzul_Piezas")){
-             bPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.peon_blue);
-             bRook= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.torre_blue);
-             bKnight= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.caballo_blue);
-             bBishop= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.alfil_blue);
-             bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blue);
-             bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_blue);
+            bPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.peon_blue);
+            bRook= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.torre_blue);
+            bKnight= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.caballo_blue);
+            bBishop= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.alfil_blue);
+            bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blue);
+            bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_blue);
         }else if (colorSet.equals("blancoRojo_Piezas")){
-             bPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.peon_rojo);
-             bRook= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.torre_roja);
-             bKnight= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.caballo_rojo);
-             bBishop= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.alfil_rojo);
-             bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_roja);
-             bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_rojo);
+            bPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.peon_rojo);
+            bRook= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.torre_roja);
+            bKnight= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.caballo_rojo);
+            bBishop= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.alfil_rojo);
+            bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_roja);
+            bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_rojo);
         }else if(colorSet.equals("rojiAzul_Piezas")){
-             wPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.peon_rojo);
-             wRook = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.torre_roja);
-             wKnight = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.caballo_rojo);
-             wBishop = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.alfil_rojo);
-             wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_roja);
-             wKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_rojo);
-             bPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.peon_blue);
-             bRook= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.torre_blue);
-             bKnight= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.caballo_blue);
-             bBishop= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.alfil_blue);
-             bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blue);
-             bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_blue);
+            wPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.peon_rojo);
+            wRook = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.torre_roja);
+            wKnight = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.caballo_rojo);
+            wBishop = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.alfil_rojo);
+            wQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_roja);
+            wKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_rojo);
+            bPawn = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.peon_blue);
+            bRook= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.torre_blue);
+            bKnight= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.caballo_blue);
+            bBishop= android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.alfil_blue);
+            bQueen = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.reina_blue);
+            bKing = android.graphics.BitmapFactory.decodeResource(getResources(),R.drawable.rey_blue);
 
         }
 
@@ -1374,7 +1374,7 @@ public class ChessBoard extends View {
             pieceSet.put(num,new ChessPiece(x0+(7*squareSize),y0,"Rook",squareSize,"b",bRook,side)); num++;
             pieceSet.put(num,new ChessPiece(x0,y0+(7*squareSize),"Rook",squareSize,"w",wRook,side)); num++;
             pieceSet.put(num,new ChessPiece(x0+(7*squareSize),y0+(7*squareSize),"Rook",squareSize,"w",wRook,side)); num++;
-                                            // left top
+            // left top
             pieceSet.put(num,new ChessPiece(x0+squareSize,y0,"Knight",squareSize,"b",bKnight,side)); num++;
             pieceSet.put(num,new ChessPiece(x0+(6*squareSize),y0,"Knight",squareSize,"b",bKnight,side)); num++;
             pieceSet.put(num,new ChessPiece(x0+squareSize,y0+(7*squareSize),"Knight",squareSize,"w",wKnight,side)); num++;
@@ -1433,9 +1433,9 @@ public class ChessBoard extends View {
             for(int j = 0; j < NUM_FILCOL;j++) boardMtx[i][j] = "--";
         }
 
-            boardMtx[0][0] = "bK";
-            boardMtx[0][2] = "wp";
-            boardMtx[1][2] = "wK";
+        boardMtx[0][0] = "bK";
+        boardMtx[0][2] = "wp";
+        boardMtx[1][2] = "wK";
     }
     private void setMatrix(){
         for(int i = 0;i < NUM_FILCOL;i++){
@@ -1492,7 +1492,7 @@ public class ChessBoard extends View {
                 canvas.drawRect(x1 + (2*squareSize * i), y0+(squareSize*(2*j+1)), x1 + squareSize + (2*squareSize * i), y0 + squareSize+(squareSize*(2*j+1)), p);
                 canvas.drawRect(x0 + (2*squareSize * i), y0+(squareSize*(2*j+1)), x1 + (2*squareSize * i), y0 + squareSize+(squareSize*(2*j+1)), q);
             }
-         }
+        }
     }
 
     void addPieces(Canvas canvas){

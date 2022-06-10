@@ -1,5 +1,7 @@
 package eina.unizar.ajedrez;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class MainPage extends AppCompatActivity {
 
@@ -96,6 +99,8 @@ public class MainPage extends AppCompatActivity {
         gameRecord.setOnClickListener((view -> seeRecord()));
         ranking.setOnClickListener((view-> seeRanking()));
         logOut.setOnClickListener((view -> logOut()));
+
+        //esperarPartida();
     }
 
     private void playAgainstOnlineRival(int min) {
@@ -277,4 +282,48 @@ public class MainPage extends AppCompatActivity {
     public void onBackPressed() {
         moveTaskToBack(true);
     }
+
+   /* private void esperarPartida(){
+        Log.d("SignIn: ", "Esperando invita");
+        eina.unizar.ajedrez.UserSignIn.mSocket.on("getGameInvites", new Emitter.Listener() {
+
+            @Override
+            public void call(Object... args) {
+                Log.d("SignIn: ", "Llega invita");
+                runOnUiThread(new Runnable() {
+                    public void run() {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainPage.this);
+                        builder.setMessage("Aceptar invitacion");
+                        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                JSONObject data = (JSONObject) args[0];
+                                try {
+                                    Log.d("SignIn: ", "Llega invitacion");
+                                    String nomAmigo = data.getString("nick");
+                                    //eina.unizar.ajedrez.UserSignIn.mSocket.emit("confirmGameFriend",nickname,nomAmigo);
+                                   /* Intent j = new Intent(getApplicationContext(), OnlineActivity.class);
+                                    j.putExtra("nickname", nickname);
+                                    j.putExtra("avatar", avatar);
+                                    j.putExtra("board", board);
+                                    j.putExtra("pieces", pieces);
+                                    j.putExtra("time", 0);
+                                    j.putExtra("nomAmigo", nomAmigo);
+                                    startActivity(j);
+                                    // Toast.makeText(FriendsList.this,"Funciona", Toast.LENGTH_SHORT).show();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                Log.d("Socket: ", data.toString());
+                            }
+                        });
+                        builder.show();
+                    }
+                });
+
+                //here the data is in JSON Format
+            }
+        });
+    }*/
 }

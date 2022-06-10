@@ -12,8 +12,8 @@ public class ChessPiece {
     boolean alreadyMoved;
     String color;
     String side;
-    int squareSize = 90;
-    int x0 = 170;
+    int squareSize = 100;
+    int x0 = 135;
     int y0 = 170;
 
     public ChessPiece(int col, int fila, String type, int size, String color, Bitmap piece, String side){

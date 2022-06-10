@@ -86,29 +86,6 @@ public class OnlineActivity extends AppCompatActivity {
         //mSocket2.disconnect();
         mSocket.connect();
         //mSocket2.connect();
-
-        dialog=new ProgressDialog(this);
-        dialog.setMessage("Esperando rival");
-        dialog.setCancelable(false);
-        dialog.setInverseBackgroundForced(true);
-        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Log.d("d: ", "Finalizando actividad");
-                mSocket.off();
-                mSocket.disconnect();
-                mSocket.close();
-
-                // stopTimer();
-                Intent i = new Intent(getApplicationContext(), MainPage.class);
-                i.putExtra("nickname", nickname);
-                i.putExtra("avatar",avatar);
-                startActivity(i);
-            }
-        });
-        dialog.show();
-
-
         pieces =  getIntent().getExtras().getString("pieces");
         nickname = getIntent().getExtras().getString("nickname");
         avatar = getIntent().getExtras().getString("avatar");
@@ -128,21 +105,67 @@ public class OnlineActivity extends AppCompatActivity {
         if(time != 0 )timeLeftInMilliseconds = (long) time*60*1000;
         timeLeftInMillisecondsRival = (long) time*60*1000;
         if(getIntent().hasExtra("nomAmigo")){
-            idSocket = getIntent().getExtras().getString("nomAmigo");
-            if(Integer.toString(time).equals("0")){
-                mSocket.emit("buscarPartida",nickname,"A",avatar,idSocket);
-            }else{
-                mSocket.emit("buscarPartida",nickname,"A",avatar,idSocket);
-            }
+            dialog=new ProgressDialog(this);
+            dialog.setMessage("Aceptar invitación");
+            dialog.setCancelable(false);
+            dialog.setInverseBackgroundForced(true);
+            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.d("d: ", "Aceptando peticion");
+
+                    // stopTimer();
+                    idSocket = getIntent().getExtras().getString("nomAmigo");
+                    if(Integer.toString(time).equals("0")){
+                        mSocket.emit("buscarPartida",nickname,"A",avatar,idSocket);
+                    }else{
+                        mSocket.emit("buscarPartida",nickname,"A",avatar,idSocket);
+                    }
+                }
+            });
+            dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Rechazar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.d("d: ", "Finalizando actividad");
+                    mSocket.off();
+                    mSocket.disconnect();
+                    mSocket.close();
+
+                    // stopTimer();
+                    Intent i = new Intent(getApplicationContext(), MainPage.class);
+                    i.putExtra("nickname", nickname);
+                    i.putExtra("avatar",avatar);
+                    startActivity(i);
+                }
+            });
+            dialog.show();
         }else{
+            dialog=new ProgressDialog(this);
+            dialog.setMessage("Esperando rival");
+            dialog.setCancelable(false);
+            dialog.setInverseBackgroundForced(true);
+            dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.d("d: ", "Finalizando actividad");
+                    mSocket.off();
+                    mSocket.disconnect();
+                    mSocket.close();
+
+                    // stopTimer();
+                    Intent i = new Intent(getApplicationContext(), MainPage.class);
+                    i.putExtra("nickname", nickname);
+                    i.putExtra("avatar",avatar);
+                    startActivity(i);
+                }
+            });
+            dialog.show();
             if(Integer.toString(time).equals("0")){
                 mSocket.emit("buscarPartida",nickname,"NT",avatar,"0");
             }else{
                 mSocket.emit("buscarPartida",nickname,Integer.toString(time),avatar,"0");
             }
-
         }
-
         //mSocket2.emit("buscarPartida","Juan",Integer.toString(time),avatar,"0");
 
         TextView nameUser = findViewById(R.id.nombreUser);
@@ -211,8 +234,8 @@ public class OnlineActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if(time!= 0)  startTimer();
-                                    if(time!= 0) stopTimerRival();
+                                    if(time != 0 && timerRunning)stopTimer();
+                                    if(time != 0 && timerRunningRival)stopTimerRival();
                                 }
                             });
 
@@ -221,7 +244,8 @@ public class OnlineActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if(time!= 0)   stopTimer();
+                                    if(time != 0 && timerRunning)stopTimer();
+                                    if(time != 0 && timerRunningRival)stopTimerRival();
                                     Log.d("d: ", "Fin partida");
                                     Toast.makeText(getApplicationContext(), "Derrota" , Toast.LENGTH_SHORT).show();
                                     AlertDialog.Builder builder = new AlertDialog.Builder(OnlineActivity.this);
@@ -274,12 +298,13 @@ public class OnlineActivity extends AppCompatActivity {
                             if (turno == 'w') turno = 'b';
                             else turno = 'w';
                             if (!myCanvas.isMate()) {
-                                if(time!= 0) stopTimer();
-                                if(time!= 0)  startTimerRival();
+                                if(time != 0 && timerRunning)stopTimer();
+                                if(time != 0 && timerRunningRival)stopTimerRival();
                                 playGame();
                             } else { // Enviar datos de la partida al server y liberar el socket
                                 mSocket.disconnect();
-                                if(time!= 0) stopTimer();
+                                if(time != 0 && timerRunning)stopTimer();
+                                if(time != 0 && timerRunningRival)stopTimerRival();
                                 AlertDialog.Builder builder = new AlertDialog.Builder(OnlineActivity.this);
                                 builder.setMessage("Victoria!");
                                 builder.setPositiveButton("Volver", new DialogInterface.OnClickListener() {
@@ -381,7 +406,7 @@ public class OnlineActivity extends AppCompatActivity {
                         Log.d("esperarival: ", "Partida antigua");
                         String turnoActual = String.valueOf(data.getString("turn"));
                         String tiempo = String.valueOf(data.getString("t1"));
-                        String tiempoRival = String.valueOf(data.getString("t2"));
+                        String tiempoRival = String.valueOf(data.getString("t1"));
 
                         JSONArray myBoard = data.getJSONArray("board");
                         JSONObject casilla;
@@ -440,7 +465,8 @@ public class OnlineActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(time!= 0)  stopTimer();
+                        if(time != 0 && timerRunning)stopTimer();
+                        if(time != 0 && timerRunningRival)stopTimerRival();
                         Log.d("d: ", "Fin partida");
                         Toast.makeText(getApplicationContext(), "El rival ha abandonado la partida" , Toast.LENGTH_SHORT).show();
                         AlertDialog.Builder builder = new AlertDialog.Builder(OnlineActivity.this);
@@ -586,7 +612,8 @@ public class OnlineActivity extends AppCompatActivity {
         mSocket.off();
         mSocket.disconnect();
         mSocket.close();
-        if(time != 0) stopTimer();
+        if(time != 0 && timerRunning)stopTimer();
+        if(time != 0 && timerRunningRival)stopTimerRival();
         Intent i = new Intent(getApplicationContext(), MainPage.class);//OnlineActivity
         i.putExtra("nickname", nickname);
         i.putExtra("avatar", avatar);
@@ -603,7 +630,8 @@ public class OnlineActivity extends AppCompatActivity {
             mSocket.off();
             mSocket.disconnect();
             mSocket.close();
-            if(time != 0)stopTimer();
+            if(time != 0 && timerRunning)stopTimer();
+            if(time != 0 && timerRunningRival)stopTimerRival();
             finish();
         }
         return super.onKeyDown(keyCode, event);
@@ -638,8 +666,8 @@ public class OnlineActivity extends AppCompatActivity {
 
     public void stopTimer(){
         countDownTimer.cancel();
-        countDownTimerRival.cancel();
-        timerRunning = true;
+       // countDownTimerRival.cancel();
+        timerRunning = false;
     }
 
     public void startTimerRival(){
@@ -658,7 +686,7 @@ public class OnlineActivity extends AppCompatActivity {
 
     public void stopTimerRival(){
         countDownTimerRival.cancel();
-        timerRunningRival = true;
+        timerRunningRival = false;
     }
     public void updateTimer(){
 

@@ -211,7 +211,7 @@ public class FriendsList extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
        // TextView tv = ((TextView)info.targetView.findViewById(R.id.YOUR_TEXTVIEW_ID)).getText().toString();
         //Log.d("d: ", "Finalizando actividad" + tv.toString());
-        eina.unizar.ajedrez.UserSignIn.mSocket.emit("inviteFriend",nickname,"jbuil");
+        eina.unizar.ajedrez.UserSignIn.mSocket.emit("inviteFriend",nickname,"David");
          dialog=new ProgressDialog(this);
         dialog.setMessage("Esperando amigo");
         dialog.setCancelable(false);
