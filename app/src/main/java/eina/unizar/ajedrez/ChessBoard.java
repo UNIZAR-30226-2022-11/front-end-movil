@@ -131,7 +131,6 @@ public class ChessBoard extends View {
         this.colorSet = set;
         setNewSetPiece(board, side, turno, boardC);
         boardMtx = board;
-
     }
 
     public ChessBoard(Context context, String[][] board, String side, String turno, String boardC){
