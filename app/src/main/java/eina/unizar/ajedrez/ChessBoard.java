@@ -128,8 +128,8 @@ public class ChessBoard extends View {
         p  = new Paint();
         q = new Paint();
         Rec = new Rect();
-        setNewSetPiece(board, side, turno, boardC);
         this.colorSet = set;
+        setNewSetPiece(board, side, turno, boardC);
         boardMtx = board;
 
     }
