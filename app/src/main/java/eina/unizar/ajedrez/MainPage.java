@@ -33,8 +33,6 @@ public class MainPage extends AppCompatActivity {
 
     String nickname;
     String avatar;
-    String pieces;
-    String board;
 
     Button online3Button;
     Button online10Button;
