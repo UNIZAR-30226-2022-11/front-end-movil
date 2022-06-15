@@ -45,13 +45,13 @@ public class MainPage extends AppCompatActivity {
     Button ai30Button;
     Button aiNoTimeButton;
     Button myFriends;
-    Button playFriends;
+    Button createTournament;
+    Button joinTournament;
     Button requests;
     Button store;
     Button gameRecord;
     Button ranking;
     Button logOut;
-    private Object UserSignIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +60,7 @@ public class MainPage extends AppCompatActivity {
 
         nickname = getIntent().getExtras().getString("nickname");
         avatar = getIntent().getExtras().getString("avatar");
-       //Socket socket =  eina.unizar.ajedrez.UserSignIn.mSocket;
-      // eina.unizar.ajedrez.UserSignIn.mSocket2.emit("inviteFriend",nickname,"Juan");
+
         online3Button = findViewById(R.id.online3);
         online10Button = findViewById(R.id.online10);
         online30Button = findViewById(R.id.online30);
@@ -82,6 +81,9 @@ public class MainPage extends AppCompatActivity {
 
         logOut = findViewById(R.id.buttonLogOut);
 
+        createTournament = findViewById(R.id.buttonCreateTournament);
+        joinTournament = findViewById(R.id.buttonJoinTournament);
+
         online3Button.setOnClickListener(view -> playAgainstOnlineRival(3));
         online10Button.setOnClickListener(view -> playAgainstOnlineRival(10));
         online30Button.setOnClickListener(view -> playAgainstOnlineRival(30));
@@ -100,7 +102,19 @@ public class MainPage extends AppCompatActivity {
         ranking.setOnClickListener((view-> seeRanking()));
         logOut.setOnClickListener((view -> logOut()));
 
-        //esperarPartida();
+        createTournament.setOnClickListener(view -> createTournament(nickname));
+        joinTournament.setOnClickListener(view -> joinTournament());
+    }
+
+    private void createTournament(String nickname) {
+        Intent i = new Intent(getApplicationContext(), CreateTournament.class);
+        i.putExtra("nickname", nickname);
+        startActivity(i);
+    }
+
+    private void joinTournament() {
+        Intent i = new Intent(getApplicationContext(), JoinTournament.class);
+        startActivity(i);
     }
 
     private void playAgainstOnlineRival(int min) {

@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
+            android:name=".CreateTournament"
+            android:exported="true" />
+        <activity
+            android:name=".JoinTournament"
+            android:exported="true" />
+        <activity
             android:name=".AiActivity"
             android:exported="true" />
         <activity
