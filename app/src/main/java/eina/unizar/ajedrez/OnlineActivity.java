@@ -234,8 +234,15 @@ public class OnlineActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if(time != 0 && timerRunning)stopTimer();
-                                    if(time != 0 && timerRunningRival)stopTimerRival();
+                                    if(time != 0 && timerRunning) {
+                                        stopTimer();
+                                        startTimerRival();
+                                    }
+                                    else {
+                                        Log.d("Entro segundo if", "Ebtre");
+                                        stopTimerRival();
+                                        startTimer();
+                                    }
                                 }
                             });
 
@@ -298,8 +305,16 @@ public class OnlineActivity extends AppCompatActivity {
                             if (turno == 'w') turno = 'b';
                             else turno = 'w';
                             if (!myCanvas.isMate()) {
-                                if(time != 0 && timerRunning)stopTimer();
-                                if(time != 0 && timerRunningRival)stopTimerRival();
+                                if(time != 0 && timerRunning) {
+                                    Log.d("Entro primer if", "Ebtre");
+                                    stopTimer();
+                                    startTimerRival();
+                                }
+                                else {
+                                    Log.d("Entro segundo if", "Ebtre");
+                                    stopTimerRival();
+                                    startTimer();
+                                }
                                 playGame();
                             } else { // Enviar datos de la partida al server y liberar el socket
                                 mSocket.disconnect();
@@ -373,10 +388,22 @@ public class OnlineActivity extends AppCompatActivity {
                 if (turnoActual.equals("b")&& side.equals("0")) playGame();
                 else if(turnoActual.equals("w") && side.equals("1")) playGame();
                 if( time!= 0 ) {
+                    String[] string1 = tiempo.split(":");
+                    String p1 = string1[0];
+                    String p2 = string1[1];
+                    if(time != 0 )timeLeftInMilliseconds = (long) Integer.parseInt(p1)*60*1000+Integer.parseInt(p2)*1000;
+                    String[] string2 = tiempoRival.split(":");
+                    p1 = string2[0];
+                    p2 = string2[1];
+                    timeLeftInMillisecondsRival = (long) Integer.parseInt(p1)*60*1000+ Integer.parseInt(p2)*1000;
                     TextView timerUser = findViewById(R.id.timerUser);
+                    Log.d("eyeyeey1", "tiempo: " + tiempo);
                     timerUser.setText(tiempo);
                     TextView timerRival = findViewById(R.id.timerRival);
                     timerRival.setText(tiempoRival);
+                    Log.d("eyeyeey2", "tiempo: " + tiempo);
+                    countdownText = findViewById(R.id.timerUser);
+                    countdownTextRival = findViewById(R.id.timerRival);
                     if (turno == 'w' && side.equals("0") || turno == 'b' && side.equals("1"))
                         startTimer();
                     else startTimerRival();
@@ -406,7 +433,7 @@ public class OnlineActivity extends AppCompatActivity {
                         Log.d("esperarival: ", "Partida antigua");
                         String turnoActual = String.valueOf(data.getString("turn"));
                         String tiempo = String.valueOf(data.getString("t1"));
-                        String tiempoRival = String.valueOf(data.getString("t1"));
+                        String tiempoRival = String.valueOf(data.getString("t2"));
 
                         JSONArray myBoard = data.getJSONArray("board");
                         JSONObject casilla;
